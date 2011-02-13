@@ -8,12 +8,10 @@ scope="session"
 ></jsp:useBean>
 <%
 	String follow = "Follow";
-	Boolean loggedin;
+	Boolean loggedin = false;
 	if (User != null)
 	{
 		loggedin = User.isloggedIn();
-	} else {
-		loggedin = false;
 	}
 %>
 <!DOCTYPE html> <!-- The new doctype -->
@@ -39,8 +37,9 @@ scope="session"
     <body>	
     	<section id="page"> <!-- Defining the #page section with the section tag -->
             <header> <!-- Defining the header section of the page with the appropriate tag -->
+                
                 <hgroup>
-                    <a href="/Litter/" style="color: white;"><h1>Litter</h1></a>
+                    <h1><a href="/Litter/" style="color: white;">Litter</a></h1>
                     <h3>Like Twitter but with liking!</h3>
                 </hgroup>            
                 <nav class="clear"> <!-- The nav link semantically marks your main site navigation -->
