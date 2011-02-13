@@ -1,9 +1,8 @@
 package uk.ac.dundee.computing.rosswarren.litter.Utils;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.ddl.ColumnFamilyDefinition;
-import me.prettyprint.hector.api.ddl.ColumnType;
+
 import me.prettyprint.hector.api.ddl.KeyspaceDefinition;
-import me.prettyprint.hector.api.factory.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,37 +15,10 @@ import me.prettyprint.hector.api.*;
 public final class Keyspaces {
 	public Keyspaces(){
 	}
-	public static void AddColumnFamilies(){
-		try{
-			ColumnFamilyDefinition User = HFactory.createColumnFamilyDefinition("litter", "User");
-		}catch(Exception et){
-			//System.out.println("Can't create ColumnFamily "+et);
-		}
-		try{
-			ColumnFamilyDefinition Username = HFactory.createColumnFamilyDefinition("litter", "Username");
-		}catch(Exception et){
-			//System.out.println("Can't create ColumnFamily "+et);
-		}
-		try{
-			ColumnFamilyDefinition Followers = HFactory.createColumnFamilyDefinition("litter", "Followers");
-		}catch(Exception et){
-			//System.out.println("Can't create ColumnFamily "+et);
-		}
-		try{
-			ColumnFamilyDefinition Followees = HFactory.createColumnFamilyDefinition("litter", "Followees");
-		}catch(Exception et){
-			//System.out.println("Can't create ColumnFamily "+et);
-		}
-
-
-	}
 	public static void SetUpKeySpaces(Cluster c){
 		try{
 			try{
-				KeyspaceDefinition kd =c.describeKeyspace("litter");
-				//System.out.println("Keyspace: "+kd.getName());
-				//System.out.println("Replication: "+kd.getReplicationFactor());
-				//System.out.println("Strategy: "+kd.getStrategyClass());
+				c.describeKeyspace("litter");
 			}catch(Exception et){
 				//System.out.println("Keyspace probably doesn't exist, tryping to create it"+et);
 				List<ColumnFamilyDefinition> cfs = new ArrayList<ColumnFamilyDefinition>(); 
@@ -78,7 +50,7 @@ public final class Keyspaces {
 				c.addKeyspace(ks);
 				//System.out.println("Keyspace created ?");
 				try{
-					KeyspaceDefinition kd =c.describeKeyspace("litter");
+					c.describeKeyspace("litter");
 				//	System.out.println("Keyspace: "+kd.getName());
 				//	System.out.println("Replication: "+kd.getReplicationFactor());
 				//	System.out.println("Strategy: "+kd.getStrategyClass());

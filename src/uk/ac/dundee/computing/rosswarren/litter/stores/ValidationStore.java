@@ -15,12 +15,12 @@ public class ValidationStore {
     public static final Integer ERR_USERNAME_TAKEN = new Integer(3);
 
     // Holds error messages for the properties
-    Map errorCodes = new HashMap();
+    Map<String, Integer> errorCodes = new HashMap<String, Integer>();
 
     // Maps error codes to textual messages.
     // This map must be supplied by the object that instantiated this bean.
-    Map msgMap;
-    public void setErrorMessages(Map msgMap) {
+    Map<?, ?> msgMap;
+    public void setErrorMessages(Map<?, ?> msgMap) {
         this.msgMap = msgMap;
     }
     

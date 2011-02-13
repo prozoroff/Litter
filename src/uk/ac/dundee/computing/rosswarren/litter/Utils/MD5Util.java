@@ -1,6 +1,5 @@
 package uk.ac.dundee.computing.rosswarren.litter.Utils;
 
-import java.util.*;
 import java.io.*;
 import java.security.*;
 public class MD5Util {

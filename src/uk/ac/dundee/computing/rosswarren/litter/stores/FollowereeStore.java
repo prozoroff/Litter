@@ -1,7 +1,5 @@
 package uk.ac.dundee.computing.rosswarren.litter.stores;
 
-import java.util.Date;
-
 import com.sun.jmx.snmp.Timestamp;
 
 public class FollowereeStore {

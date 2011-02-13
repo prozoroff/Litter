@@ -22,7 +22,7 @@ import uk.ac.dundee.computing.rosswarren.litter.stores.UserStore;
  */
 public class User extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	 private HashMap FormatsMap = new HashMap();
+	 private HashMap<String, Integer> FormatsMap = new HashMap<String, Integer>();
     /**
      * Default constructor. 
      */

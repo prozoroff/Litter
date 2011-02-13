@@ -62,7 +62,6 @@ public  final class CassandraHosts {
 			c = HFactory.getOrCreateCluster("Test Cluster", Host+":9160");
 			getHosts();	
 			Keyspaces.SetUpKeySpaces(c);
-			Keyspaces.AddColumnFamilies();
 		return c;
 		
 	}	

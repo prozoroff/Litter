@@ -35,11 +35,11 @@ public class RenderJson extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		Object temp=request.getAttribute("Data");
-		Class c = temp.getClass();
+		Class<? extends Object> c = temp.getClass();
 		String className=c.getName();
 		if (className.compareTo("java.util.LinkedList")==0){ //Deal with a linked list
-			List Data = (List)request.getAttribute("Data");
-			Iterator iterator;
+			List<?> Data = (List<?>)request.getAttribute("Data");
+			Iterator<?> iterator;
 			JSONObject JSONObj=new JSONObject();
 			JSONArray Parts=new JSONArray();
 			iterator = Data.iterator();     
@@ -76,7 +76,7 @@ public class RenderJson extends HttpServlet {
 		JSONObject Record=new JSONObject();
 
 		try {
-            Class c = Value.getClass();
+            Class<? extends Object> c = Value.getClass();
             Method methlist[] = c.getDeclaredMethods();
             for (int i = 0; i < methlist.length; i++) {  
             	 Method m = methlist[i];
@@ -89,7 +89,7 @@ public class RenderJson extends HttpServlet {
 	                 //for (int j = 0; j < pvec.length; j++)
 	                 //   System.out.println("param #" + j + " " + pvec[j]);
 	                 //System.out.println(mName+" return type = " +  m.getReturnType());
-	                 Class partypes[] = new Class[0];
+	                 Class<?> partypes[] = new Class[0];
 	                 Method meth = c.getMethod(mName, partypes);
 
 	                 Object rt= meth.invoke(Value);
