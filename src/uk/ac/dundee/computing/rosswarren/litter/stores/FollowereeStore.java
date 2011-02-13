@@ -3,14 +3,12 @@ package uk.ac.dundee.computing.rosswarren.litter.stores;
 import com.sun.jmx.snmp.Timestamp;
 
 public class FollowereeStore {
-	private String username;
+	private String username = "";
 	private Timestamp date;
-	private String avatarurl;
+	private String avatarurl ="";
 	
 	public FollowereeStore()
 	{
-		username = "";
-		avatarurl = "";
 	}
 	
 	public String getUsername()

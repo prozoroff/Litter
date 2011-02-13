@@ -13,7 +13,7 @@ public class ReturnStore {
 
 	//This will remove the jBloggyAppy bit
 	public void setReturnTo(String ReturnTo){
-		String ret = ReturnTo.replaceFirst("/jBloggyAppy", "");
+		String ret = ReturnTo.replaceFirst("/Litter", "");
 		this.ReturnTo=ret;
 	}
 

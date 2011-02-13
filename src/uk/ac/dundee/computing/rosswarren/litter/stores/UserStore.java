@@ -3,11 +3,9 @@ package uk.ac.dundee.computing.rosswarren.litter.stores;
 import uk.ac.dundee.computing.rosswarren.litter.Utils.MD5Util;
 
 public class UserStore {
-	private boolean loggedIn;
-	private String name, email, bio, username, avatarurl;
+	private boolean loggedIn = false;
+	private String name, email, bio, username, avatarurl = "";
 	public UserStore(){
-		name=email=bio=username=avatarurl="";
-		loggedIn = false;
 	}
 	public String getAvatarUrl() { return avatarurl; }
 	public String getUserName() { return username; }
