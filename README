@@ -1,0 +1,26 @@
+Servlets
+-- User --
+GET
+No arguments - shows user page if logged in.
+/json - shows your details in json format if you are logged in.
+/[username]  - shows a specific user page.
+/[username]/json shows a specific users details in json format.
+POST
+No arguments - adds the user in the session to the database. (if no user is in the session it forwards to the registration page)
+
+-- Login --
+GET
+No arguments - check sign on result from Google or Yahoo
+/Google or /Yahoo - redirect to Google or Yahoo sign on page:
+/logout - Log out the current User.
+
+-- RenderJson --
+GET
+No arguments - If an object is passed in by the request attribute "Data" it will be outputted as Json. (Written by Andy Cobley)
+
+-- Follow --
+GET
+/[username]/json - return followers formatted as Json
+
+POST
+/[username] - follow username specified.
