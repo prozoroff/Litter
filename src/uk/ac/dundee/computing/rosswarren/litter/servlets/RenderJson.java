@@ -1,8 +1,9 @@
+// RenderJson Code by Andy Cobley
+
 package uk.ac.dundee.computing.rosswarren.litter.servlets;
 
 import org.json.JSONObject;
 import org.json.JSONArray;
-import org.json.JSONException;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.*;
-import java.lang.reflect.*;
 import java.io.PrintWriter;
 
 /**
