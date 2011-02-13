@@ -1,12 +1,7 @@
 package uk.ac.dundee.computing.rosswarren.litter.connectors;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.xml.transform.Result;
-
-import com.sun.jmx.snmp.Timestamp;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.ConsistencyLevelPolicy;
 import me.prettyprint.hector.api.Keyspace;
