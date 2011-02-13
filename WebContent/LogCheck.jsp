@@ -1,10 +1,10 @@
 <jsp:useBean id="User"
-class="uk.ac.dundee.computing.rosswarren.litter.stores.UserStore"
+class="uk.co.ross_warren.litter.stores.UserStore"
 scope="session"
 ></jsp:useBean>
 
 <jsp:useBean id="ReturnPoint"
-class="uk.ac.dundee.computing.rosswarren.litter.stores.ReturnStore"
+class="uk.co.ross_warren.litter.stores.ReturnStore"
 scope="session"
 ></jsp:useBean>
 <%

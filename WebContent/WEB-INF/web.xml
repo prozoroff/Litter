@@ -13,7 +13,7 @@
     <description></description>
     <display-name>User</display-name>
     <servlet-name>User</servlet-name>
-    <servlet-class>uk.ac.dundee.computing.rosswarren.litter.servlets.User</servlet-class>
+    <servlet-class>uk.co.ross_warren.litter.servlets.User</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>User</servlet-name>
@@ -24,7 +24,7 @@
     <description></description>
     <display-name>Follow</display-name>
     <servlet-name>Follow</servlet-name>
-    <servlet-class>uk.ac.dundee.computing.rosswarren.litter.servlets.Follow</servlet-class>
+    <servlet-class>uk.co.ross_warren.litter.servlets.Follow</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Follow</servlet-name>
@@ -35,7 +35,7 @@
     <description></description>
     <display-name>RenderJson</display-name>
     <servlet-name>RenderJson</servlet-name>
-    <servlet-class>uk.ac.dundee.computing.rosswarren.litter.servlets.RenderJson</servlet-class>
+    <servlet-class>uk.co.ross_warren.litter.servlets.RenderJson</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RenderJson</servlet-name>
@@ -46,7 +46,7 @@
     <description></description>
     <display-name>Login</display-name>
     <servlet-name>Login</servlet-name>
-    <servlet-class>uk.ac.dundee.computing.rosswarren.litter.servlets.Login</servlet-class>
+    <servlet-class>uk.co.ross_warren.litter.servlets.Login</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>Login</servlet-name>

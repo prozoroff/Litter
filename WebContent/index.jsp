@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <jsp:useBean id="User"
-class="uk.ac.dundee.computing.rosswarren.litter.stores.UserStore"
+class="uk.co.ross_warren.litter.stores.UserStore"
 scope="session"
 ></jsp:useBean>
 <%
@@ -34,7 +34,7 @@ scope="session"
     	<section id="page"> <!-- Defining the #page section with the section tag -->
             <header> <!-- Defining the header section of the page with the appropriate tag -->
                 <hgroup>
-                    <a href="/Litter/" style="color: white;"><h1>Litter</h1></a>
+                    <h1><a href="/Litter/" style="color: white;">Litter</a></h1>
                     <h3>Like Twitter but with liking!</h3>
                 </hgroup>            
                 <nav class="clear"> <!-- The nav link semantically marks your main site navigation -->

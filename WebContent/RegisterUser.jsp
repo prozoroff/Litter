@@ -2,9 +2,9 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.ac.dundee.computing.rosswarren.litter.stores.*" %>
+<%@ page import="uk.co.ross_warren.litter.stores.*" %>
 <%@ page import="java.util.*" %>
-<jsp:useBean id="form" class="uk.ac.dundee.computing.rosswarren.litter.stores.ValidationStore" scope="request">
+<jsp:useBean id="form" class="uk.co.ross_warren.litter.stores.ValidationStore" scope="request">
     <jsp:setProperty name="form" property="errorMessages" value='<%= errorMap %>'/>
 </jsp:useBean>
 
