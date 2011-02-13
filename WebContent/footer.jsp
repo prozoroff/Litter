@@ -1,4 +1,5 @@
-<footer> <!-- Marking the footer section -->
+<!-- Footer loaded through page include -->
+<footer> 
 	<div class="line"></div>
 	<p>Copyright 2011 - Litter</p> <!-- Change the copyright notice -->
 	<a href="#" class="up">Go UP</a>
