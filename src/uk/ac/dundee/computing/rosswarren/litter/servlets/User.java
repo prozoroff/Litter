@@ -54,12 +54,18 @@ public class User extends HttpServlet {
 
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
+		HttpSession session=request.getSession();
+		UserStore output = (UserStore)session.getAttribute("User");
 
 		switch (args.length){
+			case 2:
+				if (output != null && output.isloggedIn() == true)
+				{
+					ReturnAuthor(request, response,0, output.getUserName());
+				}
+				break;
 			case 3: if (FormatsMap.containsKey(args[2])){ //Display an author
 						Integer IFormat= (Integer)FormatsMap.get(args[2]);
-						HttpSession session=request.getSession();
-						UserStore output = (UserStore)session.getAttribute("User");
 						if (output != null && output.isloggedIn() == true)
 						{
 							 switch((int)IFormat.intValue()){
