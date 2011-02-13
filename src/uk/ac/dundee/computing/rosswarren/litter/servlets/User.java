@@ -38,20 +38,6 @@ public class User extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//Possible Call Methods:
-		//case 2
-		// /jBloggyAppy/Author List all Authors and redirect to jsp
-		// case 3
-		// /jBloggyAppy/Author/xml return all authors as XML (not implemented)
-		// /jBloggyAppy/Author/rss return all authors as RSS (not implemented)
-		// /jBloggyAppy/Author/json return all authors as JSON (not implemented)
-		// /jBloggyAppy/Author/name return author and redirect to jsp
-		//case 4
-		// /jBloggyAppy/Author/name/xml return author and return xml (not implemented)
-		// /jBloggyAppy/Author/name/rss return author and return rss (not implemented)
-		// /jBloggyAppy/Author/name/json return author and return json 
-
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
 		HttpSession session=request.getSession();
