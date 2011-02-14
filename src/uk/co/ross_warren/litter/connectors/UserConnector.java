@@ -150,10 +150,9 @@ public class UserConnector {
 				OrderedRows<String, String, String> rows = result.get();
 				if (rows.getByKey(toBeFollowed).getColumnSlice().getColumns().isEmpty() == false) return false;
 				//---------------------- 
-				
+				Long now = System.currentTimeMillis();
 				Mutator<String> mutator = HFactory.createMutator(ko,se);
-				
-				mutator.addInsertion(toBeFollowed, "Followers", HFactory.createStringColumn(toFollow, ""));
+				mutator.addInsertion(toBeFollowed, "Followers", HFactory.createStringColumn(toFollow, now.toString()));
 				mutator.execute();
 				return true;
 			}
@@ -206,10 +205,10 @@ public class UserConnector {
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
 				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
 				ko.setConsistencyLevelPolicy(mcl);
-				StringSerializer se = StringSerializer.get();				
+				StringSerializer se = StringSerializer.get();
+				Long now = System.currentTimeMillis();
 				Mutator<String> mutator = HFactory.createMutator(ko,se);
-				
-				mutator.addInsertion(toFollow, "Followees", HFactory.createStringColumn(toBeFollowed, ""));
+				mutator.addInsertion(toFollow, "Followees", HFactory.createStringColumn(toBeFollowed, now.toString()));
 				mutator.execute();
 				return true;
 			}
@@ -278,6 +277,10 @@ public class UserConnector {
 					result.setDate(Long.parseLong(column.getValue()));
 				}
 				results.add(result);
+			}
+			for (FollowereeStore store: results)
+			{
+				
 			}
 			return results;
 
