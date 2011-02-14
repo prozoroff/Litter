@@ -20,7 +20,7 @@ public final class Keyspaces {
 			try{
 				c.describeKeyspace("litter");
 			}catch(Exception et){
-				//System.out.println("Keyspace probably doesn't exist, tryping to create it"+et);
+				System.out.println("Keyspace probably doesn't exist, tryping to create it" + et);
 				List<ColumnFamilyDefinition> cfs = new ArrayList<ColumnFamilyDefinition>(); 
 				BasicColumnFamilyDefinition user = new BasicColumnFamilyDefinition(); 
 				BasicColumnFamilyDefinition username = new BasicColumnFamilyDefinition(); 
@@ -60,21 +60,15 @@ public final class Keyspaces {
 				cfs.add(usertweetsdef);
 				KeyspaceDefinition ks=HFactory.createKeyspaceDefinition("litter","org.apache.cassandra.locator.SimpleStrategy", 1, cfs);
 				c.addKeyspace(ks);
-				//System.out.println("Keyspace created ?");
+				System.out.println("Keyspace created ?");
 				try{
 					c.describeKeyspace("litter");
-				//	System.out.println("Keyspace: "+kd.getName());
-				//	System.out.println("Replication: "+kd.getReplicationFactor());
-				//	System.out.println("Strategy: "+kd.getStrategyClass());
 				}catch(Exception et2){
-				//	System.out.println("Opps no it wasn't !" +et2);
+					System.out.println("Oops no it wasn't!" +et2);
 				}
 			}
-			
-			
 		}catch(Exception et){
 			System.out.println("Other keyspace or column definition error" +et);
 		}
-		
 	}
 }
