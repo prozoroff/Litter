@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import uk.co.ross_warren.litter.stores.TweetStore;
+
 /**
  * Servlet implementation class Tweet
  */
@@ -27,6 +29,7 @@ public class Tweet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -34,6 +37,9 @@ public class Tweet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		TweetStore tweet = new TweetStore();
+		tweet.setUser(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Username")));
+		tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));
 	}
 
 }

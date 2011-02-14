@@ -1,15 +1,15 @@
 package uk.co.ross_warren.litter.stores;
 
 public class TweetStore {
-	private int tweetID = 0;
+	private String tweetID = "";
 	private String user = "";
-	private String timeStamp = "";
+	private long timeStamp = 0;
 	private String replyToUser = "";
 	
-	public void setTweetID(int tweetID) {
+	public void setTweetID(String tweetID) {
 		this.tweetID = tweetID;
 	}
-	public int getTweetID() {
+	public String getTweetID() {
 		return tweetID;
 	}
 	public void setUser(String user) {
@@ -18,10 +18,10 @@ public class TweetStore {
 	public String getUser() {
 		return user;
 	}
-	public void setTimeStamp(String timeStamp) {
+	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
 	}
-	public String getTimeStamp() {
+	public long getTimeStamp() {
 		return timeStamp;
 	}
 	public void setReplyToUser(String replyToUser) {

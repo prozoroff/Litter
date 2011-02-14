@@ -31,9 +31,9 @@ public class Follow extends HttpServlet {
     public Follow() {
         super();
         FormatsMap.put("Jsp", 0);
-   	 FormatsMap.put("xml", 1);
-   	 FormatsMap.put("rss", 2);
-   	 FormatsMap.put("json",3);
+		FormatsMap.put("xml", 1);
+		FormatsMap.put("rss", 2);
+		FormatsMap.put("json",3);
         // TODO Auto-generated constructor stub
     }
 
@@ -45,6 +45,21 @@ public class Follow extends HttpServlet {
 		String args[]=split.SplitRequestPath(request);
 
 		switch (args.length){
+			case 3:
+				if (FormatsMap.containsKey(args[2])) {
+					Integer IFormat= (Integer)FormatsMap.get(args[2]);
+					UserStore lc = (UserStore)request.getAttribute("User");
+					if (lc != null && lc.isloggedIn() == true)
+					{
+						switch((int)IFormat.intValue()){
+							case 3:GetFollowers(request, response,3,lc.getUserName()); //Only JSON implemented for now
+							break;
+						}
+						
+					}
+				}
+				break;
+			
 			case 4: if (FormatsMap.containsKey(args[3])){ //all authors in a format
 						Integer IFormat= (Integer)FormatsMap.get(args[3]);
 						switch((int)IFormat.intValue()){
@@ -60,109 +75,105 @@ public class Follow extends HttpServlet {
 	
 	}
 		
-		public void GetFollowers(HttpServletRequest request, HttpServletResponse response,int Format, String username) throws ServletException, IOException{
-			/*  Format is one of
-			 *  0 jsp
-			 *  1 xml
-			 *  2 rss
-			 *  3 json
-			 * 
-			 */
-			HttpSession session=request.getSession();
-			session.setAttribute("followers", null);
-			session.setAttribute("followees", null);
-			UserConnector connect = new UserConnector();
-			List<FollowereeStore> followers = connect.getFollowers(username);
-			List<FollowereeStore> followerList = new LinkedList<FollowereeStore>();
-			if (followers != null && followers.size() > 0)
+	public void GetFollowers(HttpServletRequest request, HttpServletResponse response,int Format, String username) throws ServletException, IOException{
+		/*  Format is one of
+		 *  0 jsp
+		 *  1 xml
+		 *  2 rss
+		 *  3 json
+		 * 
+		 */
+		HttpSession session=request.getSession();
+		session.setAttribute("followers", null);
+		session.setAttribute("followees", null);
+		UserConnector connect = new UserConnector();
+		List<FollowereeStore> followers = connect.getFollowers(username);
+		List<FollowereeStore> followerList = new LinkedList<FollowereeStore>();
+		if (followers != null && followers.size() > 0)
+		{
+			for (FollowereeStore follow : followers)
 			{
-				for (FollowereeStore follow : followers)
+				try 
 				{
-					try 
-					{
-						follow.setAvatarUrl(connect.getUserByEmail(connect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
-						
-					}
-					catch(Exception e)
-					{
-						System.out.println("Oh noes could not get the avatar URL" + e);
-					}
-					followerList.add(follow);
-					System.out.println("Followed by" + follow.getUsername());
+					follow.setAvatarUrl(connect.getUserByEmail(connect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
+					
 				}
+				catch(Exception e)
+				{
+					System.out.println("Oh noes could not get the avatar URL" + e);
+				}
+				followerList.add(follow);
+				System.out.println("Followed by" + follow.getUsername());
 			}
-			switch(Format){
-				case 3: request.setAttribute("Data", followerList);
-						RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");
-						rdjson.forward(request,response);
-						break;
-				default: System.out.println("Invalid Format in ReturnAllAuthors ");
-			}
-
-
 		}
+		switch(Format){
+			case 3: request.setAttribute("Data", followerList);
+					RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");
+					rdjson.forward(request,response);
+					break;
+			default: System.out.println("Invalid Format in ReturnAllAuthors ");
+		}
+	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-			Boolean success = false;
-			StringSplitter split = new StringSplitter();
-			String args[]=split.SplitRequestPath(request);
-			if (args.length == 3)
-			{
-				String usernameToFollow = args[2]; //args 2 is the person you want to follow
-				UserConnector connector = new UserConnector();
-				HttpSession session=request.getSession();
-				UserStore lc =(UserStore)session.getAttribute("User");
-				if (lc == null || lc.isloggedIn() == false)
-				{
-					try {
-						//response.sendRedirect("");
-						success = false;
-					} catch (Exception et) {
-						success = false;
-					}
-				} else {
-					if (connector.addFollower(lc.getUserName(), usernameToFollow) == true)
-					{
-						System.out.println("Follow success");
-						if (connector.addFollowee(lc.getUserName(), usernameToFollow))
-						{
-							System.out.println("Followee success");
-						}
-						try {
-							//response.sendRedirect("User/" + lc.getUserName());
-							
-							success = true;
-						} catch (Exception et) {
-							success = false;
-						}
-					}
-					else {
-						try
-						{
-							if (connector.removeFollower(lc.getUserName(), usernameToFollow) && connector.removeFollowee(lc.getUserName(), usernameToFollow))
-							{
-								System.out.println("UnfollowSuccess");
-							}
-						} catch (Exception e)
-						{
-							System.out.println("Unfollow fail: " + e);
-						}
-					}
-				}
-			}
-			if (!success)
+		Boolean success = false;
+		StringSplitter split = new StringSplitter();
+		String args[]=split.SplitRequestPath(request);
+		if (args.length == 3)
+		{
+			String usernameToFollow = args[2]; //args 2 is the person you want to follow
+			UserConnector connector = new UserConnector();
+			HttpSession session=request.getSession();
+			UserStore lc =(UserStore)session.getAttribute("User");
+			if (lc == null || lc.isloggedIn() == false)
 			{
 				try {
 					//response.sendRedirect("");
+					success = false;
 				} catch (Exception et) {
-					System.out.println("Couldn't Forward to Show User");
+					success = false;
+				}
+			} else {
+				if (connector.addFollower(lc.getUserName(), usernameToFollow) == true)
+				{
+					System.out.println("Follow success");
+					if (connector.addFollowee(lc.getUserName(), usernameToFollow))
+					{
+						System.out.println("Followee success");
+					}
+					try {
+						//response.sendRedirect("User/" + lc.getUserName());
+						
+						success = true;
+					} catch (Exception et) {
+						success = false;
+					}
+				}
+				else {
+					try
+					{
+						if (connector.removeFollower(lc.getUserName(), usernameToFollow) && connector.removeFollowee(lc.getUserName(), usernameToFollow))
+						{
+							System.out.println("UnfollowSuccess");
+						}
+					} catch (Exception e)
+					{
+						System.out.println("Unfollow fail: " + e);
+					}
 				}
 			}
-			
+		}
+		if (!success)
+		{
+			try {
+				//response.sendRedirect("");
+			} catch (Exception et) {
+				System.out.println("Couldn't Forward to Show User");
+			}
+		}
 	}
-
 }

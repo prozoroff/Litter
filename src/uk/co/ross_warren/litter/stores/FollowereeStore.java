@@ -1,10 +1,8 @@
 package uk.co.ross_warren.litter.stores;
 
-import com.sun.jmx.snmp.Timestamp;
-
 public class FollowereeStore {
 	private String username = "";
-	private Timestamp date;
+	private long date = 0;
 	private String avatarurl ="";
 	
 	public FollowereeStore()
@@ -27,7 +25,7 @@ public class FollowereeStore {
 	}
 	
 	
-	public Timestamp getDate()
+	public long getDate()
 	{
 		return date;
 	}
@@ -37,7 +35,7 @@ public class FollowereeStore {
 		this.username = username;
 	}
 	
-	public void setDate (Timestamp date)
+	public void setDate (long date)
 	{
 		this.date = date;
 	}

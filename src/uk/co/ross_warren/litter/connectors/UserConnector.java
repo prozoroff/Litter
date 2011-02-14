@@ -208,6 +208,7 @@ public class UserConnector {
 				ko.setConsistencyLevelPolicy(mcl);
 				StringSerializer se = StringSerializer.get();				
 				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				
 				mutator.addInsertion(toFollow, "Followees", HFactory.createStringColumn(toBeFollowed, ""));
 				mutator.execute();
 				return true;
@@ -272,6 +273,10 @@ public class UserConnector {
 			{
 				FollowereeStore result = new FollowereeStore();
 				result.setUsername(column.getName());
+				if (column.getValue() != null && !column.getValue().equals(""))
+				{
+					result.setDate(Long.parseLong(column.getValue()));
+				}
 				results.add(result);
 			}
 			return results;
@@ -294,7 +299,6 @@ public class UserConnector {
 		}
 		try {
 			List<FollowereeStore> results = new ArrayList<FollowereeStore>();
-	
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
 			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
 			ko.setConsistencyLevelPolicy(mcl);
@@ -310,10 +314,13 @@ public class UserConnector {
 			{
 				FollowereeStore result = new FollowereeStore();
 				result.setUsername(column.getName());
+				if (column.getValue() != null && !column.getValue().equals(""))
+				{
+					result.setDate(Long.parseLong(column.getValue()));
+				}
 				results.add(result);
 			}
-		return results;
-
+			return results;
 		}
 		catch (Exception e) {
 			System.out.println("Getting the followers was not as simple as first appeared. Are they ALL stalkers? " + e);
