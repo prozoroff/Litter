@@ -38,6 +38,7 @@ public class User extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		request.setAttribute("ViewUser", null);
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
 		HttpSession session=request.getSession();
