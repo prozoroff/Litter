@@ -2,12 +2,12 @@ package uk.co.ross_warren.litter.connectors;
 
 import java.util.LinkedList;
 import java.util.List;
-
 import me.prettyprint.cassandra.serializers.StringSerializer;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.ConsistencyLevelPolicy;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
+import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.SliceQuery;
@@ -19,6 +19,11 @@ public class TweetConnector {
 	public TweetConnector()
 	{
 		
+	}
+	
+	public void addTweet(TweetStore store)
+	{
+		System.out.println("Method not implemented!");
 	}
 	
 	public TweetStore getTweet(String tweetID)
@@ -61,9 +66,56 @@ public class TweetConnector {
 		return result;
 	}
 	
-	public List<Integer> getTweets(String username)
+	public List<TweetStore> getTweets(String username)
 	{
-		List<Integer> list = new LinkedList<Integer>();
-		return list;
+		List<TweetStore> list = new LinkedList<TweetStore>();
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Can't Connect to Cassandra. Check she is OK?");
+			return null;
+		}
+		
+		try 
+		{
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+			ko.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			q.setColumnFamily("UserTweets")
+			.setKey(username)
+			.setRange("", "", false, 100);
+			QueryResult<ColumnSlice<String, String>> r = q.execute();
+			ColumnSlice<String, String> slice = r.get();
+			List<HColumn<String, String>> slices = slice.getColumns();
+			for (HColumn<String, String> column: slices)
+			{
+				TweetStore store = new TweetStore();
+				store.setTweetID(column.getName());
+				if (column.getValue() != null && !column.getValue().equals(""))
+				{
+					store.setTimeStamp(Long.parseLong(column.getValue()));
+				}
+				try {
+					TweetStore store2 = getTweet(column.getName());
+					store.setUser(store2.getUser());
+					store.setReplyToUser(store2.getReplyToUser());
+					store.setContent(store2.getContent());
+				}
+				catch (Exception e)
+				{
+					System.out.println("Tweet Error!" + e);
+				}
+				list.add(store);
+			}
+			return list;
+		}
+		catch (Exception e)
+		{
+			System.out.println("Getting tweets failed miserably. Oh dear" + e);
+			return null;
+		}
 	}
 }
