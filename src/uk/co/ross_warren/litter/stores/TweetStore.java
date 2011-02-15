@@ -5,6 +5,7 @@ public class TweetStore {
 	private String user = "";
 	private long timeStamp = 0;
 	private String replyToUser = "";
+	private String content = "";
 	
 	public void setTweetID(String tweetID) {
 		this.tweetID = tweetID;
@@ -29,5 +30,11 @@ public class TweetStore {
 	}
 	public String getReplyToUser() {
 		return replyToUser;
+	}
+	public void setContent(String content) {
+		this.content = content;
+	}
+	public String getContent() {
+		return content;
 	}
 }

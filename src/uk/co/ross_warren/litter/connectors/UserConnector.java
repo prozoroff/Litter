@@ -278,12 +278,7 @@ public class UserConnector {
 				}
 				results.add(result);
 			}
-			for (FollowereeStore store: results)
-			{
-				
-			}
 			return results;
-
 		}
 		catch (Exception e) {
 			System.out.println("There were some problems getting the users the user follows. - "+ e);

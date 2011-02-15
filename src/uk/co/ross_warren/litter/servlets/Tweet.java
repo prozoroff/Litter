@@ -40,6 +40,7 @@ public class Tweet extends HttpServlet {
 		TweetStore tweet = new TweetStore();
 		tweet.setUser(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Username")));
 		tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));
+		tweet.setContent(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Content")));
 	}
 
 }
