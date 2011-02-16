@@ -54,6 +54,7 @@
     <body>	
     	<section id="page"> <!-- Defining the #page section with the section tag -->
             <header> <!-- Defining the header section of the page with the appropriate tag -->
+                <img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" />
                 <hgroup>
                     <h1>Litter</h1>
                     <h3>Like Twitter but with liking!</h3>

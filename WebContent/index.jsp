@@ -35,6 +35,7 @@ scope="session"
     <body>	
     	<section id="page"> <!-- Defining the #page section with the section tag -->
             <header> <!-- Defining the header section of the page with the appropriate tag -->
+                <img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" />
                 <hgroup>
                     <h1><a href="/Litter/" style="color: white;">Litter</a></h1>
                     <h3>Like Twitter but with liking!</h3>
@@ -64,19 +65,28 @@ scope="session"
                 <article id="Welcome">
                     <h2>Welcome!</h2>
 					<div class="line"></div>  <!-- Dividing line -->
-					<p style="display: inline; width: 300px;">Welcome to Litter. To begin, click Login with Google or Yahoo at the top left of the page. </p>
-					<img style="display: inline;" src="/Litter/img/IMG.png" />
+					<img align="right" src="/Litter/img/IMG.png" />
+					<p>Welcome to Litter. To begin, click Login with Google or Yahoo at the top left of the page. </p>
+					<p style="margin-bottom: 200px;">Currently in Alpha development. Please be patient!</p>
                 </article>
                 <% } else { %>
                 <article id="Welcome">
                     <h2>Welcome back <%=User.getUserName() %></h2>
 					<div class="line"></div>  <!-- Dividing line -->
-					<form action='/Litter/Tweet' method="POST">
-						<label for="ReplyToUser">At Username:</label> 
+					<form style="width: 80%" action='/Litter/Tweet' method="POST">
+						<!-- <label for="ReplyToUser">At Username:</label> 
 						<input style="background-color: white;" type="text" name="ReplyToUser" placeholder="Username" />
-						<label for="Content">Content:</label> 
-						<textarea style="background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
-						<input style="background-color: white;" type="submit"  value="Tweet">
+						-->
+						<table style="width: 100%">
+						<tr>
+						<td>
+						<textarea style="background: none; width: 90%; min-height: 42px; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
+						</td>
+						<td>
+						<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
+						</td>
+						</tr>
+						</table>
 					</form>
 					
                 </article>
