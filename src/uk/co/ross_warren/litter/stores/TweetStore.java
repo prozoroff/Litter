@@ -8,6 +8,7 @@ public class TweetStore implements Comparable<TweetStore>
 	private Long timeStamp = (long) 0;
 	private String replyToUser = "";
 	private String content = "";
+	private int likes = 0;
 	
 	public void setTweetID(String tweetID) {
 		this.tweetID = tweetID;
@@ -43,5 +44,11 @@ public class TweetStore implements Comparable<TweetStore>
 	public int compareTo(TweetStore o) {
 		// TODO Auto-generated method stub
 		return (int) (o.timeStamp - this.timeStamp);
+	}
+	public void setLikes(int likes) {
+		this.likes = likes;
+	}
+	public int getLikes() {
+		return likes;
 	}
 }

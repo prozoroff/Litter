@@ -146,9 +146,14 @@ scope="session"
 						{
 							%>
 							<h4><%= tweet.getUser() %></h4>
-							<%if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-							%><p>To <%= tweet.getReplyToUser() %>: <% } else {%>
-							<p><%} %><%= tweet.getContent() %></p>
+							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+							%>
+							<p>To <%= tweet.getReplyToUser() %>: 
+							<% } else {%>
+							<p>
+							<%} %>
+							<%= tweet.getContent() %></p>
+							<p>Likes: <%= tweet.getLikes() %></p>
 							<%
 						}	
 					}

@@ -48,6 +48,7 @@ public class TweetConnector {
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("replyToUser", store.getReplyToUser()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("content", store.getContent()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("timestamp", time));
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("likes", "0"));
 			mutator.execute();
 		}
 		catch (Exception e)
@@ -87,6 +88,12 @@ public class TweetConnector {
 			result.setTweetID(tweetID);
 			result.setUser(slice.getColumnByName("user").getValue());
 			result.setContent(slice.getColumnByName("content").getValue());
+			try {
+			result.setLikes(Integer.parseInt(slice.getColumnByName("likes").getValue()));
+			} catch (Exception e)
+			{
+				result.setLikes(0);
+			}
 		}
 		catch (Exception e)
 		{
@@ -133,6 +140,7 @@ public class TweetConnector {
 					store.setUser(store2.getUser());
 					store.setReplyToUser(store2.getReplyToUser());
 					store.setContent(store2.getContent());
+					store.setLikes(store2.getLikes());
 				}
 				catch (Exception e)
 				{
