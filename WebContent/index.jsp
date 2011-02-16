@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    <%@ page import="uk.co.ross_warren.litter.stores.*" %>
+<%@ page import="java.util.*" %>
     <jsp:useBean id="User"
 class="uk.co.ross_warren.litter.stores.UserStore"
 scope="session"
@@ -69,7 +71,26 @@ scope="session"
                 <article id="Welcome">
                     <h2>Welcome back <%=User.getUserName() %></h2>
 					<div class="line"></div>  <!-- Dividing line -->
-					<p>Your Feed will show here!</p>
+					<form action='/Litter/Tweet' method="POST">
+						<label for="ReplyToUser">At Username:</label> 
+						<input style="background-color: white;" type="text" name="ReplyToUser" placeholder="Username" />
+						<label for="Content">Content:</label> 
+						<textarea style="background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
+						<input style="background-color: white;" type="submit"  value="Tweet">
+					</form>
+					<% List<TweetStore> tweets = (List<TweetStore>)request.getAttribute("Tweets");
+					if (tweets != null && tweets.size() > 0)
+					{
+						for (TweetStore tweet: tweets)
+						{
+							%>
+							<p><%=tweet.getContent() %></p>
+							<%
+						}
+					}
+						
+						
+						%>
                 </article>
                 <% } %>
             </section>

@@ -9,6 +9,7 @@ import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.factory.HFactory;
+import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.QueryResult;
 import me.prettyprint.hector.api.query.SliceQuery;
 import uk.co.ross_warren.litter.Utils.CassandraHosts;
@@ -23,7 +24,36 @@ public class TweetConnector {
 	
 	public void addTweet(TweetStore store)
 	{
-		System.out.println("Method not implemented!");
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Can't Connect to Cassandra. Check she is OK?");
+			return;
+		}
+		try
+		{
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+			ko.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			Long now = System.currentTimeMillis();
+			store.setTweetID(store.getUser() + now);
+			String time = now.toString();
+			mutator.addInsertion(store.getUser(), "UserTweets", HFactory.createStringColumn(store.getTweetID(), time));
+			mutator.execute();
+			mutator = HFactory.createMutator(ko,se);
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("user", store.getUser()));
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("replyToUser", store.getReplyToUser()));
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("content", store.getContent()));
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("timestamp", time));
+			mutator.execute();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Adding the tweet totally failed :(" + e);
+		}
 	}
 	
 	public TweetStore getTweet(String tweetID)

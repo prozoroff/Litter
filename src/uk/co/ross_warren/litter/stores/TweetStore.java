@@ -1,9 +1,11 @@
 package uk.co.ross_warren.litter.stores;
 
-public class TweetStore {
+public class TweetStore implements Comparable<TweetStore>
+{
+	
 	private String tweetID = "";
 	private String user = "";
-	private long timeStamp = 0;
+	private Long timeStamp = (long) 0;
 	private String replyToUser = "";
 	private String content = "";
 	
@@ -36,5 +38,10 @@ public class TweetStore {
 	}
 	public String getContent() {
 		return content;
+	}
+	@Override
+	public int compareTo(TweetStore o) {
+		// TODO Auto-generated method stub
+		return (int) (o.timeStamp - this.timeStamp);
 	}
 }

@@ -2,6 +2,7 @@ package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,8 +14,10 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.RequestDispatcher;
 
 import uk.co.ross_warren.litter.Utils.StringSplitter;
+import uk.co.ross_warren.litter.connectors.TweetConnector;
 import uk.co.ross_warren.litter.connectors.UserConnector;
 import uk.co.ross_warren.litter.stores.FollowereeStore;
+import uk.co.ross_warren.litter.stores.TweetStore;
 import uk.co.ross_warren.litter.stores.UserStore;
 
 /**
@@ -155,7 +158,14 @@ public class User extends HttpServlet {
 				System.out.println("Follows: " + follow.getUsername());
 			}
 			session.setAttribute("followees", followeeList);
+			
 		}
+		request.setAttribute("Tweets", null);
+		TweetConnector connector = new TweetConnector();
+		List<TweetStore> tweets = connector.getTweets(Author.getUserName());
+		Collections.sort(tweets);
+		request.setAttribute("Tweets", tweets);
+		
 		System.out.println("Got Author "+Author.getName()+" : "+Format);
 		System.out.flush();
 		switch(Format){

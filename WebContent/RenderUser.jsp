@@ -139,8 +139,22 @@ scope="session"
 						
 					</form>
 					<% 
+					List<TweetStore> tweets = (List<TweetStore>)request.getAttribute("Tweets");
+					if (tweets != null && tweets.size() > 0)
+					{
+						for (TweetStore tweet: tweets)
+						{
+							%>
+							<p><%=tweet.getContent() %></p>
+							<%
+						}
+				
+						
+						
+					}
 				}
-				%></article>
+				%>
+				</article>
             </section>
        <%@ include file="footer.jsp" %>  
 		</section> <!-- Closing the #page section -->
