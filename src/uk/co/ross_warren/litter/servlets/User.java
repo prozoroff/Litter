@@ -163,8 +163,12 @@ public class User extends HttpServlet {
 		request.setAttribute("Tweets", null);
 		TweetConnector connector = new TweetConnector();
 		List<TweetStore> tweets = connector.getTweets(Author.getUserName());
-		Collections.sort(tweets);
+		if (tweets != null && tweets.size() > 0) Collections.sort(tweets);
 		request.setAttribute("Tweets", tweets);
+		request.setAttribute("AtReplies", null);
+		List<TweetStore> atReplies = connector.getAtReplies(Author.getUserName());
+		if (atReplies != null && atReplies.size() > 0) Collections.sort(atReplies);
+		request.setAttribute("AtReplies", atReplies);
 		
 		System.out.println("Got Author "+Author.getName()+" : "+Format);
 		System.out.flush();

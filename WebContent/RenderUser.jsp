@@ -37,7 +37,7 @@ scope="session"
     <body>	
     	<section id="page"> <!-- Defining the #page section with the section tag -->
             <header> <!-- Defining the header section of the page with the appropriate tag -->
-                <img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" />
+                <a href="/Litter/"><img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" /></a>
                 <hgroup>
                     <h1><a href="/Litter/" style="color: white;">Litter</a></h1>
                     <h3>Like Twitter but with liking!</h3>
@@ -134,10 +134,10 @@ scope="session"
 					%>
 					</p>
 					<div class="line"></div>  <!-- Dividing line -->  
+					<table>
+					<tr>
+					<td>
 					<h2><%= displayUser.getUserName() %>'s Timeline</h2>
-					<form>
-						
-					</form>
 					<% 
 					List<TweetStore> tweets = (List<TweetStore>)request.getAttribute("Tweets");
 					if (tweets != null && tweets.size() > 0)
@@ -146,19 +146,44 @@ scope="session"
 						{
 							%>
 							<h4><%= tweet.getUser() %></h4>
+							<p>
 							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
 							%>
-							<p>To <%= tweet.getReplyToUser() %>: 
-							<% } else {%>
-							<p>
-							<%} %>
-							<%= tweet.getContent() %></p>
+							To <%= tweet.getReplyToUser() %>: 
+							<% } %>
+							<%= tweet.getContent() %>
+							</p>
 							<p>Likes: <%= tweet.getLikes() %></p>
 							<%
 						}	
 					}
-				}
 				%>
+				</td>
+				<td>
+					<h2><%= displayUser.getUserName() %>'s Mentions</h2>
+					<% 
+					List<TweetStore> atReplies = (List<TweetStore>)request.getAttribute("AtReplies");
+					if (atReplies != null && atReplies.size() > 0)
+					{
+						for (TweetStore tweet: atReplies)
+						{
+							%>
+							<h4><%= tweet.getUser() %></h4>
+							<p>
+							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+							%>
+							To <%= tweet.getReplyToUser() %>: 
+							<% } %>
+							<%= tweet.getContent() %>
+							</p>
+							<p>Likes: <%= tweet.getLikes() %></p>
+							<%
+						}	
+					}
+					}
+				%>
+				</tr>
+				</table>
 				</article>
             </section>
        <%@ include file="footer.jsp" %>  
@@ -172,9 +197,12 @@ scope="session"
         <script src="../script.js"></script>
         
         <script>
-        $(window).load(function(){  
+        $(window).load(function() {  
         	$("#follow").text("<%= follow %>");
        	});  
+        
+        </script>
+        <script>
         
         $("#follow").click(function () {
         	$.ajax({

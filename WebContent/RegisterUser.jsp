@@ -54,7 +54,7 @@
     <body>	
     	<section id="page"> <!-- Defining the #page section with the section tag -->
             <header> <!-- Defining the header section of the page with the appropriate tag -->
-                <img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" />
+                <a href="/Litter/"><img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" /></a>
                 <hgroup>
                     <h1>Litter</h1>
                     <h3>Like Twitter but with liking!</h3>
@@ -88,8 +88,7 @@
 						<input style="background-color: white;" type="submit"  value="Add Yourself">
 						<input type="HIDDEN" name="process" value="true">
 					</form>
-
-</article>
+				</article>
             </section>
         <%@ include file="footer.jsp" %>  
 		</section> <!-- Closing the #page section -->
@@ -103,7 +102,7 @@
 
 <%!
     // Define error messages
-    java.util.Map errorMap = new java.util.HashMap();
+    java.util.Map<Integer, String> errorMap = new java.util.HashMap<Integer, String>();
     public void jspInit() {
         errorMap.put(ValidationStore.ERR_NAME, "Name field is empty");
         errorMap.put(ValidationStore.ERR_USERNAME, "Username is empty");

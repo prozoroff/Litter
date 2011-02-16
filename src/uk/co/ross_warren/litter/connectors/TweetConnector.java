@@ -41,6 +41,10 @@ public class TweetConnector {
 			Long now = System.currentTimeMillis();
 			store.setTweetID(store.getUser() + now);
 			String time = now.toString();
+			if (store.getReplyToUser() == null)
+			{
+				store.setReplyToUser("");
+			}
 			mutator.addInsertion(store.getUser(), "UserTweets", HFactory.createStringColumn(store.getTweetID(), time));
 			mutator.execute();
 			mutator = HFactory.createMutator(ko,se);
@@ -50,7 +54,7 @@ public class TweetConnector {
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("timestamp", time));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("likes", "0"));
 			mutator.execute();
-			if (store.getReplyToUser() != null && !store.getReplyToUser().equals(""))
+			if (!store.getReplyToUser().equals(""))
 			{
 				mutator.addInsertion(store.getReplyToUser(), "AtReplies", HFactory.createStringColumn(store.getTweetID(), time));
 				mutator.execute();
