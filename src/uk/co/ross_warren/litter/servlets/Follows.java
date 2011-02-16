@@ -50,7 +50,8 @@ public class Follows extends HttpServlet {
 			case 3:
 				if (FormatsMap.containsKey(args[2])) {
 					Integer IFormat= (Integer)FormatsMap.get(args[2]);
-					UserStore lc = (UserStore)request.getAttribute("User");
+					HttpSession session=request.getSession();
+					UserStore lc = (UserStore)session.getAttribute("User");
 					if (lc != null && lc.isloggedIn() == true)
 					{
 						switch((int)IFormat.intValue()){

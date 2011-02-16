@@ -24,3 +24,7 @@ GET
 
 POST
 /[username] - follow username specified.
+
+--Follows--
+GET
+/[username]/json - return users who the user follows formatted as Json
