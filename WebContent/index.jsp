@@ -78,19 +78,7 @@ scope="session"
 						<textarea style="background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
 						<input style="background-color: white;" type="submit"  value="Tweet">
 					</form>
-					<% List<TweetStore> tweets = (List<TweetStore>)request.getAttribute("Tweets");
-					if (tweets != null && tweets.size() > 0)
-					{
-						for (TweetStore tweet: tweets)
-						{
-							%>
-							<p><%=tweet.getContent() %></p>
-							<%
-						}
-					}
-						
-						
-						%>
+					
                 </article>
                 <% } %>
             </section>

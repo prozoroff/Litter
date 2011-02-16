@@ -33,6 +33,17 @@
   </servlet-mapping>
   <servlet>
     <description></description>
+    <display-name>Follows</display-name>
+    <servlet-name>Follows</servlet-name>
+    <servlet-class>uk.co.ross_warren.litter.servlets.Follows</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Follows</servlet-name>
+    <url-pattern>/Follows</url-pattern>
+    <url-pattern>/Follows/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
     <display-name>RenderJson</display-name>
     <servlet-name>RenderJson</servlet-name>
     <servlet-class>uk.co.ross_warren.litter.servlets.RenderJson</servlet-class>
