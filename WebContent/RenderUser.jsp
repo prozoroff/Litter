@@ -134,7 +134,7 @@ scope="session"
 					%>
 					</p>
 					<div class="line"></div>  <!-- Dividing line -->  
-					<h2>Posts by <%= displayUser.getUserName() %></h2>
+					<h2><%= displayUser.getUserName() %>'s Timeline</h2>
 					<form>
 						
 					</form>
@@ -145,12 +145,12 @@ scope="session"
 						for (TweetStore tweet: tweets)
 						{
 							%>
-							<p><%=tweet.getContent() %></p>
+							<h4><%= tweet.getUser() %></h4>
+							<%if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+							%><p>To <%= tweet.getReplyToUser() %>: <% } else {%>
+							<p><%} %><%= tweet.getContent() %></p>
 							<%
-						}
-				
-						
-						
+						}	
 					}
 				}
 				%>
