@@ -103,6 +103,65 @@ public class TweetConnector {
 		return result;
 	}
 	
+	public List<TweetStore> getAtReplies(String username)
+	{
+		List<TweetStore> list = new LinkedList<TweetStore>();
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Can't Connect to Cassandra. Check she is OK?");
+			return null;
+		}
+		
+		try 
+		{
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+			ko.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			q.setColumnFamily("AtReplies")
+			.setKey(username)
+			.setRange("", "", false, 100);
+			QueryResult<ColumnSlice<String, String>> r = q.execute();
+			ColumnSlice<String, String> slice = r.get();
+			List<HColumn<String, String>> slices = slice.getColumns();
+			for (HColumn<String, String> column: slices)
+			{
+				TweetStore store = new TweetStore();
+				store.setTweetID(column.getName());
+				if (column.getValue() != null && !column.getValue().equals(""))
+				{
+					store.setTimeStamp(Long.parseLong(column.getValue()));
+				}
+				try {
+					TweetStore store2 = getTweet(column.getName());
+					store.setUser(store2.getUser());
+					store.setReplyToUser(store2.getReplyToUser());
+					store.setContent(store2.getContent());
+					store.setLikes(store2.getLikes());
+				}
+				catch (Exception e)
+				{
+					System.out.println("Tweet Error!" + e);
+				}
+				list.add(store);
+			}
+			return list;
+		}
+		catch (Exception e)
+		{
+			System.out.println("Getting at reply tweets failed miserably. Oh dear" + e);
+			return null;
+		}
+	}
+	
+	public Boolean checkLike(String username, int tweetID)
+	{
+		return null;
+	}
+	
 	public List<TweetStore> getTweets(String username)
 	{
 		List<TweetStore> list = new LinkedList<TweetStore>();
