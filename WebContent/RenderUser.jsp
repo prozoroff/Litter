@@ -153,7 +153,7 @@ scope="session"
 							<% } %>
 							</h4>
 							<p><%= tweet.getContent() %></p>
-							<p>Likes: <%= tweet.getLikes() %></p>
+							<p><a class="like" id="<%=tweet.getTweetID() %>">Likes: <%= tweet.getLikes() %></a></p>
 							<%
 						}	
 					}
@@ -219,7 +219,7 @@ scope="session"
  		});
         
         $(".like").click(function () {
-        	var url = "/Litter/Like/" + ($('this').id);
+        	var url = "/Litter/Like/" + (this.id);
         	$.ajax({
         		aysnc: true,
    				type: "POST",

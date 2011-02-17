@@ -61,6 +61,8 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		session.setAttribute("ReturnPoint", request.getHeader("referer"));
 		String sRealm="http://"+request.getServerName()+":"+request.getServerPort()+"/";
 		System.out.println("srealm: "+sRealm);
 		manager.setRealm(sRealm);
@@ -81,7 +83,7 @@ public class Login extends HttpServlet {
 	        		checkNonce(request.getParameter("openid.response_nonce"));
 	        	}catch (Exception et){
 	        		System.out.println("Check Nonce failed "+et);
-	        		response.sendRedirect("/Litter/Login.jsp");
+	        		response.sendRedirect("/Litter/");
 	        		return;
 	        	}
 	            // get authentication:
@@ -89,7 +91,7 @@ public class Login extends HttpServlet {
 	            String alias = (String) request.getSession().getAttribute(ATTR_ALIAS);
 	            Authentication authentication = manager.getAuthentication(request, mac_key, alias);
 	            if (authentication==null) {
-	            	response.sendRedirect("/Litter/Login.jsp");
+	            	response.sendRedirect("/Litter/");
 	            }
 	            response.setContentType("text/html; charset=UTF-8");
 	            showAuthentication(request,response, authentication);
@@ -150,12 +152,12 @@ public class Login extends HttpServlet {
 			System.out.println("Login: "+lc.getEmail());
 			//System.out.println(request.getContextPath());
 			
+			String returnTo = (String)session.getAttribute("ReturnPoint");
 			try{
-				response.sendRedirect("/Litter/User/" + lc.getUserName());
+				response.sendRedirect(returnTo);
 			}catch(Exception et){
 				System.out.println("Can't forward in login servlet: "+et);
 			}		
-			System.out.println(auth.getFullname());
 		}
 		
     }

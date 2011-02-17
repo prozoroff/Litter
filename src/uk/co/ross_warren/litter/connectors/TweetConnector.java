@@ -10,7 +10,6 @@ import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
 import me.prettyprint.hector.api.beans.OrderedRows;
-import me.prettyprint.hector.api.beans.Row;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.QueryResult;
@@ -147,7 +146,7 @@ public class TweetConnector {
 			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
 			q.setColumnFamily("AllTweets")
 			.setKey(tweetID)
-			.setColumnNames("user", "replyToUser", "content", "timestamp");
+			.setColumnNames("user", "replyToUser", "content", "timestamp", "likes");
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			ColumnSlice<String, String> slice = r.get();
 			result.setReplyToUser(slice.getColumnByName("replyToUser").getValue());
@@ -160,10 +159,11 @@ public class TweetConnector {
 			result.setUser(slice.getColumnByName("user").getValue());
 			result.setContent(slice.getColumnByName("content").getValue());
 			try {
-			result.setLikes(Integer.parseInt(slice.getColumnByName("likes").getValue()));
+				result.setLikes(Integer.parseInt(slice.getColumnByName("likes").getValue()));
 			} catch (Exception e)
 			{
 				result.setLikes(0);
+				System.out.println("getting likes count failed" + e);
 			}
 		}
 		catch (Exception e)
@@ -244,7 +244,6 @@ public class TweetConnector {
 			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
 			ko.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			
 			RangeSlicesQuery<String, String, String> rangeSlicesQuery =
 				HFactory.createRangeSlicesQuery(ko, se, se, se);
 				rangeSlicesQuery.setColumnFamily("Likes");
@@ -253,11 +252,11 @@ public class TweetConnector {
 				QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
 			OrderedRows<String, String, String> rows = result.get();
 			
-			if (rows != null && rows.getByKey(username) != null && rows.getByKey(username).getColumnSlice() != null && rows.getByKey(username).getColumnSlice().getColumns() != null)
+			if (rows != null && rows.getByKey(username) != null && rows.getByKey(username).getColumnSlice().getColumns() != null)
 			{
-				if (rows.getByKey(username).getColumnSlice().getColumns().isEmpty() == false) return false;
+				if (rows.getByKey(username).getColumnSlice().getColumns().isEmpty() == false) return true;
 			}
-			return true;
+			return false;
 		} catch (Exception e)
 		{
 			System.out.println("Couldn't check if the tweet is liked :(" + e);
@@ -285,7 +284,7 @@ public class TweetConnector {
 				StringSerializer se = StringSerializer.get();
 				Mutator<String> mutator = HFactory.createMutator(ko,se);
 				Long now = System.currentTimeMillis();
-				mutator.addInsertion(username, "Likes", HFactory.createStringColumn(tweetID.toString(), now.toString()));
+				mutator.addInsertion(username, "Likes", HFactory.createStringColumn(tweetID, now.toString()));
 				mutator.execute();
 				TweetStore tweet = getTweet(tweetID);
 				try

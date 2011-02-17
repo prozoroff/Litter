@@ -40,6 +40,7 @@ public class Like extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
 		if (args.length == 3)
@@ -48,6 +49,10 @@ public class Like extends HttpServlet {
 			String tweetID = args[2];
 			HttpSession session=request.getSession();
 			UserStore lc =(UserStore)session.getAttribute("User");
+			if (lc == null || lc.isloggedIn() == false)
+			{
+				return;
+			}
 			TweetConnector connect = new TweetConnector();
 			try
 			{
