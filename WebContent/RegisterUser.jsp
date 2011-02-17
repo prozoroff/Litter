@@ -62,7 +62,7 @@
                 <nav class="clear"> <!-- The nav link semantically marks your main site navigation -->
                     <ul>
                     	<li><a href="../Litter">Home</a>
-                   			<li><a href="Login/logout">Logout</a></li>
+                  		<li><a href="Logout">Logout</a></li>
                     </ul>
                 </nav>
             </header>

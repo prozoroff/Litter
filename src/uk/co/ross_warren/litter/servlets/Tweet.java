@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -90,10 +91,24 @@ public class Tweet extends HttpServlet {
 		UserStore lc =(UserStore)session.getAttribute("User");
 		if (lc != null && lc.isloggedIn() == true)
 		{
+			String content = request.getParameter("Content");
+			StringTokenizer tokens = new StringTokenizer(content);
+			tweet.setReplyToUser("");
+			while (tokens.hasMoreElements())
+			{
+				String token = (String) tokens.nextElement();
+				if(token.charAt(0) == '@')
+				{
+					token.trim();
+					token = token.substring(1, token.length());
+					System.out.println(token);
+					tweet.setReplyToUser(token);
+				}
+			}
 			tweet.setUser(lc.getUserName());
 			tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));
 			tweet.setContent(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Content")));
-			tweet.setReplyToUser(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("ReplyToUser")));
+			//tweet.setReplyToUser(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("ReplyToUser")));
 			try {
 				TweetConnector connector = new TweetConnector();
 				connector.addTweet(tweet);
@@ -101,6 +116,8 @@ public class Tweet extends HttpServlet {
 			{
 				System.out.println("There was curious error in tweeting the tweet." + e);
 			}
+			
+			response.sendRedirect("/Litter/");
 		}
 	}
 	

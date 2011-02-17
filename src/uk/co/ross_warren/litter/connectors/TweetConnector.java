@@ -1,5 +1,6 @@
 package uk.co.ross_warren.litter.connectors;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import me.prettyprint.cassandra.serializers.StringSerializer;
@@ -8,18 +9,49 @@ import me.prettyprint.hector.api.ConsistencyLevelPolicy;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
 import me.prettyprint.hector.api.beans.HColumn;
+import me.prettyprint.hector.api.beans.OrderedRows;
+import me.prettyprint.hector.api.beans.Row;
 import me.prettyprint.hector.api.factory.HFactory;
 import me.prettyprint.hector.api.mutation.Mutator;
 import me.prettyprint.hector.api.query.QueryResult;
+import me.prettyprint.hector.api.query.RangeSlicesQuery;
 import me.prettyprint.hector.api.query.SliceQuery;
 import uk.co.ross_warren.litter.Utils.CassandraHosts;
 import uk.co.ross_warren.litter.Utils.MyConsistancyLevel;
+import uk.co.ross_warren.litter.stores.FollowereeStore;
 import uk.co.ross_warren.litter.stores.TweetStore;
 
 public class TweetConnector {
 	public TweetConnector()
 	{
 		
+	}
+	
+	public void updateTweet(TweetStore store)
+	{
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Can't Connect to Cassandra. Check she is OK?");
+			return;
+		}
+		
+		try
+		{
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+			ko.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			Integer likes = store.getLikes();
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("likes", likes.toString()));
+			mutator.execute();
+		}
+		catch (Exception e)
+		{
+			System.out.println("Adding the tweet totally failed :(" + e);
+		}
 	}
 	
 	public void addTweet(TweetStore store)
@@ -64,6 +96,36 @@ public class TweetConnector {
 		{
 			System.out.println("Adding the tweet totally failed :(" + e);
 		}
+	}
+	
+	public List<TweetStore> GetFeed(String username)
+	{
+		UserConnector userConnector = new UserConnector();
+		List<FollowereeStore> followees= userConnector.getFollowees(username);
+		if (followees == null || followees.size() == 0) return null;
+		List<TweetStore> tweets = new LinkedList<TweetStore>();
+		for (FollowereeStore store: followees)
+		{
+			try
+			{
+				tweets.addAll(getTweets(store.getUsername()));
+			}
+			catch (Exception e)
+			{
+				System.out.println("oops" + e);
+			}
+		}
+		try
+		{
+			tweets.addAll(getAtReplies(username));
+			tweets.addAll(getTweets(username));
+		}
+		catch (Exception e)
+		{
+			System.out.println("oops" + e);
+		}
+		if (tweets != null && tweets.size() > 0) Collections.sort(tweets);
+		return tweets;
 	}
 	
 	public TweetStore getTweet(String tweetID)
@@ -166,16 +228,82 @@ public class TweetConnector {
 		}
 	}
 	
-	public Boolean checkLike(String username, int tweetID)
+	public Boolean checkLike(String username, String tweetID)
 	{
-		return null;
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Can't Connect to Cassandra. Check she is OK?");
+			return null;
+		}
+		
+		try
+		{
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+			ko.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			
+			RangeSlicesQuery<String, String, String> rangeSlicesQuery =
+				HFactory.createRangeSlicesQuery(ko, se, se, se);
+				rangeSlicesQuery.setColumnFamily("Likes");
+				rangeSlicesQuery.setKeys(username, username);
+				rangeSlicesQuery.setRange(tweetID, tweetID, false, 999);
+				QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
+			OrderedRows<String, String, String> rows = result.get();
+			
+			if (rows != null && rows.getByKey(username) != null && rows.getByKey(username).getColumnSlice() != null && rows.getByKey(username).getColumnSlice().getColumns() != null)
+			{
+				if (rows.getByKey(username).getColumnSlice().getColumns().isEmpty() == false) return false;
+			}
+			return true;
+		} catch (Exception e)
+		{
+			System.out.println("Couldn't check if the tweet is liked :(" + e);
+			return false;
+		}
 	}
 	
-	public void like(String username, int tweetID)
+	public void like(String username, String tweetID)
 	{
 		if (checkLike(username, tweetID) == false)
 		{
+			Cluster c; //V2
+			try{
+				c=CassandraHosts.getCluster();
+			}catch (Exception et){
+				System.out.println("Can't Connect to Cassandra. Check she is OK?");
+				return;
+			}
 			
+			try
+			{
+				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+				ko.setConsistencyLevelPolicy(mcl);
+				StringSerializer se = StringSerializer.get();
+				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				Long now = System.currentTimeMillis();
+				mutator.addInsertion(username, "Likes", HFactory.createStringColumn(tweetID.toString(), now.toString()));
+				mutator.execute();
+				TweetStore tweet = getTweet(tweetID);
+				try
+				{
+					tweet.setLikes(tweet.getLikes() + 1);
+				} catch (Exception e)
+				{
+					tweet.setLikes(1);
+				}
+				updateTweet(tweet);
+			}
+			catch (Exception e)
+			{
+				System.out.println("Errors!" + e);
+			}
+			
+		} else {
+			System.out.println("Already liked");
 		}
 	}
 	

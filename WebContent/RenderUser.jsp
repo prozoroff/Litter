@@ -55,7 +55,7 @@ scope="session"
                     		} else {
                     			%>
                     			<li><a href="../User/<%=User.getUserName() %>">Your Profile</a></li>
-                    			<li><a href="../Login/logout">Logout</a></li>
+                    			<li><a href="../Logout">Logout</a></li>
                     			<%
                     		}
                     	%>
@@ -176,13 +176,9 @@ scope="session"
 							<% } %>
 							</h4>
 							<p>
-							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-							%>
-							To <%= tweet.getReplyToUser() %>: 
-							<% } %>
 							<%= tweet.getContent() %>
 							</p>
-							<p>Likes: <%= tweet.getLikes() %></p>
+							<p><a class="like" id="<%=tweet.getTweetID() %>">Likes: <%= tweet.getLikes() %></a></p>
 							<%
 						}	
 					}
@@ -215,6 +211,19 @@ scope="session"
         		aysnc: true,
    				type: "POST",
    				url: "/Litter/Follow/<%= displayUser.getUserName() %>",
+   				dataType: "text",
+  				success: function(msg){
+  					location.reload(); 
+   				}
+        	});
+ 		});
+        
+        $(".like").click(function () {
+        	var url = "/Litter/Like/" + ($('this').id);
+        	$.ajax({
+        		aysnc: true,
+   				type: "POST",
+   				url: url,
    				dataType: "text",
   				success: function(msg){
   					location.reload(); 

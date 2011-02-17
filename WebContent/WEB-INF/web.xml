@@ -66,6 +66,17 @@
   </servlet-mapping>
   <servlet>
     <description></description>
+    <display-name>Logout</display-name>
+    <servlet-name>Logout</servlet-name>
+    <servlet-class>uk.co.ross_warren.litter.servlets.Logout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Logout</servlet-name>
+    <url-pattern>/Logout</url-pattern>
+    <url-pattern>/Logout/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
     <display-name>Tweet</display-name>
     <servlet-name>Tweet</servlet-name>
     <servlet-class>uk.co.ross_warren.litter.servlets.Tweet</servlet-class>
@@ -75,6 +86,17 @@
     <url-pattern>/Tweet</url-pattern>
     <url-pattern>/Tweet/*</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>Like</display-name>
+    <servlet-name>Like</servlet-name>
+    <servlet-class>uk.co.ross_warren.litter.servlets.Like</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Like</servlet-name>
+    <url-pattern>/Like</url-pattern>
+    <url-pattern>/Like/*</url-pattern>
+    </servlet-mapping>
   <error-page>
     <error-code>404</error-code>
     <location>/404.jsp</location>

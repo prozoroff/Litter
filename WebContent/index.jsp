@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
     <%@ page import="uk.co.ross_warren.litter.stores.*" %>
+    <%@ page import="uk.co.ross_warren.litter.connectors.*" %>
 <%@ page import="java.util.*" %>
     <jsp:useBean id="User"
 class="uk.co.ross_warren.litter.stores.UserStore"
@@ -52,7 +53,7 @@ scope="session"
                     		} else {
                     			%>
                     			<li><a href="User/<%=User.getUserName() %>">Your Profile</a></li>
-                    			<li><a href="Login/logout">Logout</a></li>
+                    			<li><a href="Logout">Logout</a></li>
                     			<%
                     		}
                     	%>
@@ -86,11 +87,30 @@ scope="session"
 						<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
 						</td>
 						</tr>
-						
 						</table>
-						<textarea name="ReplyToUser"></textarea>
 					</form>
+					<%
+						TweetConnector connect = new TweetConnector();
+						List<TweetStore> tweets= connect.GetFeed(User.getUserName());
+						if (tweets != null && tweets.size() > 0)
+						{
+							for (TweetStore tweet: tweets)
+							{
+								%>
+								<h4><%= tweet.getUser() %>
+								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+								%>
+								 to 
+								<%= tweet.getReplyToUser() %>
+								<% } %>
+								</h4>
+								<p><%= tweet.getContent() %></p>
+								<p>Likes: <%= tweet.getLikes() %></p>
+								<%
+							}	
+						}
 					
+					%>
                 </article>
                 <% } %>
             </section>

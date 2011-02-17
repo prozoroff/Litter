@@ -106,19 +106,6 @@ public class Login extends HttpServlet {
 	            System.out.println(url);
 	            response.sendRedirect(url);
 	        }
-	        else if (op.equals("logout"))
-	        {
-	        	request.getSession().invalidate();
-	        	System.out.println("Logged out.");
-	        	try
-	        	{
-	        		response.sendRedirect(request.getHeader("referer"));
-	        	} catch (Exception et)
-	        	{
-	        		System.out.println("couldn't return to page");
-	        	}
-	        	
-	        }
 	        else {
 	            throw new ServletException("Unsupported OP: " + op);
 	        }
