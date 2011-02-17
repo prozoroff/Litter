@@ -134,9 +134,9 @@ scope="session"
 					%>
 					</p>
 					<div class="line"></div>  <!-- Dividing line -->  
-					<table>
+					<table style="width: 100%">
 					<tr>
-					<td>
+					<td style="width: 50%; vertical-align: top">
 					<h2><%= displayUser.getUserName() %>'s Timeline</h2>
 					<% 
 					List<TweetStore> tweets = (List<TweetStore>)request.getAttribute("Tweets");
@@ -145,21 +145,21 @@ scope="session"
 						for (TweetStore tweet: tweets)
 						{
 							%>
-							<h4><%= tweet.getUser() %></h4>
-							<p>
+							<h4><%= tweet.getUser() %>
 							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
 							%>
-							To <%= tweet.getReplyToUser() %>: 
+							 to 
+							<%= tweet.getReplyToUser() %>
 							<% } %>
-							<%= tweet.getContent() %>
-							</p>
+							</h4>
+							<p><%= tweet.getContent() %></p>
 							<p>Likes: <%= tweet.getLikes() %></p>
 							<%
 						}	
 					}
 				%>
 				</td>
-				<td>
+				<td style="width: 50%; vertical-align: top">
 					<h2><%= displayUser.getUserName() %>'s Mentions</h2>
 					<% 
 					List<TweetStore> atReplies = (List<TweetStore>)request.getAttribute("AtReplies");
@@ -168,7 +168,13 @@ scope="session"
 						for (TweetStore tweet: atReplies)
 						{
 							%>
-							<h4><%= tweet.getUser() %></h4>
+							<h4><%= tweet.getUser() %>
+							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+							%>
+							 to 
+							<%= tweet.getReplyToUser() %>
+							<% } %>
+							</h4>
 							<p>
 							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
 							%>

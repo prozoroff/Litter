@@ -86,7 +86,9 @@ scope="session"
 						<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
 						</td>
 						</tr>
+						
 						</table>
+						<textarea name="ReplyToUser"></textarea>
 					</form>
 					
                 </article>
