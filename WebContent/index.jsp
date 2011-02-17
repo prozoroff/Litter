@@ -104,11 +104,21 @@ scope="session"
 								<%= tweet.getReplyToUser() %>
 								<% } %>
 								</h4>
-								<p><%= tweet.getContent() %></p>
-								<p>Likes: <%= tweet.getLikes() %></p>
+								<% 
+							TweetConnector connector = new TweetConnector();
+							String like = "like";
+							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "unlike";
+							
+							%>
+							</h4>
+							<p>
+							<%= tweet.getContent() %>
+							</p>
+							<p>Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
 								<%
 							}	
-						}
+                }
+                
 					
 					%>
                 </article>
@@ -122,5 +132,21 @@ scope="session"
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
         <script src="jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="script.js"></script>
+        
+        <script>
+        
+                $(".like").click(function () {
+        	var url = "/Litter/Like/" + (this.id);
+        	$.ajax({
+        		aysnc: true,
+   				type: "POST",
+   				url: url,
+   				dataType: "text",
+  				success: function(msg){
+  					location.reload(); 
+   				}
+        	});
+ 		}); 
+                </script>
     </body>
 </html>
