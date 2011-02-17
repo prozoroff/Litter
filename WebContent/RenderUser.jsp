@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ page import="uk.co.ross_warren.litter.stores.*" %>
+<%@ page import="uk.co.ross_warren.litter.connectors.*" %>
 <%@ page import="java.util.*" %>
     <jsp:useBean id="User"
 class="uk.co.ross_warren.litter.stores.UserStore"
@@ -150,10 +151,15 @@ scope="session"
 							%>
 							 to 
 							<%= tweet.getReplyToUser() %>
-							<% } %>
+							<% }
+							TweetConnector connector = new TweetConnector();
+							String like = "like";
+							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "unlike";
+							
+							%>
 							</h4>
 							<p><%= tweet.getContent() %></p>
-							<p><a class="like" id="<%=tweet.getTweetID() %>">Likes: <%= tweet.getLikes() %></a></p>
+							<p>Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
 							<%
 						}	
 					}
@@ -173,12 +179,17 @@ scope="session"
 							%>
 							 to 
 							<%= tweet.getReplyToUser() %>
-							<% } %>
+							<% }
+							TweetConnector connector = new TweetConnector();
+							String like = "like";
+							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "unlike";
+							
+							%>
 							</h4>
 							<p>
 							<%= tweet.getContent() %>
 							</p>
-							<p><a class="like" id="<%=tweet.getTweetID() %>">Likes: <%= tweet.getLikes() %></a></p>
+							<p>Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
 							<%
 						}	
 					}
@@ -229,8 +240,7 @@ scope="session"
   					location.reload(); 
    				}
         	});
- 		});
-       
+ 		});       
         
         </script>
         <script>

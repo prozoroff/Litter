@@ -230,6 +230,7 @@ public class TweetConnector {
 	
 	public Boolean checkLike(String username, String tweetID)
 	{
+		System.out.println("Checking if " + username + " likes " + tweetID);
 		Cluster c; //V2
 		try{
 			c=CassandraHosts.getCluster();
