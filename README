@@ -41,4 +41,8 @@ POST
 --Tweet--
 
 GET
-[[note to self - finish writing after some tasty chicken]]
+/json returns tweets formatted as json for logged in user
+/[username]/json returns tweets formatted as json for specified user
+
+POST
+adds a tweet for the logged in user
