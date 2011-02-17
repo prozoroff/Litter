@@ -12,7 +12,10 @@ No arguments - adds the user in the session to the database. (if no user is in t
 GET
 No arguments - check sign on result from Google or Yahoo
 /Google or /Yahoo - redirect to Google or Yahoo sign on page:
-/logout - Log out the current User.
+
+Logout
+GET
+Invalidates the session with the effect of logging out the user.
 
 -- RenderJson --
 GET
@@ -20,11 +23,22 @@ No arguments - If an object is passed in by the request attribute "Data" it will
 
 -- Follow --
 GET
-/[username]/json - return followers formatted as Json
+/json return followers formatted as Json for logged in user
+/[username]/json - return followers formatted as Json for specified user
 
 POST
-/[username] - follow username specified.
+/[username] - adds the user specified to those who the logged in user follows (or unfollows if already followed)
 
---Follows--
+-- Follows --
 GET
-/[username]/json - return users who the user follows formatted as Json
+/json - return those who the user follows formatted as Json for logged in user
+/[username]/json - return those who the user follows formatted as Json
+
+--Like--
+POST
+/[tweetID] - "likes" the tweet for the user currently logged in
+
+--Tweet--
+
+GET
+[[note to self - finish writing after some tasty chicken]]
