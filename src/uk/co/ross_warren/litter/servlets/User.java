@@ -272,5 +272,13 @@ public class User extends HttpServlet {
 	 */
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+		UserStore lc = (UserStore)session.getAttribute("User");
+		String username = lc.getUserName();
+		String email = lc.getEmail();
+		UserConnector connect = new UserConnector();
+		List<FollowereeStore> followers = connect.getFollowers(username);
+		List<FollowereeStore> followees = connect.getFollowees(username);
+		connect.deleteUser(username, email, followers, followees);
 	}
 }

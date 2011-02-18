@@ -118,6 +118,53 @@ public class UserConnector {
 		}
 	}
 
+	public void deleteUser(String username, String email, List<FollowereeStore> followers, List<FollowereeStore> followees)
+	{
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Couldn't connect to Cassandra. Maybe she is ignoring you. Probably best just to apologise. "+et);
+			return;
+		}
+		try
+		{
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+			ko.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			mutator.delete(username, "Likes", null, se);
+			mutator.execute();
+			mutator.delete(username, "UserTweets", null, se);
+			mutator.execute();
+			mutator.delete(username, "AtReplies", null, se);
+			mutator.execute();
+			mutator.delete(username, "Followers", null, se);
+			mutator.execute();
+			mutator.delete(username, "Followees", null, se);
+			mutator.execute();
+			mutator.delete(username, "Username", null, se);
+			mutator.execute();
+			mutator.delete(email, "User", null, se);
+			mutator.execute();
+			
+			for (FollowereeStore store: followers)
+			{
+				removeFollowee(store.getUsername(), username);
+			}
+			for (FollowereeStore store: followees)
+			{
+				removeFollower(username, store.getUsername());
+			}
+			
+		} catch(Exception e)
+		{
+			System.out.println("Error in deleting " + e);
+		}
+		
+	}
+	
 	public boolean addUser(UserStore Author){
 		Cluster c; //V2
 		try{
