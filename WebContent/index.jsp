@@ -24,6 +24,25 @@ scope="session"
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
         <script src="js/jquery-1.4.4.min.js"></script>
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
+         <script language="javascript" src="Jquery.js"></script>
+		<script language="javascript">
+		function limitChars(textid, limit, infodiv)
+		{
+			var text = $('#'+textid).val(); 
+ 			var textlength = text.length;
+			if(textlength > limit)
+			{
+				$('#' + infodiv).html('You cannot write more then '+limit+' characters!');
+				$('#'+textid).val(text.substr(0,limit));
+				return false;
+			}
+			else
+			{
+				$('#' + infodiv).html('You have '+ (limit - textlength) +' characters left.');
+				return true;
+			}
+		}
+ 		</script>
         <!-- Internet Explorer HTML5 enabling code: -->       
         <!--[if IE]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>       
@@ -77,16 +96,21 @@ scope="session"
                     <h2>Welcome back <%=User.getUserName() %></h2>
 					<div class="line"></div>  <!-- Dividing line -->
 					<form style="width: 80%" action='/Litter/Tweet' method="POST">
-						<!-- <label for="ReplyToUser">At Username:</label> 
-						<input style="background-color: white;" type="text" name="ReplyToUser" placeholder="Username" />
-						-->
 						<table style="width: 100%">
 						<tr>
 						<td>
-						<textarea style="background: none; width: 90%; min-height: 42px; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
+						<textarea id = "comment" style="background: none; width: 90%; min-height: 42px; font-size: 1em; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
+						<p id="charlimitinfo">
+						<script>
+						$(function(){
+						$('#comment').keyup(function(){
+							limitChars('comment', 140, 'charlimitinfo');
+							});
+						});
+						</script>
 						</td>
-						<td>
-						<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
+						<td style="vertical-align: top;">
+							<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
 						</td>
 						</tr>
 						</table>

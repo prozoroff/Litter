@@ -280,6 +280,7 @@ input, textarea {
 		
 		textarea {
 				min-height:200px;
+				resize: none;
 		}
  
 		input:focus, textarea:focus {
