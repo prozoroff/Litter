@@ -85,6 +85,38 @@ public class UserConnector {
 			return null;
 		}
 	}
+	
+	public boolean updateUser(UserStore Author){
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Couldn't connect to Cassandra. Maybe she is ignoring you. Probably best just to apologise. "+et);
+			return false;
+		}
+		try{
+			if (this.getUserByUsername(Author.getUserName()) != null)
+			{
+				System.out.println("User " + Author.getUserName() + " exists, updating now.");
+				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+				ko.setConsistencyLevelPolicy(mcl);
+				StringSerializer se = StringSerializer.get();
+				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				mutator.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("name", Author.getName()))
+					.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("bio", Author.getBio()))
+					.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("avatarurl", Author.getAvatarUrl()));
+				mutator.execute();			
+			} else {
+				System.out.println("Username not found");
+				return false;
+			}
+			return true;
+		}catch (Exception et){
+			System.out.println("Can't update the user :( ." + et);
+			return false;
+		}
+	}
 
 	public boolean addUser(UserStore Author){
 		Cluster c; //V2

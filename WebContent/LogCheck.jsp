@@ -3,14 +3,10 @@ class="uk.co.ross_warren.litter.stores.UserStore"
 scope="session"
 ></jsp:useBean>
 
-<jsp:useBean id="ReturnPoint"
-class="uk.co.ross_warren.litter.stores.ReturnStore"
-scope="session"
-></jsp:useBean>
 <%
 System.out.println("Called From "+request.getRequestURI());
 System.out.println("logcheck "+User.isloggedIn());
-ReturnPoint.setReturnTo(request.getRequestURI());
+//ReturnPoint.setReturnTo(request.getRequestURI());
 %>
 
 <%

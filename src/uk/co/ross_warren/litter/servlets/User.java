@@ -228,6 +228,32 @@ public class User extends HttpServlet {
 	 */
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		UserStore Author =new UserStore();
+		RequestDispatcher rd;
+		HttpSession session=request.getSession();
+		UserStore lc =(UserStore)session.getAttribute("User");
+		if (lc==null){
+			rd=request.getRequestDispatcher("RegisterUser.jsp");
+			rd.forward(request,response);
+		}
+		Author = lc;
+		Author.setName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Name")));
+		Author.setBio(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Bio")));
+		Author.setAvatar(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Avatar")));
+		UserConnector au = new UserConnector();
+		if (au.updateUser(Author)== true){
+			lc = Author;
+			lc.login(lc.getEmail());
+			session.setAttribute("User", lc);
+			try {
+				response.sendRedirect("User/" + lc.getUserName());
+			} catch (Exception et) {
+				System.out.println("Couldn't Forward to Show User");
+			}
+		}else{
+			rd=request.getRequestDispatcher("UpdateUser.jsp");
+			rd.forward(request,response);
+		}
 	}
 
 	/**
