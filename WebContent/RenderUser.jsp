@@ -21,6 +21,9 @@ scope="session"
     	<% UserStore displayUser = (UserStore)request.getAttribute("ViewUser"); %>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Litter - <%= displayUser.getUserName() %></title>
+        <script src="../js/jquery-1.4.4.min.js"></script>
+        <script src="../js/jquery-ui-1.8.9.custom.min.js"></script>
+        <script src="../js/JSON.js"></script>
         <link rel="stylesheet" type="text/css" href="../styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'> 
         <link type="text/css" href="../css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
@@ -146,20 +149,41 @@ scope="session"
 						for (TweetStore tweet: tweets)
 						{
 							%>
-							<h4><%= tweet.getUser() %>
-							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-							%>
-							 to 
-							<%= tweet.getReplyToUser() %>
-							<% }
-							TweetConnector connector = new TweetConnector();
-							String like = "like";
-							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "unlike";
+							<div class="tweet">
+							<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px" class="<%= tweet.getUser() %>" src="" align="left"/>
 							
+								<% 
+								
+							TweetConnector connector = new TweetConnector();
+							String like = "Like";
+							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "Unlike";
+							String username = tweet.getUser();
 							%>
-							</h4>
-							<p><%= tweet.getContent() %></p>
-							<p>Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
+							
+							<p>
+							<%= tweet.getContent() %>
+							</p>
+							<p><a href="/Litter/User/<%= username %>"><%= username %></a>
+								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+								%>
+								 to 
+								<a href="/Litter/User/<%= tweet.getReplyToUser() %>"><%= tweet.getReplyToUser() %></a>
+								<% } %>
+								
+							| Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
+							</div>
+							<script>
+					        	$(function() {
+					        		$.ajax({
+					        			url: '/Litter/User/<%= tweet.getUser() %>/json',
+					        			success: function(data) {
+					        				var obj = jQuery.parseJSON(data);
+					        				var avatarurl = data.AvatarURL;	
+					        				$('.<%= tweet.getUser() %>').attr('src', obj.AvatarUrl);
+					        			}
+					        		});					        		
+					        	});
+					        </script>
 							<%
 						}	
 					}
@@ -174,22 +198,41 @@ scope="session"
 						for (TweetStore tweet: atReplies)
 						{
 							%>
-							<h4><%= tweet.getUser() %>
-							<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-							%>
-							 to 
-							<%= tweet.getReplyToUser() %>
-							<% }
-							TweetConnector connector = new TweetConnector();
-							String like = "like";
-							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "unlike";
+							<div class="tweet">
+
+							<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px" class="<%= tweet.getUser() %>" src="" align="left"/>
 							
+								<% 
+							TweetConnector connector = new TweetConnector();
+							String like = "Like";
+							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "Unlike";
+							String username = tweet.getUser();
 							%>
-							</h4>
+							
 							<p>
 							<%= tweet.getContent() %>
 							</p>
-							<p>Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
+							<p><a href="/Litter/User/<%= username %>"><%= username %></a>
+								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+								%>
+								 to 
+								<a href="/Litter/User/<%= tweet.getReplyToUser() %>"><%= tweet.getReplyToUser() %></a>
+								<% } %>
+								
+							| Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
+							</div>
+							<script>
+					        	$(function() {
+					        		$.ajax({
+					        			url: '/Litter/User/<%= tweet.getUser() %>/json',
+					        			success: function(data) {
+					        				var obj = jQuery.parseJSON(data);
+					        				var avatarurl = data.AvatarURL;	
+					        				$('.<%= tweet.getUser() %>').attr('src', obj.AvatarUrl);
+					        			}
+					        		});					        		
+					        	});
+					        </script>
 							<%
 						}	
 					}
@@ -203,11 +246,12 @@ scope="session"
 		</section> <!-- Closing the #page section -->
         
         <!-- JavaScript Includes -->
-        <script src="../js/jquery-1.4.4.min.js"></script>
-        <script src="../js/jquery-ui-1.8.9.custom.min.js"></script>
+        
 		
         <script src="../jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="../script.js"></script>
+        
+        
         
         <script>
         $(window).load(function() {  
@@ -228,19 +272,22 @@ scope="session"
    				}
         	});
  		});
+        </script>
+        <script>
         
-        $(".like").click(function () {
-        	var url = "/Litter/Like/" + (this.id);
-        	$.ajax({
-        		aysnc: true,
-   				type: "POST",
-   				url: url,
-   				dataType: "text",
-  				success: function(msg){
-  					location.reload(); 
-   				}
-        	});
- 		});       
+	        $(".Like").click(function () {
+		var url = "/Litter/Like/" + (this.id);
+		$.ajax({
+			aysnc: true,
+				type: "POST",
+				url: url,
+				dataType: "text",
+				success: function(msg){
+					location.reload(); 
+				}
+		});
+		}); 
+        </script>   
         
         </script>
         <script>

@@ -22,6 +22,8 @@ scope="session"
         <title>Litter</title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
+        <script src="js/jquery-1.4.4.min.js"></script>
+        <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
         <!-- Internet Explorer HTML5 enabling code: -->       
         <!--[if IE]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>       
@@ -97,24 +99,39 @@ scope="session"
 							for (TweetStore tweet: tweets)
 							{
 								%>
-								<h4><%= tweet.getUser() %>
-								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-								%>
-								 to 
-								<%= tweet.getReplyToUser() %>
-								<% } %>
-								</h4>
+								<div class="tweet">
+								<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px" class="<%= tweet.getUser() %>" src="" align="left"/>
 								<% 
 							TweetConnector connector = new TweetConnector();
-							String like = "like";
-							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "unlike";
-							
+							String like = "Like";
+							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "Unlike";
+							String username = tweet.getUser();
 							%>
-							</h4>
+							
 							<p>
 							<%= tweet.getContent() %>
 							</p>
-							<p>Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
+							<p><a href="/Litter/User/<%= username %>"><%= username %></a>
+								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
+								%>
+								 to 
+								<a href="/Litter/User/<%= tweet.getReplyToUser() %>"><%= tweet.getReplyToUser() %></a>
+								<% } %>
+								
+							| Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
+							</div>
+							<script>
+					        	$(function() {
+					        		$.ajax({
+					        			url: '/Litter/User/<%= tweet.getUser() %>/json',
+					        			success: function(data) {
+					        				var obj = jQuery.parseJSON(data);
+					        				var avatarurl = data.AvatarURL;	
+					        				$('.<%= tweet.getUser() %>').attr('src', obj.AvatarUrl);
+					        			}
+					        		});					        		
+					        	});
+					        </script>
 								<%
 							}	
                 }
@@ -128,14 +145,12 @@ scope="session"
 		</section> <!-- Closing the #page section -->
         
         <!-- JavaScript Includes -->
-        
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
         <script src="jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="script.js"></script>
         
         <script>
         
-                $(".like").click(function () {
+                $(".Like").click(function () {
         	var url = "/Litter/Like/" + (this.id);
         	$.ajax({
         		aysnc: true,

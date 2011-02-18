@@ -36,6 +36,14 @@ a img{
 	border:none;
 }
 
+.tweet {
+	background-color: #003333;
+	padding-left: 7px;
+	padding-right: 7px;
+	padding-top: 3px;
+	margin-bottom: 3px;
+}
+
 a.info{
     position:relative; /*this is the key*/
     z-index:24; background-color:#ccc;
@@ -165,7 +173,7 @@ nav ul li a:hover{
 	background-color:#f0f0f0;
 }
 
-nav, article, nav ul li a,figure{
+nav, article, .tweet, nav ul li a,figure{
 	/* Applying CSS3 rounded corners: */
 	-moz-border-radius:10px;
 	-webkit-border-radius:10px;
