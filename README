@@ -8,12 +8,20 @@ No arguments - shows user page if logged in.
 POST
 No arguments - adds the user in the session to the database. (if no user is in the session it forwards to the registration page)
 
+TODO:
+
+PUT
+Update user details
+
+DELETE
+Delete the user
+
 -- Login --
 GET
 No arguments - check sign on result from Google or Yahoo
 /Google or /Yahoo - redirect to Google or Yahoo sign on page:
 
-Logout
+-- Logout --
 GET
 Invalidates the session with the effect of logging out the user.
 
@@ -29,6 +37,10 @@ GET
 POST
 /[username] - adds the user specified to those who the logged in user follows (or unfollows if already followed)
 
+TODO:
+DELETE
+unfollow the user (functionality currently in POST
+
 -- Follows --
 GET
 /json - return those who the user follows formatted as Json for logged in user
@@ -38,6 +50,10 @@ GET
 POST
 /[tweetID] - "likes" the tweet for the user currently logged in
 
+TODO:
+DELETE
+Unlike the tweet
+
 --Tweet--
 
 GET
@@ -46,3 +62,8 @@ GET
 
 POST
 adds a tweet for the logged in user
+
+TODO:
+
+DELETE
+remove the tweet
