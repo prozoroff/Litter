@@ -110,7 +110,7 @@ scope="session"
 							
 							<p>
 							<%= tweet.getContent() %>
-							</p>
+							<span style="float: right">Likes: <%= tweet.getLikes() %></span></p>
 							<p><a href="/Litter/User/<%= username %>"><%= username %></a>
 								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
 								%>
@@ -118,7 +118,7 @@ scope="session"
 								<a href="/Litter/User/<%= tweet.getReplyToUser() %>"><%= tweet.getReplyToUser() %></a>
 								<% } %>
 								
-							| Likes: <%= tweet.getLikes() %> <a class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
+							<a style="float: right" class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
 							</div>
 							<script>
 					        	$(function() {

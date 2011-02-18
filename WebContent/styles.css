@@ -37,11 +37,16 @@ a img{
 }
 
 .tweet {
-	background-color: #003333;
+	background-color: #1D3540;
 	padding-left: 7px;
 	padding-right: 7px;
 	padding-top: 3px;
 	margin-bottom: 3px;
+}
+
+.tweet a
+{
+	color:#87C5E6;
 }
 
 a.info{
@@ -189,7 +194,7 @@ nav, article, .tweet, nav ul li a,figure{
 }
 
 article{
-	background-color:#213E4A;
+	background-color:#1F3A45;
 	margin:3em 0;
 	padding:20px;
 	
