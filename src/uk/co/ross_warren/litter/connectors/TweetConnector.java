@@ -99,10 +99,12 @@ public class TweetConnector {
 	
 	public List<TweetStore> GetFeed(String username)
 	{
+		List<String> tweetIDs = new LinkedList<String>();
 		UserConnector userConnector = new UserConnector();
 		List<FollowereeStore> followees= userConnector.getFollowees(username);
 		if (followees == null || followees.size() == 0) return null;
 		List<TweetStore> tweets = new LinkedList<TweetStore>();
+		List<TweetStore> tweets2 = new LinkedList<TweetStore>();
 		for (FollowereeStore store: followees)
 		{
 			try
@@ -123,8 +125,16 @@ public class TweetConnector {
 		{
 			System.out.println("oops" + e);
 		}
-		if (tweets != null && tweets.size() > 0) Collections.sort(tweets);
-		return tweets;
+		for (TweetStore tweet: tweets)
+		{
+			if (!tweetIDs.contains(tweet.getTweetID()))
+			{
+				tweetIDs.add(tweet.getTweetID());
+				tweets2.add(tweet);
+			}
+		}
+		if (tweets2 != null && tweets2.size() > 0) Collections.sort(tweets2);
+		return tweets2;
 	}
 	
 	public TweetStore getTweet(String tweetID)
@@ -165,6 +175,8 @@ public class TweetConnector {
 				result.setLikes(0);
 				System.out.println("getting likes count failed" + e);
 			}
+			
+	
 		}
 		catch (Exception e)
 		{

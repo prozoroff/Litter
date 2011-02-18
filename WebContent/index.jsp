@@ -174,7 +174,7 @@ scope="session"
         
         <script>
         
-                $(".Like").click(function () {
+           $(".Like").click(function () {
         	var url = "/Litter/Like/" + (this.id);
         	$.ajax({
         		aysnc: true,

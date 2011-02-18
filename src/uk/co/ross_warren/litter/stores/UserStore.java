@@ -7,7 +7,9 @@ public class UserStore {
 	private String name, email, bio, username, avatarurl = "";
 	public UserStore(){
 	}
-	public String getAvatarUrl() { return avatarurl; }
+	public String getAvatarUrl() {
+		return avatarurl;
+	}
 	public String getUserName() { return username; }
 	public String getBio() { return bio; }
 	public String getName(){ return name; }
@@ -18,7 +20,7 @@ public class UserStore {
 	public void setBio(String bio) { this.bio = bio; }
 	public void setAvatar(String avatarUrl) { 
 		this.avatarurl = avatarUrl; 
-		if (avatarUrl.equals("")) {
+		if (avatarUrl.equals("") || avatarUrl == null) {
 			this.avatarurl = "http://www.gravatar.com/avatar/" + MD5Util.md5Hex(email) + "?d=mm";
 		}
 		

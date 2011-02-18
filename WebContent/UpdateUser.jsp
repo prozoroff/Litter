@@ -2,13 +2,6 @@
 
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<%@ page import="uk.co.ross_warren.litter.stores.*" %>
-<%@ page import="java.util.*" %>
-<jsp:useBean id="form" class="uk.co.ross_warren.litter.stores.ValidationStore" scope="request">
-    <jsp:setProperty name="form" property="errorMessages" value='<%= errorMap %>'/>
-</jsp:useBean>
-
-
 
 <!DOCTYPE html> <!-- The new doctype -->
 <html>
@@ -31,77 +24,41 @@
         <![endif]-->   
     </head> 
     <body>	
-    	<%
-    // If process is true, attempt to validate and process the form
-    if ("true".equals(request.getParameter("process"))) {
-%>
-        <jsp:setProperty name="form" property="*" />
-<%
-		if (request.getParameter("Name") != null)
-		{
-			form.setName(request.getParameter("Name"));
-		}
-		if (request.getParameter("Username") != null)
-		{
-			form.setUserName(request.getParameter("Username"));
-		}
-        // Attempt to process the form
-        if (form.process()) {
-            // Go to success page
-            //RequestDispatcher rd;
-            //rd=request.getRequestDispatcher("User");
-			//rd.forward(request,response);
-			%>
-			<script>
-			$(function() {
-				var form = $('#toput').serialize();
-        		$.ajax({
-       				url: "User" + form,
-    			  	type: "PUT",
-      			  	success: function() {
-      			    //
-      			  }
-        		});					        		
-        	});
-			</script>
-			<%
-            return;
-        }
-    }
-%>
     	<section id="page"> <!-- Defining the #page section with the section tag -->
             <header> <!-- Defining the header section of the page with the appropriate tag -->
                 <a href="/Litter/"><img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" /></a>
                 <hgroup>
                     <h1>Litter</h1>
                     <h3>Like Twitter but with liking!</h3>
-                </hgroup>            
+                </hgroup>       
+                					<%@include file="LogCheck.jsp" %>     
                 <nav class="clear"> <!-- The nav link semantically marks your main site navigation -->
                     <ul>
                     	<li><a href="../Litter">Home</a>
+                    	<li><a href="../Litter/User/<%= User.getUserName() %>">Your Profile</a>
                   		<li><a href="Logout">Logout</a></li>
                     </ul>
                 </nav>
             </header>
             <section id="articles"> <!-- A new section with the articles -->
                 <div class="line"></div>  <!-- Dividing line -->   
-                <article id="Register">
-                	<h2>Register</h2>
-					<%@include file="LogCheck.jsp" %>
+                <article id="Update">
+                	<h2>Update</h2>
 					<P>Fill in the form to update. You are updating for this email: <%= User.getEmail()%></P>
-					<% 
-					String tempName;
-					if (form.getName() == null || form.getName() == "") {  tempName = User.getName(); } else { tempName = form.getName(); }%>
-					<%-- When submitting the form, resubmit to this page --%>
-					<form id="toput" action='<%= request.getRequestURI() %>' method="POST">
-					    <label for="Name">Name: <span style="color: red"><%= form.getErrorMessage("name") %></span></label> 
-						<input value = "<%= tempName %>" style="background-color: white;" type="text" name="Name" required placeholder="Name" />
+					<span id="forminfo" style="display: none; text-align: center">
+						<br />
+						<br />
+						<h2>Details Updated</h2>
+						<br />
+					</span>
+					<form id="toput">
+					    <label for="Name">Name:</label> 
+						<input value = "<%= User.getName() %>" style="background-color: white;" type="text" name="Name" required placeholder="Name" />
 						<label for="Bio">Bio:</label> 
-						<textarea style="background-color: white;" name="Bio" placeholder="Write a bit about yourself"></textarea> 
+						<textarea style="background-color: white;" name="Bio" placeholder="Write a bit about yourself"><%= User.getBio() %></textarea> 
 						<label for="Avatar">Avatar (Leave blank to use Gravatar):</label>
-						<input style="background-color: white;" type="text" name="Avatar"></input>
+						<input value = "<%= User.getAvatarUrl() %>" style="background-color: white;" type="text" name="Avatar"></input>
 						<input style="background-color: white;" type="submit"  value="Add Yourself">
-						<input type="HIDDEN" name="process" value="true">
 					</form>
 				</article>
             </section>
@@ -110,15 +67,20 @@
         <!-- JavaScript Includes -->
         <script src="script.js"></script>
     </body>
+<script>
+$("#toput").submit(function() {
+	var form = $(this).serialize();
+	$.ajax({
+			url: "/Litter/User?" + form,
+		  	type: "PUT",
+		  	complete: function() {
+		  		$("#toput").hide('fast');
+		  		$('#forminfo').show();
+		  	}		
+			
+	});		
+
+	return false;
+});
+</script>
 </html>
-
-
-<%!
-    // Define error messages
-    java.util.Map<Integer, String> errorMap = new java.util.HashMap<Integer, String>();
-    public void jspInit() {
-        errorMap.put(ValidationStore.ERR_NAME, "Name field is empty");
-        errorMap.put(ValidationStore.ERR_USERNAME, "Username is empty");
-        errorMap.put(ValidationStore.ERR_USERNAME_TAKEN, "Username is taken by another user");
-    }
-%>

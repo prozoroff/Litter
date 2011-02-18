@@ -54,7 +54,13 @@ public class User extends HttpServlet {
 					ReturnAuthor(request, response,0, output.getUserName());
 				}
 				break;
-			case 3: if (FormatsMap.containsKey(args[2])){ //Display an author
+			case 3: 
+				if (args[2].equals("Update"))
+				{
+					response.sendRedirect("/Litter/UpdateUser.jsp");
+					return;
+				}	
+				if (FormatsMap.containsKey(args[2])){ //Display an author
 						Integer IFormat= (Integer)FormatsMap.get(args[2]);
 						if (output != null && output.isloggedIn() == true)
 						{
@@ -77,7 +83,8 @@ public class User extends HttpServlet {
 			case 4: if (FormatsMap.containsKey(args[3])){ //Display an Author
 						Integer IFormat= (Integer)FormatsMap.get(args[3]);
 						switch((int)IFormat.intValue()){
-						case 3:ReturnAuthor(request, response,3,args[2]); //Only JSON implemented for now
+						case 3:
+							ReturnAuthor(request, response,3,args[2]); //Only JSON implemented for now
 					 		break;
 						default:break;
 						}
@@ -95,7 +102,7 @@ public class User extends HttpServlet {
 		 *  2 rss
 		 *  3 json
 		 * 
-		 */
+		 */	
 		UserConnector au = new UserConnector();
 		UserStore Author;
 		Author = au.getUserByUsername(username);
@@ -112,9 +119,7 @@ public class User extends HttpServlet {
 				Author.setName("");
 			} else {
 				Author.setUserName(username);
-			}
-		}
-		
+
 		HttpSession session=request.getSession();
 		session.setAttribute("followers", null);
 		session.setAttribute("followees", null);
@@ -169,6 +174,10 @@ public class User extends HttpServlet {
 		List<TweetStore> atReplies = connector.getAtReplies(Author.getUserName());
 		if (atReplies != null && atReplies.size() > 0) Collections.sort(atReplies);
 		request.setAttribute("AtReplies", atReplies);
+		
+			}
+		}
+		
 		
 		System.out.println("Got Author "+Author.getName()+" : "+Format);
 		System.out.flush();
@@ -228,17 +237,19 @@ public class User extends HttpServlet {
 	 */
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		System.out.println("Updating ze user ja");
 		UserStore Author =new UserStore();
 		RequestDispatcher rd;
 		HttpSession session=request.getSession();
 		UserStore lc =(UserStore)session.getAttribute("User");
 		if (lc==null){
-			rd=request.getRequestDispatcher("RegisterUser.jsp");
+			rd=request.getRequestDispatcher("UpdateUser.jsp");
 			rd.forward(request,response);
 		}
 		Author = lc;
 		Author.setName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Name")));
 		Author.setBio(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Bio")));
+		System.out.println(Author.getBio());
 		Author.setAvatar(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Avatar")));
 		UserConnector au = new UserConnector();
 		if (au.updateUser(Author)== true){

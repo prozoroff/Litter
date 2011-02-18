@@ -149,6 +149,8 @@ public class Login extends HttpServlet {
 		
 			lc.login(Email);
 			lc.setUserName(ars.getUserName());
+			lc.setAvatar(ars.getAvatarUrl());
+			lc.setBio(ars.getBio());
 			System.out.println("Login: "+lc.getEmail());
 			//System.out.println(request.getContextPath());
 			

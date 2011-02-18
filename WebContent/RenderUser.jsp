@@ -82,16 +82,23 @@ scope="session"
 					<tr><td><img title="<%=displayUser.getUserName() %>" style="padding-right: 10px;" src="<%=displayUser.getAvatarUrl() %>" /></td>
 					<td><h2 style="top: 0%"><%=displayUser.getUserName() %> (<%=displayUser.getName() %>)</h2>
 					<p><%=displayUser.getBio() %></p>
-					<% if (displayUser.getUserName().equals(User.getUserName()) == false && User != null)
+					<% 
+					if (User != null && User.isloggedIn() == true)
 					{
-						if (User.isloggedIn() == true)
+						if (displayUser.getUserName().equals(User.getUserName()) == false)
 						{
-					%>
-					
-					<div class="demo">
-					<button id = "follow" >Follow</button>
-					</div>
-					<%} } 
+						
+						%>
+						
+						<div class="demo">
+						<button id = "follow" >Follow</button>
+						</div>
+						<%} else {
+							%>
+							<a href="/Litter/User/Update">Update Your details</a>
+							<%
+						}
+					} 
 					
 					List<FollowereeStore> Followers = (List<FollowereeStore>)session.getAttribute("followers");
 					%>
