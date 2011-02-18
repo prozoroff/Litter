@@ -290,6 +290,19 @@ scope="session"
 				}
 		});
 		}); 
+	        
+	        $(".Unlike").click(function () {
+	    		var url = "/Litter/Like/" + (this.id);
+	    		$.ajax({
+	    			aysnc: true,
+	    				type: "DELETE",
+	    				url: url,
+	    				dataType: "text",
+	    				success: function(msg){
+	    					location.reload(); 
+	    				}
+	    		});
+	    		}); 
         </script>   
         
         </script>
