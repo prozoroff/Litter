@@ -14,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+
 import uk.co.ross_warren.litter.Utils.StringSplitter;
 import uk.co.ross_warren.litter.connectors.TweetConnector;
 import uk.co.ross_warren.litter.stores.TweetStore;
@@ -107,7 +110,9 @@ public class Tweet extends HttpServlet {
 			}
 			tweet.setUser(lc.getUserName());
 			tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));
-			tweet.setContent(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Content")));
+			String unsafe = request.getParameter("Content");
+			String safe = Jsoup.clean(unsafe, Whitelist.basic());
+			tweet.setContent(safe);
 			//tweet.setReplyToUser(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("ReplyToUser")));
 			try {
 				TweetConnector connector = new TweetConnector();
