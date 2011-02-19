@@ -225,6 +225,9 @@ scope="session"
         <script src="../script.js"></script>
         <script>
         
+        <% if (loggedin)
+        {
+        	%>
         $(function() {
 	   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
 	   		$.ajax({
@@ -235,6 +238,8 @@ scope="session"
 	   			}
 	   		});
         });
+        <%
+        } %>
         
         $("#follow").click(function () {
         	var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
