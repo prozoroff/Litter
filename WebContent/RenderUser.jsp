@@ -8,7 +8,6 @@ class="uk.co.ross_warren.litter.stores.UserStore"
 scope="session"
 ></jsp:useBean>
 <%
-	String follow = "Follow";
 	Boolean loggedin = false;
 	if (User != null)
 	{
@@ -99,52 +98,23 @@ scope="session"
 							<%
 						}
 					} 
-					
-					List<FollowereeStore> Followers = (List<FollowereeStore>)session.getAttribute("followers");
 					%>
 					</td>
 					</tr>
 					</table>
 					<div class = "line"></div>
-					<h4><%=displayUser.getUserName() %> has <% if (Followers != null) { %><%= Followers.size()%><% } else { %>0<%} %> Followers</h4>
+					<h4><%=displayUser.getUserName() %> has <span id="followercount"></span> Followers</h4>
 					<p>
-					<%
-						
-						if (Followers != null)
-						{
-							for (FollowereeStore store : Followers)
-							{
-								if (store.getUsername().equals(User.getUserName()))
-								{
-									follow = "Unfollow";
-								}
-								%>
-								<a href="/Litter/User/<%= store.getUsername() %>" class="info"><img width = "25px" height = "25px" src="<%= store.getAvatarUrl() %>" /><span><%= store.getUsername() %></span></a>
-								<%
-							}
-						}
-					List<FollowereeStore> Followees = (List<FollowereeStore>)session.getAttribute("followees");
-					
-					%>
+					<div id="followers"></div>	
 					</p>
 					
 					<div class="line"></div>  <!-- Dividing line -->  
-					<h4><%=displayUser.getUserName() %> Follows <% if (Followees != null) { %><%= Followees.size()%><% } else { %>0<%} %> Users</h4>
+					<h4><%=displayUser.getUserName() %> Follows <span id="followeecount"></span> Users</h4>
 					<p>
-					<%
-						if (Followees != null)
-						{
-							for (FollowereeStore store : Followees)
-							{
-								%>
-								<a href="/Litter/User/<%= store.getUsername() %>" class="info"><img width = "25px" height = "25px" src="<%= store.getAvatarUrl() %>" /><span><%= store.getUsername() %></span></a>
-								<%
-							}
-							
-						}
-					%>
+					<div id="followees"></div>	
 					</p>
-					<div class="line"></div>  <!-- Dividing line -->  
+					<div class="line"></div>  <!-- Dividing line --> 		
+					 
 					<table style="width: 100%">
 					<tr>
 					<td style="width: 50%; vertical-align: top">
@@ -253,27 +223,53 @@ scope="session"
 		
         <script src="../jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="../script.js"></script>
-        
-        
-        
         <script>
-        $(window).load(function() {  
-        	$("#follow").text("<%= follow %>");
-       	});  
         
-        </script>
-        <script>
+        $(function() {
+	   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
+	   		$.ajax({
+	   			type: "GET",
+	   			url: url,
+	   			success: function(msg) {
+	   				$("#follow").text(msg);
+	   			}
+	   		});
+        });
         
         $("#follow").click(function () {
-        	$.ajax({
-        		aysnc: true,
-   				type: "POST",
-   				url: "/Litter/Follow/<%= displayUser.getUserName() %>",
-   				dataType: "text",
-  				success: function(msg){
-  					location.reload(); 
-   				}
-        	});
+        	var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
+	   		$.ajax({
+	   			type: "GET",
+	   			url: url,
+	   			success: function(msg) {
+	   				
+	   				if (msg=='Follow')
+   					{
+	   					
+	   					$.ajax({
+	   		        		aysnc: true,
+	   		   				type: "POST",
+	   		   				url: "/Litter/Follow/<%= displayUser.getUserName() %>",
+	   		   				dataType: "text",
+	   		  				success: function(msg){
+	   		  					location.reload(); 
+	   		   				}
+	   		        	});
+   					}
+	   				else
+	   				{
+	   					$.ajax({
+	   		        		aysnc: true,
+	   		   				type: "DELETE",
+	   		   				url: "/Litter/Follow/<%= displayUser.getUserName() %>",
+	   		   				dataType: "text",
+	   		  				success: function(msg){
+	   		  					location.reload(); 
+	   		   				}
+	   		        	});
+	   				}
+	   			}
+	   		});
  		});
         </script>
         <script>
@@ -312,6 +308,40 @@ scope="session"
 		$( "a", ".demo" ).click(function() { return false; });
 	});
 	</script>
+	
+		<script>
+       	$(function() {
+       		var count = 0;
+       		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/json';
+       		$.getJSON(url, function(json) {
+       			$.each(json.Data, function(i, Data) {
+       				$("#followees").append('<a href="/Litter/User/' 
+       						+ this.Username 
+       						+ '" class="info"><img width = "25px" height = "25px" src="' 
+       						+ this.AvatarUrl + '" /><span>' 
+       						+ this.Username+ '</span></a> ');
+					count += 1;
+       				
+       			});
+       			$("#followeecount").append(count);
+       		});		
+       		var url = '/Litter/Follow/<%= displayUser.getUserName() %>/json';
+       		$.getJSON(url, function(json) {
+       			var count = 0;
+       			$.each(json.Data, function(i, Data) {
+       				$("#followers").append('<a href="/Litter/User/' 
+       						+ this.Username 
+       						+ '" class="info"><img width = "25px" height = "25px" src="' 
+       						+ this.AvatarUrl + '" /><span>' 
+       						+ this.Username+ '</span></a> ');
+       				count += 1;
+       				
+       			});
+       			$("#followercount").append(count);
+       		});	
+       	});
+       </script>
+					
          
     </body>
 </html>

@@ -1,6 +1,7 @@
 package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,13 +46,13 @@ public class Follows extends HttpServlet {
 		// TODO Auto-generated method stub
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
-
+		HttpSession session=request.getSession();
+		UserStore sessionUser = (UserStore)session.getAttribute("User");
 		switch (args.length){
 			case 3:
 				if (FormatsMap.containsKey(args[2])) {
 					Integer IFormat= (Integer)FormatsMap.get(args[2]);
-					HttpSession session=request.getSession();
-					UserStore sessionUser = (UserStore)session.getAttribute("User");
+					
 					if (sessionUser != null && sessionUser.isloggedIn() == true)
 					{
 						switch((int)IFormat.intValue()){
@@ -63,7 +64,34 @@ public class Follows extends HttpServlet {
 				}
 				break;
 			
-			case 4: if (FormatsMap.containsKey(args[3])){ //all authors in a format
+			case 4: 
+				if (args[3].equals("Check"))
+				{
+					UserConnector connector = new UserConnector();
+					List<FollowereeStore> followees = connector.getFollowees(sessionUser.getUserName());
+					PrintWriter pw = response.getWriter();
+					Boolean found = false;
+					if (followees != null && followees.size() > 0)
+					{
+						for (FollowereeStore store: followees)
+						{
+							if (store.getUsername().equals(args[2]))
+							{
+								found = true;
+							}
+						}
+					}
+					if (found)
+					{
+						pw.print("Unfollow");
+					} else {
+						pw.print("Follow");
+					}
+					
+				}
+				
+				
+				if (FormatsMap.containsKey(args[3])){ //all authors in a format
 						Integer IFormat= (Integer)FormatsMap.get(args[3]);
 						switch((int)IFormat.intValue()){
 						case 3:GetFollowees(request, response,3,args[2]); //Only JSON implemented for now

@@ -1,6 +1,7 @@
 package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -43,13 +44,13 @@ public class Follow extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
+		HttpSession session=request.getSession();
+		UserStore sessionUser = (UserStore)session.getAttribute("User");
 
 		switch (args.length){
 			case 3:
 				if (FormatsMap.containsKey(args[2])) {
 					Integer IFormat= (Integer)FormatsMap.get(args[2]);
-					HttpSession session=request.getSession();
-					UserStore sessionUser = (UserStore)session.getAttribute("User");
 					if (sessionUser != null && sessionUser.isloggedIn() == true)
 					{
 						switch((int)IFormat.intValue()){
@@ -61,7 +62,32 @@ public class Follow extends HttpServlet {
 				}
 				break;
 			
-			case 4: if (FormatsMap.containsKey(args[3])){ //all authors in a format
+			case 4: 
+				if (args[3].equals("Check"))
+				{
+					UserConnector connector = new UserConnector();
+					List<FollowereeStore> followers = connector.getFollowers(sessionUser.getUserName());
+					PrintWriter pw = response.getWriter();
+					Boolean found = false;
+					if (followers != null && followers.size() > 0)
+					{
+						for (FollowereeStore store: followers)
+						{
+							if (store.getUsername().equals(args[2]))
+							{
+								found = true;
+							}
+						}
+					}
+					if (found)
+					{
+						pw.println("Unfollow");
+					} else {
+						pw.println("Follow");
+					}
+					
+				}
+					if (FormatsMap.containsKey(args[3])){ //all authors in a format
 						Integer IFormat= (Integer)FormatsMap.get(args[3]);
 						switch((int)IFormat.intValue()){
 						case 3:GetFollowers(request, response,3,args[2]); //Only JSON implemented for now
@@ -141,17 +167,33 @@ public class Follow extends HttpServlet {
 						System.out.println("Followee success");
 					}
 				}
-				else {
-					try
+			}
+		}
+	}
+	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+		StringSplitter split = new StringSplitter();
+		String args[]=split.SplitRequestPath(request);
+		if (args.length == 3)
+		{
+			String usernameToFollow = args[2]; //args 2 is the person you want to follow
+			UserConnector connector = new UserConnector();
+			HttpSession session=request.getSession();
+			UserStore sessionUser =(UserStore)session.getAttribute("User");
+			if (sessionUser == null || sessionUser.isloggedIn() == false)
+			{
+				//
+			} else {
+				try
+				{
+					if (connector.removeFollower(sessionUser.getUserName(), usernameToFollow) && connector.removeFollowee(sessionUser.getUserName(), usernameToFollow))
 					{
-						if (connector.removeFollower(sessionUser.getUserName(), usernameToFollow) && connector.removeFollowee(sessionUser.getUserName(), usernameToFollow))
-						{
-							System.out.println("UnfollowSuccess");
-						}
-					} catch (Exception e)
-					{
-						System.out.println("Unfollow fail: " + e);
+						System.out.println("UnfollowSuccess");
 					}
+				} catch (Exception e)
+				{
+					System.out.println("Unfollow fail: " + e);
 				}
 			}
 		}

@@ -119,60 +119,15 @@ public class User extends HttpServlet {
 				dataUser.setName("");
 			} else {
 				dataUser.setUserName(username);
-
-		HttpSession session=request.getSession();
-		session.setAttribute("followers", null);
-		session.setAttribute("followees", null);
-		List<FollowereeStore> followers = userConnect.getFollowers(dataUser.getUserName());
-		if (followers != null && followers.size() > 0)
-		{
-			List<FollowereeStore> followerList = new ArrayList<FollowereeStore>();
-			for (FollowereeStore follow : followers)
-			{
-				try 
-				{
-					follow.setAvatarUrl(userConnect.getUserByEmail(userConnect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
-					
-				}
-				catch(Exception e)
-				{
-					System.out.println("Oh noes could not get the avatar URL" + e);
-				}
-				followerList.add(follow);
-				System.out.println("Followed by: " + follow.getUsername());
-			}
-			session.setAttribute("followers", followerList);
-		}
-		List<FollowereeStore> followees = userConnect.getFollowees(dataUser.getUserName());
-		if (followees != null && followees.size() > 0)
-		{
-			List<FollowereeStore> followeeList = new ArrayList<FollowereeStore>();
-			for (FollowereeStore follow : followees)
-			{
-				try 
-				{
-					follow.setAvatarUrl(userConnect.getUserByEmail(userConnect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
-					
-				}
-				catch(Exception e)
-				{
-					System.out.println("Oh noes could not get the avatar URL" + e);
-				}
-				followeeList.add(follow);
-				System.out.println("Follows: " + follow.getUsername());
-			}
-			session.setAttribute("followees", followeeList);
-			
-		}
-		request.setAttribute("Tweets", null);
-		TweetConnector tweetConnect = new TweetConnector();
-		List<TweetStore> tweets = tweetConnect.getTweets(dataUser.getUserName());
-		if (tweets != null && tweets.size() > 0) Collections.sort(tweets);
-		request.setAttribute("Tweets", tweets);
-		request.setAttribute("AtReplies", null);
-		List<TweetStore> atReplies = tweetConnect.getAtReplies(dataUser.getUserName());
-		if (atReplies != null && atReplies.size() > 0) Collections.sort(atReplies);
-		request.setAttribute("AtReplies", atReplies);
+				request.setAttribute("Tweets", null);
+				TweetConnector tweetConnect = new TweetConnector();
+				List<TweetStore> tweets = tweetConnect.getTweets(dataUser.getUserName());
+				if (tweets != null && tweets.size() > 0) Collections.sort(tweets);
+				request.setAttribute("Tweets", tweets);
+				request.setAttribute("AtReplies", null);
+				List<TweetStore> atReplies = tweetConnect.getAtReplies(dataUser.getUserName());
+				if (atReplies != null && atReplies.size() > 0) Collections.sort(atReplies);
+				request.setAttribute("AtReplies", atReplies);
 		
 			}
 		}
