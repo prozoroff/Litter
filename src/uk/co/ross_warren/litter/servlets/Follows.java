@@ -51,11 +51,11 @@ public class Follows extends HttpServlet {
 				if (FormatsMap.containsKey(args[2])) {
 					Integer IFormat= (Integer)FormatsMap.get(args[2]);
 					HttpSession session=request.getSession();
-					UserStore lc = (UserStore)session.getAttribute("User");
-					if (lc != null && lc.isloggedIn() == true)
+					UserStore sessionUser = (UserStore)session.getAttribute("User");
+					if (sessionUser != null && sessionUser.isloggedIn() == true)
 					{
 						switch((int)IFormat.intValue()){
-							case 3:GetFollowees(request, response,3,lc.getUserName()); //Only JSON implemented for now
+							case 3:GetFollowees(request, response,3,sessionUser.getUserName()); //Only JSON implemented for now
 							break;
 						}
 						
@@ -75,13 +75,6 @@ public class Follows extends HttpServlet {
 			default: System.out.println("Wrong number of arguements in doGet Author "+request.getRequestURI()+" : "+args.length);
 			break;
 		}
-	}
-
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 	}
 
 	public void GetFollowees(HttpServletRequest request, HttpServletResponse response,int Format, String username) throws ServletException, IOException{

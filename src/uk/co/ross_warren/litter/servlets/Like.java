@@ -48,15 +48,15 @@ public class Like extends HttpServlet {
 			System.out.println("Tweet ID to be liked is " + args[2]);
 			String tweetID = args[2];
 			HttpSession session=request.getSession();
-			UserStore lc =(UserStore)session.getAttribute("User");
-			if (lc == null || lc.isloggedIn() == false)
+			UserStore sessionUser =(UserStore)session.getAttribute("User");
+			if (sessionUser == null || sessionUser.isloggedIn() == false)
 			{
 				return;
 			}
 			TweetConnector connect = new TweetConnector();
 			try
 			{
-				connect.like(lc.getUserName(), tweetID);
+				connect.like(sessionUser.getUserName(), tweetID);
 			}
 				catch (Exception e)
 			{
@@ -77,15 +77,15 @@ public class Like extends HttpServlet {
 			System.out.println("Tweet ID to be unliked is " + args[2]);
 			String tweetID = args[2];
 			HttpSession session=request.getSession();
-			UserStore lc =(UserStore)session.getAttribute("User");
-			if (lc == null || lc.isloggedIn() == false)
+			UserStore sessionUser =(UserStore)session.getAttribute("User");
+			if (sessionUser == null || sessionUser.isloggedIn() == false)
 			{
 				return;
 			}
 			TweetConnector connect = new TweetConnector();
 			try
 			{
-				connect.unLike(lc.getUserName(), tweetID);
+				connect.unLike(sessionUser.getUserName(), tweetID);
 			}
 				catch (Exception e)
 			{

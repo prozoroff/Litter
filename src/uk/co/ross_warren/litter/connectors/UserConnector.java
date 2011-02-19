@@ -36,10 +36,10 @@ public class UserConnector {
 		try
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			ColumnQuery<String, String, String> columnQuery =
-				HFactory.createStringColumnQuery(ko);
+				HFactory.createStringColumnQuery(ks);
 			columnQuery.setColumnFamily("Username").setKey(username).setName("email");
 			QueryResult<HColumn<String, String>> result = columnQuery.execute();
 			user.login(result.get().getValue());
@@ -65,10 +65,10 @@ public class UserConnector {
 		try
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("User")
 			.setKey(email)
 			.setColumnNames("name", "bio", "username", "avatarurl");
@@ -99,10 +99,10 @@ public class UserConnector {
 			{
 				System.out.println("User " + Author.getUserName() + " exists, updating now.");
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-				ko.setConsistencyLevelPolicy(mcl);
+				Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+				ks.setConsistencyLevelPolicy(mcl);
 				StringSerializer se = StringSerializer.get();
-				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				Mutator<String> mutator = HFactory.createMutator(ks,se);
 				mutator.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("name", Author.getName()))
 					.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("bio", Author.getBio()))
 					.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("avatarurl", Author.getAvatarUrl()));
@@ -130,10 +130,10 @@ public class UserConnector {
 		try
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			Mutator<String> mutator = HFactory.createMutator(ks,se);
 			mutator.delete(username, "Likes", null, se);
 			mutator.execute();
 			mutator.delete(username, "UserTweets", null, se);
@@ -178,16 +178,16 @@ public class UserConnector {
 			{
 				System.out.println("User " + Author.getUserName() + " probably Doesn't exist, adding now.");
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-				ko.setConsistencyLevelPolicy(mcl);
+				Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+				ks.setConsistencyLevelPolicy(mcl);
 				StringSerializer se = StringSerializer.get();
-				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				Mutator<String> mutator = HFactory.createMutator(ks,se);
 				mutator.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("name", Author.getName()))
 					.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("username", Author.getUserName()))
 					.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("bio", Author.getBio()))
 					.addInsertion(Author.getEmail(), "User", HFactory.createStringColumn("avatarurl", Author.getAvatarUrl()));
 				mutator.execute();
-				mutator = HFactory.createMutator(ko,se);
+				mutator = HFactory.createMutator(ks,se);
 				mutator.addInsertion(Author.getUserName(), "Username", HFactory.createStringColumn("email", Author.getEmail()));
 				mutator.execute();
 				
@@ -215,13 +215,13 @@ public class UserConnector {
 			if (this.getUserByUsername(toFollow) !=null && this.getUserByUsername(toBeFollowed) !=null)
 			{
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-				ko.setConsistencyLevelPolicy(mcl);
+				Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+				ks.setConsistencyLevelPolicy(mcl);
 				StringSerializer se = StringSerializer.get();
 				
 				//--------------------- Check if it already exists
 				RangeSlicesQuery<String, String, String> rangeSlicesQuery =
-					HFactory.createRangeSlicesQuery(ko, se, se, se);
+					HFactory.createRangeSlicesQuery(ks, se, se, se);
 					rangeSlicesQuery.setColumnFamily("Followers");
 					rangeSlicesQuery.setKeys(toBeFollowed, toBeFollowed);
 					rangeSlicesQuery.setRange(toFollow, toFollow, false, 999);
@@ -230,7 +230,7 @@ public class UserConnector {
 				if (rows.getByKey(toBeFollowed).getColumnSlice().getColumns().isEmpty() == false) return false;
 				//---------------------- 
 				Long now = System.currentTimeMillis();
-				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				Mutator<String> mutator = HFactory.createMutator(ks,se);
 				mutator.addInsertion(toBeFollowed, "Followers", HFactory.createStringColumn(toFollow, now.toString()));
 				mutator.execute();
 				return true;
@@ -256,10 +256,10 @@ public class UserConnector {
 		}
 		try{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			Mutator<String> mutator = HFactory.createMutator(ks,se);
 			mutator.delete(toBeFollowed, "Followers", toFollow, se);
 			mutator.execute();
 			return true;
@@ -282,11 +282,11 @@ public class UserConnector {
 			if (this.getUserByUsername(toFollow) !=null && this.getUserByUsername(toBeFollowed) !=null)
 			{
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-				ko.setConsistencyLevelPolicy(mcl);
+				Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+				ks.setConsistencyLevelPolicy(mcl);
 				StringSerializer se = StringSerializer.get();
 				Long now = System.currentTimeMillis();
-				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				Mutator<String> mutator = HFactory.createMutator(ks,se);
 				mutator.addInsertion(toFollow, "Followees", HFactory.createStringColumn(toBeFollowed, now.toString()));
 				mutator.execute();
 				return true;
@@ -311,10 +311,10 @@ public class UserConnector {
 		}
 		try{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			Mutator<String> mutator = HFactory.createMutator(ks,se);
 			mutator.delete(toFollow, "Followees", toBeFollowed, se);
 			mutator.execute();
 			return true;
@@ -337,10 +337,10 @@ public class UserConnector {
 			List<FollowereeStore> results = new ArrayList<FollowereeStore>();
 	
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("Followees")
 			.setKey(username)
 			.setRange("", "", false, 3);
@@ -377,10 +377,10 @@ public class UserConnector {
 		try {
 			List<FollowereeStore> results = new ArrayList<FollowereeStore>();
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("Followers")
 			.setKey(username)
 			.setRange("", "", false, 3);

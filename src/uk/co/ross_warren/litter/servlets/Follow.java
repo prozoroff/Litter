@@ -49,11 +49,11 @@ public class Follow extends HttpServlet {
 				if (FormatsMap.containsKey(args[2])) {
 					Integer IFormat= (Integer)FormatsMap.get(args[2]);
 					HttpSession session=request.getSession();
-					UserStore lc = (UserStore)session.getAttribute("User");
-					if (lc != null && lc.isloggedIn() == true)
+					UserStore sessionUser = (UserStore)session.getAttribute("User");
+					if (sessionUser != null && sessionUser.isloggedIn() == true)
 					{
 						switch((int)IFormat.intValue()){
-							case 3:GetFollowers(request, response,3,lc.getUserName()); //Only JSON implemented for now
+							case 3:GetFollowers(request, response,3,sessionUser.getUserName()); //Only JSON implemented for now
 							break;
 						}
 						
@@ -121,7 +121,6 @@ public class Follow extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		Boolean success = false;
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
 		if (args.length == 3)
@@ -129,35 +128,23 @@ public class Follow extends HttpServlet {
 			String usernameToFollow = args[2]; //args 2 is the person you want to follow
 			UserConnector connector = new UserConnector();
 			HttpSession session=request.getSession();
-			UserStore lc =(UserStore)session.getAttribute("User");
-			if (lc == null || lc.isloggedIn() == false)
+			UserStore sessionUser =(UserStore)session.getAttribute("User");
+			if (sessionUser == null || sessionUser.isloggedIn() == false)
 			{
-				try {
-					//response.sendRedirect("");
-					success = false;
-				} catch (Exception et) {
-					success = false;
-				}
+				//
 			} else {
-				if (connector.addFollower(lc.getUserName(), usernameToFollow) == true)
+				if (connector.addFollower(sessionUser.getUserName(), usernameToFollow) == true)
 				{
 					System.out.println("Follow success");
-					if (connector.addFollowee(lc.getUserName(), usernameToFollow))
+					if (connector.addFollowee(sessionUser.getUserName(), usernameToFollow))
 					{
 						System.out.println("Followee success");
-					}
-					try {
-						//response.sendRedirect("User/" + lc.getUserName());
-						
-						success = true;
-					} catch (Exception et) {
-						success = false;
 					}
 				}
 				else {
 					try
 					{
-						if (connector.removeFollower(lc.getUserName(), usernameToFollow) && connector.removeFollowee(lc.getUserName(), usernameToFollow))
+						if (connector.removeFollower(sessionUser.getUserName(), usernameToFollow) && connector.removeFollowee(sessionUser.getUserName(), usernameToFollow))
 						{
 							System.out.println("UnfollowSuccess");
 						}
@@ -166,14 +153,6 @@ public class Follow extends HttpServlet {
 						System.out.println("Unfollow fail: " + e);
 					}
 				}
-			}
-		}
-		if (!success)
-		{
-			try {
-				//response.sendRedirect("");
-			} catch (Exception et) {
-				System.out.println("Couldn't Forward to Show User");
 			}
 		}
 	}

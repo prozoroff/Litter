@@ -45,13 +45,13 @@ public class User extends HttpServlet {
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
 		HttpSession session=request.getSession();
-		UserStore output = (UserStore)session.getAttribute("User");
+		UserStore sessionUser = (UserStore)session.getAttribute("User");
 
 		switch (args.length){
 			case 2:
-				if (output != null && output.isloggedIn() == true)
+				if (sessionUser != null && sessionUser.isloggedIn() == true)
 				{
-					ReturnAuthor(request, response,0, output.getUserName());
+					ReturnAuthor(request, response,0, sessionUser.getUserName());
 				}
 				break;
 			case 3: 
@@ -62,11 +62,11 @@ public class User extends HttpServlet {
 				}	
 				if (FormatsMap.containsKey(args[2])){ //Display an author
 						Integer IFormat= (Integer)FormatsMap.get(args[2]);
-						if (output != null && output.isloggedIn() == true)
+						if (sessionUser != null && sessionUser.isloggedIn() == true)
 						{
 							 switch((int)IFormat.intValue()){
 							 	
-								 case 3:ReturnAuthor(request, response,3, output.getUserName()); //Only JSON implemented for now
+								 case 3:ReturnAuthor(request, response,3, sessionUser.getUserName()); //Only JSON implemented for now
 								 		break;
 								 default:break;
 							 }
@@ -103,28 +103,27 @@ public class User extends HttpServlet {
 		 *  3 json
 		 * 
 		 */	
-		UserConnector au = new UserConnector();
-		UserStore Author;
-		Author = au.getUserByUsername(username);
-		if (Author==null){
-			Author=new UserStore();
-			Author.setEmail("");
-			Author.setName("");
+		UserConnector userConnect = new UserConnector();
+		UserStore dataUser;
+		dataUser = userConnect.getUserByUsername(username);
+		if (dataUser==null){
+			dataUser=new UserStore();
+			dataUser.setEmail("");
+			dataUser.setName("");
 		} else {
-			String Email = Author.getEmail();
-			Author = au.getUserByEmail(Email);
-			if (Author==null){
-				Author=new UserStore();
-				Author.setEmail("");
-				Author.setName("");
+			String Email = dataUser.getEmail();
+			dataUser = userConnect.getUserByEmail(Email);
+			if (dataUser==null){
+				dataUser=new UserStore();
+				dataUser.setEmail("");
+				dataUser.setName("");
 			} else {
-				Author.setUserName(username);
+				dataUser.setUserName(username);
 
 		HttpSession session=request.getSession();
 		session.setAttribute("followers", null);
 		session.setAttribute("followees", null);
-		UserConnector connect = new UserConnector();
-		List<FollowereeStore> followers = connect.getFollowers(Author.getUserName());
+		List<FollowereeStore> followers = userConnect.getFollowers(dataUser.getUserName());
 		if (followers != null && followers.size() > 0)
 		{
 			List<FollowereeStore> followerList = new ArrayList<FollowereeStore>();
@@ -132,7 +131,7 @@ public class User extends HttpServlet {
 			{
 				try 
 				{
-					follow.setAvatarUrl(connect.getUserByEmail(connect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
+					follow.setAvatarUrl(userConnect.getUserByEmail(userConnect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
 					
 				}
 				catch(Exception e)
@@ -144,7 +143,7 @@ public class User extends HttpServlet {
 			}
 			session.setAttribute("followers", followerList);
 		}
-		List<FollowereeStore> followees = connect.getFollowees(Author.getUserName());
+		List<FollowereeStore> followees = userConnect.getFollowees(dataUser.getUserName());
 		if (followees != null && followees.size() > 0)
 		{
 			List<FollowereeStore> followeeList = new ArrayList<FollowereeStore>();
@@ -152,7 +151,7 @@ public class User extends HttpServlet {
 			{
 				try 
 				{
-					follow.setAvatarUrl(connect.getUserByEmail(connect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
+					follow.setAvatarUrl(userConnect.getUserByEmail(userConnect.getUserByUsername(follow.getUsername()).getEmail()).getAvatarUrl());
 					
 				}
 				catch(Exception e)
@@ -166,12 +165,12 @@ public class User extends HttpServlet {
 			
 		}
 		request.setAttribute("Tweets", null);
-		TweetConnector connector = new TweetConnector();
-		List<TweetStore> tweets = connector.getTweets(Author.getUserName());
+		TweetConnector tweetConnect = new TweetConnector();
+		List<TweetStore> tweets = tweetConnect.getTweets(dataUser.getUserName());
 		if (tweets != null && tweets.size() > 0) Collections.sort(tweets);
 		request.setAttribute("Tweets", tweets);
 		request.setAttribute("AtReplies", null);
-		List<TweetStore> atReplies = connector.getAtReplies(Author.getUserName());
+		List<TweetStore> atReplies = tweetConnect.getAtReplies(dataUser.getUserName());
 		if (atReplies != null && atReplies.size() > 0) Collections.sort(atReplies);
 		request.setAttribute("AtReplies", atReplies);
 		
@@ -179,16 +178,16 @@ public class User extends HttpServlet {
 		}
 		
 		
-		System.out.println("Got Author "+Author.getName()+" : "+Format);
+		System.out.println("Got Author "+dataUser.getName()+" : "+Format);
 		System.out.flush();
 		switch(Format){
-			case 0: request.setAttribute("ViewUser", Author);
+			case 0: request.setAttribute("ViewUser", dataUser);
 					RequestDispatcher rd=request.getRequestDispatcher("/RenderUser.jsp");
 					//System.out.println("Added jsp to dispatcher");
 					rd.forward(request,response);
 					//System.out.println("We Shouldn't be here");
 					break;
-			case 3: request.setAttribute("Data", Author);
+			case 3: request.setAttribute("Data", dataUser);
 					RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");
 					rdjson.forward(request,response);
 					break;
@@ -203,26 +202,26 @@ public class User extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		UserStore Author =new UserStore();
+		UserStore writeUser =new UserStore();
 		RequestDispatcher rd;
 		HttpSession session=request.getSession();
-		UserStore lc =(UserStore)session.getAttribute("User");
-		if (lc==null){
+		UserStore sessionUser =(UserStore)session.getAttribute("User");
+		if (sessionUser==null){
 			rd=request.getRequestDispatcher("RegisterUser.jsp");
 			rd.forward(request,response);
 		}
-		Author.setEmail(lc.getEmail());
-		Author.setName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Name")));
-		Author.setUserName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Username")));
-		Author.setBio(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Bio")));
-		Author.setAvatar(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Avatar")));
+		writeUser.setEmail(sessionUser.getEmail());
+		writeUser.setName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Name")));
+		writeUser.setUserName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Username")));
+		writeUser.setBio(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Bio")));
+		writeUser.setAvatar(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Avatar")));
 		UserConnector au = new UserConnector();
-		if (au.addUser(Author)== true){
-			lc = Author;
-			lc.login(lc.getEmail());
-			session.setAttribute("User", lc);
+		if (au.addUser(writeUser)== true){
+			sessionUser = writeUser;
+			sessionUser.login(sessionUser.getEmail());
+			session.setAttribute("User", sessionUser);
 			try {
-				response.sendRedirect("User/" + lc.getUserName());
+				response.sendRedirect("User/" + sessionUser.getUserName());
 			} catch (Exception et) {
 				System.out.println("Couldn't Forward to Show User");
 			}
@@ -238,26 +237,26 @@ public class User extends HttpServlet {
 	protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("Updating ze user ja");
-		UserStore Author =new UserStore();
+		UserStore updateUser =new UserStore();
 		RequestDispatcher rd;
 		HttpSession session=request.getSession();
-		UserStore lc =(UserStore)session.getAttribute("User");
-		if (lc==null){
+		UserStore sessionUser =(UserStore)session.getAttribute("User");
+		if (sessionUser==null){
 			rd=request.getRequestDispatcher("UpdateUser.jsp");
 			rd.forward(request,response);
 		}
-		Author = lc;
-		Author.setName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Name")));
-		Author.setBio(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Bio")));
-		System.out.println(Author.getBio());
-		Author.setAvatar(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Avatar")));
-		UserConnector au = new UserConnector();
-		if (au.updateUser(Author)== true){
-			lc = Author;
-			lc.login(lc.getEmail());
-			session.setAttribute("User", lc);
+		updateUser = sessionUser;
+		updateUser.setName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Name")));
+		updateUser.setBio(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Bio")));
+		System.out.println(updateUser.getBio());
+		updateUser.setAvatar(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Avatar")));
+		UserConnector connect = new UserConnector();
+		if (connect.updateUser(updateUser)== true){
+			sessionUser = updateUser;
+			sessionUser.login(sessionUser.getEmail());
+			session.setAttribute("User", sessionUser);
 			try {
-				response.sendRedirect("User/" + lc.getUserName());
+				response.sendRedirect("User/" + sessionUser.getUserName());
 			} catch (Exception et) {
 				System.out.println("Couldn't Forward to Show User");
 			}
@@ -273,9 +272,9 @@ public class User extends HttpServlet {
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
-		UserStore lc = (UserStore)session.getAttribute("User");
-		String username = lc.getUserName();
-		String email = lc.getEmail();
+		UserStore sessionUser = (UserStore)session.getAttribute("User");
+		String username = sessionUser.getUserName();
+		String email = sessionUser.getEmail();
 		UserConnector connect = new UserConnector();
 		List<FollowereeStore> followers = connect.getFollowers(username);
 		List<FollowereeStore> followees = connect.getFollowees(username);

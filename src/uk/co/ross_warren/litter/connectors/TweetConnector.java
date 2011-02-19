@@ -39,10 +39,10 @@ public class TweetConnector {
 		try
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			Mutator<String> mutator = HFactory.createMutator(ks,se);
 			Integer likes = store.getLikes();
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("likes", likes.toString()));
 			mutator.execute();
@@ -65,10 +65,10 @@ public class TweetConnector {
 		try
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			Mutator<String> mutator = HFactory.createMutator(ko,se);
+			Mutator<String> mutator = HFactory.createMutator(ks,se);
 			Long now = System.currentTimeMillis();
 			store.setTweetID(store.getUser() + now);
 			String time = now.toString();
@@ -78,7 +78,7 @@ public class TweetConnector {
 			}
 			mutator.addInsertion(store.getUser(), "UserTweets", HFactory.createStringColumn(store.getTweetID(), time));
 			mutator.execute();
-			mutator = HFactory.createMutator(ko,se);
+			mutator = HFactory.createMutator(ks,se);
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("user", store.getUser()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("replyToUser", store.getReplyToUser()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("content", store.getContent()));
@@ -150,10 +150,10 @@ public class TweetConnector {
 		try
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("AllTweets")
 			.setKey(tweetID)
 			.setColumnNames("user", "replyToUser", "content", "timestamp", "likes");
@@ -200,10 +200,10 @@ public class TweetConnector {
 		try 
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("AtReplies")
 			.setKey(username)
 			.setRange("", "", false, 100);
@@ -254,11 +254,11 @@ public class TweetConnector {
 		try
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
 			RangeSlicesQuery<String, String, String> rangeSlicesQuery =
-				HFactory.createRangeSlicesQuery(ko, se, se, se);
+				HFactory.createRangeSlicesQuery(ks, se, se, se);
 				rangeSlicesQuery.setColumnFamily("Likes");
 				rangeSlicesQuery.setKeys(username, username);
 				rangeSlicesQuery.setRange(tweetID, tweetID, false, 999);
@@ -292,10 +292,10 @@ public class TweetConnector {
 			try
 			{
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-				ko.setConsistencyLevelPolicy(mcl);
+				Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+				ks.setConsistencyLevelPolicy(mcl);
 				StringSerializer se = StringSerializer.get();
-				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				Mutator<String> mutator = HFactory.createMutator(ks,se);
 				mutator.delete(username, "Likes", tweetID, se);
 				mutator.execute();
 				TweetStore tweet = getTweet(tweetID);
@@ -334,10 +334,10 @@ public class TweetConnector {
 			try
 			{
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-				ko.setConsistencyLevelPolicy(mcl);
+				Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+				ks.setConsistencyLevelPolicy(mcl);
 				StringSerializer se = StringSerializer.get();
-				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				Mutator<String> mutator = HFactory.createMutator(ks,se);
 				Long now = System.currentTimeMillis();
 				mutator.addInsertion(username, "Likes", HFactory.createStringColumn(tweetID, now.toString()));
 				mutator.execute();
@@ -375,10 +375,10 @@ public class TweetConnector {
 		try 
 		{
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
-			Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
-			ko.setConsistencyLevelPolicy(mcl);
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
-			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ko, se, se, se);
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("UserTweets")
 			.setKey(username)
 			.setRange("", "", false, 100);

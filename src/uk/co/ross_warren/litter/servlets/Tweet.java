@@ -54,11 +54,11 @@ public class Tweet extends HttpServlet {
 				if (FormatsMap.containsKey(args[2])) {
 					Integer IFormat= (Integer)FormatsMap.get(args[2]);
 					HttpSession session=request.getSession();
-					UserStore lc = (UserStore)session.getAttribute("User");
-					if (lc != null && lc.isloggedIn() == true)
+					UserStore sessionUser = (UserStore)session.getAttribute("User");
+					if (sessionUser != null && sessionUser.isloggedIn() == true)
 					{
 						switch((int)IFormat.intValue()){
-							case 3:GetTweets(request, response,3,lc.getUserName()); //Only JSON implemented for now
+							case 3:GetTweets(request, response,3,sessionUser.getUserName()); //Only JSON implemented for now
 							break;
 						}
 						
@@ -91,8 +91,8 @@ public class Tweet extends HttpServlet {
 		// TODO Auto-generated method stub
 		TweetStore tweet = new TweetStore();
 		HttpSession session=request.getSession();
-		UserStore lc =(UserStore)session.getAttribute("User");
-		if (lc != null && lc.isloggedIn() == true)
+		UserStore sessionUser =(UserStore)session.getAttribute("User");
+		if (sessionUser != null && sessionUser.isloggedIn() == true)
 		{
 			String content = request.getParameter("Content");
 			
@@ -115,7 +115,7 @@ public class Tweet extends HttpServlet {
 					tweet.setReplyToUser(token);
 				}
 			}
-			tweet.setUser(lc.getUserName());
+			tweet.setUser(sessionUser.getUserName());
 			tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));
 			String unsafe = request.getParameter("Content");
 			String safe = Jsoup.clean(unsafe, Whitelist.basic());
