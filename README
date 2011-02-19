@@ -59,3 +59,8 @@ TODO:
 
 DELETE
 remove the tweet
+
+--Feed--
+GET
+no parameters - redirects to homepage to show tweets
+/json returns the logged in users feed as json
