@@ -7,14 +7,10 @@ No arguments - shows user page if logged in.
 /[username]/json shows a specific users details in json format.
 POST
 No arguments - adds the user in the session to the database. (if no user is in the session it forwards to the registration page)
-
-TODO:
-
 PUT
-Update user details
-
+Updates user details
 DELETE
-Delete the user
+Deletes the user
 
 -- Login --
 GET
@@ -33,7 +29,6 @@ No arguments - If an object is passed in by the request attribute "Data" it will
 GET
 /json return followers formatted as Json for logged in user
 /[username]/json - return followers formatted as Json for specified user
-
 POST
 /[username] - adds the user specified to those who the logged in user follows (or unfollows if already followed)
 
@@ -49,17 +44,14 @@ GET
 --Like--
 POST
 /[tweetID] - "likes" the tweet for the user currently logged in
-
-TODO:
 DELETE
-Unlike the tweet
+/[tweetID] - "Unlikes" the tweet  for the user currently logged in
 
 --Tweet--
 
 GET
 /json returns tweets formatted as json for logged in user
 /[username]/json returns tweets formatted as json for specified user
-
 POST
 adds a tweet for the logged in user
 

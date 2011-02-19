@@ -103,10 +103,14 @@ scope="session"
 						<p id="charlimitinfo">
 						<script>
 						$(function(){
-						$('#comment').keyup(function(){
-							limitChars('comment', 140, 'charlimitinfo');
+							$('#comment').keyup(function(){
+								limitChars('comment', 140, 'charlimitinfo');
 							});
+							
+							limitChars('comment', 140, 'charlimitinfo');			
+						
 						});
+						
 						</script>
 						</td>
 						<td style="vertical-align: top;">

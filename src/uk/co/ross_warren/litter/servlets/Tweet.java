@@ -95,6 +95,13 @@ public class Tweet extends HttpServlet {
 		if (lc != null && lc.isloggedIn() == true)
 		{
 			String content = request.getParameter("Content");
+			
+			if (content.length() > 140)
+			{
+				System.out.println("tweet too long");
+				response.sendRedirect("/Litter/");
+				return;
+			}
 			StringTokenizer tokens = new StringTokenizer(content);
 			tweet.setReplyToUser("");
 			while (tokens.hasMoreElements())
