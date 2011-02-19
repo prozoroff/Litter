@@ -22,6 +22,17 @@
   </servlet-mapping>
   <servlet>
     <description></description>
+    <display-name>Feed</display-name>
+    <servlet-name>Feed</servlet-name>
+    <servlet-class>uk.co.ross_warren.litter.servlets.Feed</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Feed</servlet-name>
+    <url-pattern>/Feed</url-pattern>
+    <url-pattern>/Feed/*</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
     <display-name>Follow</display-name>
     <servlet-name>Follow</servlet-name>
     <servlet-class>uk.co.ross_warren.litter.servlets.Follow</servlet-class>
@@ -96,7 +107,7 @@
     <servlet-name>Like</servlet-name>
     <url-pattern>/Like</url-pattern>
     <url-pattern>/Like/*</url-pattern>
-    </servlet-mapping>
+  </servlet-mapping>
   <error-page>
     <error-code>404</error-code>
     <location>/404.jsp</location>

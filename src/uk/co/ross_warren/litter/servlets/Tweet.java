@@ -118,7 +118,12 @@ public class Tweet extends HttpServlet {
 			tweet.setUser(sessionUser.getUserName());
 			tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));
 			String unsafe = request.getParameter("Content");
-			String safe = Jsoup.clean(unsafe, Whitelist.basic());
+			Whitelist custom = Whitelist.simpleText();
+			custom.addEnforcedAttribute("a", "rel", "nofollow");
+			custom.addProtocols("a", "href", "ftp", "http", "https");
+			custom.addAttributes("a", "href");
+			custom.addTags("a");
+			String safe = Jsoup.clean(unsafe, custom);
 			tweet.setContent(safe);
 			//tweet.setReplyToUser(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("ReplyToUser")));
 			try {
