@@ -277,6 +277,48 @@ public class TweetConnector {
 		}
 	}
 	
+	public void unLike(String username, String tweetID)
+	{
+		if (checkLike(username, tweetID) == true)
+		{
+			Cluster c; //V2
+			try{
+				c=CassandraHosts.getCluster();
+			}catch (Exception et){
+				System.out.println("Can't Connect to Cassandra. Check she is OK?");
+				return;
+			}
+			
+			try
+			{
+				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+				Keyspace ko = HFactory.createKeyspace("litter", c);  //V2
+				ko.setConsistencyLevelPolicy(mcl);
+				StringSerializer se = StringSerializer.get();
+				Mutator<String> mutator = HFactory.createMutator(ko,se);
+				mutator.delete(username, "Likes", tweetID, se);
+				mutator.execute();
+				TweetStore tweet = getTweet(tweetID);
+				try
+				{
+					tweet.setLikes(tweet.getLikes() - 1);
+				} catch (Exception e)
+				{
+					tweet.setLikes(1);
+				}
+				updateTweet(tweet);
+			}
+			catch (Exception e)
+			{
+				System.out.println("Errors!" + e);
+			}
+			
+		} else {
+			System.out.println("Wasn't liked anyway! What are you doing calling that? you fool!");
+		}
+	}
+	
+	
 	public void like(String username, String tweetID)
 	{
 		if (checkLike(username, tweetID) == false)

@@ -65,5 +65,34 @@ public class Like extends HttpServlet {
 			
 		}
 	}
+	
+	/**
+	 * @see HttpServlet#doDelete(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		StringSplitter split = new StringSplitter();
+		String args[]=split.SplitRequestPath(request);
+		if (args.length == 3)
+		{
+			System.out.println("Tweet ID to be unliked is " + args[2]);
+			String tweetID = args[2];
+			HttpSession session=request.getSession();
+			UserStore lc =(UserStore)session.getAttribute("User");
+			if (lc == null || lc.isloggedIn() == false)
+			{
+				return;
+			}
+			TweetConnector connect = new TweetConnector();
+			try
+			{
+				connect.unLike(lc.getUserName(), tweetID);
+			}
+				catch (Exception e)
+			{
+				System.out.println("Errors " + e);
+			}
+			
+		}
+	}
 
 }
