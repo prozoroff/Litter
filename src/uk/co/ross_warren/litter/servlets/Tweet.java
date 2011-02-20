@@ -154,7 +154,7 @@ public class Tweet extends HttpServlet {
 					connector.deleteTweet(args[2]);
 				} catch (Exception e)
 				{
-					System.out.println("There was curious error in tweeting the tweet." + e);
+					System.out.println("There was curious error in detweeting the tweet." + e);
 				}
 			}
 			

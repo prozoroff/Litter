@@ -57,15 +57,8 @@ scope="session"
            			   			type: "GET",
            			   			url: url3,
            			   			async: false,
-           			   			success: function(msg) {$.ajax({
-           			    			aysnc: true,
-           		    				type: "DELETE",
-           		    				url: url,
-           		    				dataType: "text",
-           		    				success: function(msg){
-           		    					location.reload(); 
-           		    				}
-           		    			});
+           			   			success: function(msg) {
+           			   			
          			   			callback.call(this, msg);
            			   		}
            			   	});

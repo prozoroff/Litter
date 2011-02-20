@@ -217,7 +217,7 @@ public class UserConnector {
 			System.out.println("Can't connect to Cassandra. Have you tried turning her on? - " + et);
 			return false;
 		}
-		////try{
+		try{
 			if (this.getUserByUsername(toFollow) !=null && this.getUserByUsername(toBeFollowed) !=null)
 			{
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
@@ -245,10 +245,10 @@ public class UserConnector {
 				System.out.println("You are trying to connect users that don't exist. Shame on you!");
 				return false;
 			}
-		//}catch (Exception et){
-		//	System.out.println("Adding the follower went terribly wrong. I suggest hiding underground until it all blows over. -" + et);
-		//	return false;
-		//}
+		}catch (Exception et){
+			System.out.println("Adding the follower went terribly wrong. I suggest hiding underground until it all blows over. -" + et);
+			return false;
+		}
 	}
 	
 	public boolean removeFollower(String toFollow, String toBeFollowed)

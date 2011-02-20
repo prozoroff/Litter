@@ -129,6 +129,7 @@ public class TweetConnector {
 			mutator.execute();
 			if (!store.getReplyToUser().equals(""))
 			{
+				mutator = HFactory.createMutator(ks,se);
 				mutator.addInsertion(store.getReplyToUser(), "AtReplies", HFactory.createStringColumn(store.getTweetID(), time));
 				mutator.execute();
 			}

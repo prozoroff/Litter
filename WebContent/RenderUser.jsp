@@ -67,7 +67,23 @@ scope="session"
 							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
        			}
        				
+       			
+       			var deletetext = '';
+       			var displayuser = '';
+       			var tweetuser = this.User;
+       			<% if (loggedin) { %>
        				
+       			displayuser = '<%= User.getUserName() %>';
+
+       			<% } %>
+       			
+       			
+       			
+       			if (displayuser == tweetuser)
+     			{
+     				deletetext = '<a style="float: right" class="delete"' +
+   					'id="' + this.TweetID + '">Delete</a>';
+     			}
 
    				$("#feed").append('<div class="tweet">' +
   					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
@@ -77,7 +93,8 @@ scope="session"
    					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
    					bleh + 
    					'<a style="float: right" class="like"' +
-   					'id="' + this.TweetID + '">' + like + '</a></p>' +
+   					'id="' + this.TweetID + '">' + like + '</a>' +
+   					deletetext + 
    					'</p></div>');
       		});
        			//$("#feed").fadeIn('slow');
@@ -127,6 +144,23 @@ scope="session"
        				bleh = ' to <a href="/Litter/User/' +
 							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
        			}
+       			
+       			var deletetext = '';
+       			var displayuser = '';
+       			var tweetuser = this.User;
+       			<% if (loggedin) { %>
+       				
+       			displayuser = '<%= User.getUserName() %>';
+
+       			<% } %>
+       			
+       			
+       			
+       			if (displayuser == tweetuser)
+     			{
+     				deletetext = '<a style="float: right" class="delete"' +
+   					'id="' + this.TweetID + '">Delete</a>';
+     			}
        				
        				
 
@@ -138,7 +172,8 @@ scope="session"
    					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
    					bleh + 
    					'<a style="float: right" class="like"' +
-   					'id="' + this.TweetID + '">' + like + '</a></p>' +
+   					'id="' + this.TweetID + '">' + like + '</a>' +
+   					deletetext + 
    					'</p></div>');
       		});
        			//$("#feed").fadeIn('slow');
@@ -274,6 +309,55 @@ scope="session"
 		   			}
 		   		});
 	        });
+	        
+	        $("a.like").live('click', function () {
+	        	var url = "/Litter/Like/" + (this.id);
+	        	var text = this.text;
+	        	var text2 = "Like";
+	        	if (text == text2)
+	       		{
+		       		$.ajax({
+		        			aysnc: true,
+		   				type: "POST",
+		   				url: url,
+		   				dataType: "text",
+		   				success: function(msg){
+		   					loadfeed();
+		   					loadmentions();
+		   				}
+		   	     	});
+	       		}
+	        	else {
+	        		$.ajax({
+	         			aysnc: true,
+	    				type: "DELETE",
+	    				url: url,
+	    				dataType: "text",
+	    				success: function(msg){
+	    					loadfeed();
+	    					loadmentions();
+	    				}
+	    	     	});
+	        	}
+	     		
+		     	
+	     	
+			}); 
+	        
+	        $("a.delete").live('click', function () {
+	        	var url = "/Litter/Tweet/" + (this.id);
+        		$.ajax({
+         			aysnc: true,
+    				type: "DELETE",
+    				url: url,
+    				dataType: "text",
+    				success: function(msg){
+    					loadfeed();
+    					loadmentions();
+    				}
+	        	});
+	        });
+	        
         <%
         } %>
         $(function() {
@@ -316,39 +400,7 @@ scope="session"
 	   		});
  		});
         
-        $("a.like").live('click', function () {
-        	var url = "/Litter/Like/" + (this.id);
-        	var text = this.text;
-        	var text2 = "Like";
-        	if (text == text2)
-       		{
-	       		$.ajax({
-	        			aysnc: true,
-	   				type: "POST",
-	   				url: url,
-	   				dataType: "text",
-	   				success: function(msg){
-	   					loadfeed();
-	   					loadmentions();
-	   				}
-	   	     	});
-       		}
-        	else {
-        		$.ajax({
-         			aysnc: true,
-    				type: "DELETE",
-    				url: url,
-    				dataType: "text",
-    				success: function(msg){
-    					loadfeed();
-    					loadmentions();
-    				}
-    	     	});
-        	}
-     		
-	     	
-     	
-		}); 
+        
         
         
 		$(function() {
