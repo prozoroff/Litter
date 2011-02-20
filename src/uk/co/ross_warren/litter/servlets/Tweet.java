@@ -96,9 +96,9 @@ public class Tweet extends HttpServlet {
 		{
 			String content = request.getParameter("Content");
 			
-			if (content.length() > 140)
+			if (content.length() > 140 || content.length() < 2)
 			{
-				System.out.println("tweet too long");
+				System.out.println("tweet malformed");
 				response.sendRedirect("/Litter/");
 				return;
 			}

@@ -8,6 +8,7 @@ public class TweetStore implements Comparable<TweetStore>
 	private Long timeStamp = (long) 0;
 	private String replyToUser = "";
 	private String content = "";
+	private String avatarurl = "";
 	private int likes = 0;
 	
 	public void setTweetID(String tweetID) {
@@ -50,5 +51,11 @@ public class TweetStore implements Comparable<TweetStore>
 	}
 	public int getLikes() {
 		return likes;
+	}
+	public void setAvatarUrl(String avatarurl) {
+		this.avatarurl = avatarurl;
+	}
+	public String getAvatarUrl() {
+		return avatarurl;
 	}
 }

@@ -42,6 +42,74 @@ scope="session"
 				return true;
 			}
 		}
+		
+		function loadfeed() {
+        	
+			
+       		var count = 0;
+       		var url = '/Litter/Feed/json';
+       		$.getJSON(url, function(json) {
+       			$("#feed").fadeOut('fast');
+       			$("#feed").html('');
+       			$.each(json.Data, function(i, Data) {
+       				    
+       				var url3 = '/Litter/Like/' + this.TweetID;
+       				
+       				TheObject2 = {
+       					check : function(callback) {
+           			   		
+           			   		$.ajax({
+           			   			type: "GET",
+           			   			url: url3,
+           			   			async: false,
+           			   			success: function(msg) {$.ajax({
+           			    			aysnc: true,
+           		    				type: "DELETE",
+           		    				url: url,
+           		    				dataType: "text",
+           		    				success: function(msg){
+           		    					location.reload(); 
+           		    				}
+           		    		});
+           			   				callback.call(this, msg);
+           			   			}
+           			   		});
+           		        }
+       				};
+       				
+       			
+       				
+       				var like = 'Like';
+       				TheObject2.check(function(a) {
+       					like = a;
+       				});
+       				
+       				var isempty = this.ReplyToUser;
+       				var bleh = '';
+       				if (isempty)
+       				{
+       					bleh = ' to <a href="/Litter/User/' +
+							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
+       				}
+       				
+       				
+
+       				$("#feed").append('<div class="tweet">' +
+     					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+     					'src="' + this.AvatarUrl + '" align="left" />' +
+     					'<p>' + this.Content +
+     					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
+       					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+       					bleh + 
+       					'<a style="float: right" class="like"' +
+       					'id="' + this.TweetID + '">' + like + '</a></p>' +
+       					'</p></div>');
+					count += 1;
+       			});
+       			$("#feed").fadeIn('slow');
+       		});	
+       		
+        }	
  		</script>
         <!-- Internet Explorer HTML5 enabling code: -->       
         <!--[if IE]>
@@ -95,7 +163,7 @@ scope="session"
                 <article id="Welcome">
                     <h2>Welcome back <%=User.getUserName() %></h2>
 					<div class="line"></div>  <!-- Dividing line -->
-					<form style="width: 80%" action='/Litter/Tweet' method="POST">
+					<form id = "totweet" style="width: 80%">
 						<table style="width: 100%">
 						<tr>
 						<td>
@@ -119,53 +187,7 @@ scope="session"
 						</tr>
 						</table>
 					</form>
-					<%
-						TweetConnector connect = new TweetConnector();
-						List<TweetStore> tweets= connect.GetFeed(User.getUserName());
-						if (tweets != null && tweets.size() > 0)
-						{
-							for (TweetStore tweet: tweets)
-							{
-								%>
-								<div class="tweet">
-								<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px" class="<%= tweet.getUser() %>" src="" align="left"/>
-								<% 
-							TweetConnector connector = new TweetConnector();
-							String like = "Like";
-							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "Unlike";
-							String username = tweet.getUser();
-							%>
-							
-							<p>
-							<%= tweet.getContent() %>
-							<span style="float: right">Likes: <%= tweet.getLikes() %></span></p>
-							<p><a href="/Litter/User/<%= username %>"><%= username %></a>
-								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-								%>
-								 to 
-								<a href="/Litter/User/<%= tweet.getReplyToUser() %>"><%= tweet.getReplyToUser() %></a>
-								<% } %>
-								
-							<a style="float: right" class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
-							</div>
-							<script>
-					        	$(function() {
-					        		$.ajax({
-					        			url: '/Litter/User/<%= tweet.getUser() %>/json',
-					        			success: function(data) {
-					        				var obj = jQuery.parseJSON(data);
-					        				var avatarurl = data.AvatarURL;	
-					        				$('.<%= tweet.getUser() %>').attr('src', obj.AvatarUrl);
-					        			}
-					        		});					        		
-					        	});
-					        </script>
-								<%
-							}	
-                }
-                
-					
-					%>
+					<div id="feed"></div>
                 </article>
                 <% } %>
             </section>
@@ -178,30 +200,65 @@ scope="session"
         
         <script>
         
-        $(".Unlike").click(function () {
-    		var url = "/Litter/Like/" + (this.id);
-    		$.ajax({
-    			aysnc: true,
+        
+        
+        <% if (loggedin) { %>
+        
+        $(function() {
+        	loadfeed();
+        });
+        
+        
+        
+		
+        $("a.like").live('click', function () {
+        	var url = "/Litter/Like/" + (this.id);
+        	var text = this.text;
+        	var text2 = "Like";
+        	if (text == text2)
+        		{
+        		$.ajax({
+         			aysnc: true,
+    				type: "POST",
+    				url: url,
+    				dataType: "text",
+    				success: function(msg){
+    					loadfeed();
+    				}
+    	     	});
+        		}
+        	else {
+        		$.ajax({
+         			aysnc: true,
     				type: "DELETE",
     				url: url,
     				dataType: "text",
     				success: function(msg){
-    					location.reload(); 
+    					loadfeed();
     				}
-    		});
-    		}); 
-           $(".Like").click(function () {
-        	var url = "/Litter/Like/" + (this.id);
+    	     	});
+        	}
+     		
+	     	
+     	
+		}); 
+        
+        $("#totweet").submit(function() {
+        	var form = $(this).serialize();
         	$.ajax({
-        		aysnc: true,
-   				type: "POST",
-   				url: url,
-   				dataType: "text",
-  				success: function(msg){
-  					location.reload(); 
-   				}
-        	});
- 		}); 
-                </script>
+       			url: "/Litter/Tweet?" + form,
+       		  	type: "POST",
+       		  	complete: function() {
+       		  		$("#comment").val('');
+       		  		limitChars('comment', 140, 'charlimitinfo');
+       		  		loadfeed();
+       		  	}		
+        	});		
+        	return false;
+        });
+        <% } %>
+        
+
+    	</script>
     </body>
 </html>

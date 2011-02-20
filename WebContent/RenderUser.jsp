@@ -200,7 +200,6 @@ scope="session"
 					        			url: '/Litter/User/<%= tweet.getUser() %>/json',
 					        			success: function(data) {
 					        				var obj = jQuery.parseJSON(data);
-					        				var avatarurl = data.AvatarURL;	
 					        				$('.<%= tweet.getUser() %>').attr('src', obj.AvatarUrl);
 					        			}
 					        		});					        		
@@ -228,19 +227,18 @@ scope="session"
         <% if (loggedin)
         {
         	%>
-        $(function() {
-	   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
-	   		$.ajax({
-	   			type: "GET",
-	   			url: url,
-	   			success: function(msg) {
-	   				$("#follow").text(msg);
-	   			}
-	   		});
-        });
+	        $(function() {
+		   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
+		   		$.ajax({
+		   			type: "GET",
+		   			url: url,
+		   			success: function(msg) {
+		   				$("#follow").text(msg);
+		   			}
+		   		});
+	        });
         <%
         } %>
-        
         $("#follow").click(function () {
         	var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
 	   		$.ajax({
@@ -276,8 +274,6 @@ scope="session"
 	   			}
 	   		});
  		});
-        </script>
-        <script>
         
 	        $(".Like").click(function () {
 		var url = "/Litter/Like/" + (this.id);
@@ -304,17 +300,10 @@ scope="session"
 	    				}
 	    		});
 	    		}); 
-        </script>   
-        
-        </script>
-        <script>
-	$(function() {
-		$( "button", ".demo" ).button();
-		$( "a", ".demo" ).click(function() { return false; });
-	});
-	</script>
-	
-		<script>
+		$(function() {
+			$( "button", ".demo" ).button();
+			$( "a", ".demo" ).click(function() { return false; });
+		});
        	$(function() {
        		var count = 0;
        		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/json';

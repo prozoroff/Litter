@@ -19,6 +19,7 @@ import uk.co.ross_warren.litter.Utils.CassandraHosts;
 import uk.co.ross_warren.litter.Utils.MyConsistancyLevel;
 import uk.co.ross_warren.litter.stores.FollowereeStore;
 import uk.co.ross_warren.litter.stores.TweetStore;
+import uk.co.ross_warren.litter.stores.UserStore;
 
 public class TweetConnector {
 	public TweetConnector()
@@ -134,6 +135,20 @@ public class TweetConnector {
 			}
 		}
 		if (tweets2 != null && tweets2.size() > 0) Collections.sort(tweets2);
+		for (TweetStore tweet: tweets2)
+		{
+			try
+			{
+				UserConnector connect = new UserConnector();
+				UserStore store = connect.getUserByUsername(tweet.getUser());
+				store = connect.getUserByEmail(store.getEmail());
+				tweet.setAvatarUrl(store.getAvatarUrl());
+			}
+			catch (Exception e)
+			{
+				//
+			}
+		}
 		return tweets2;
 	}
 	

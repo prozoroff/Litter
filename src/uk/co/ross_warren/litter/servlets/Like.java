@@ -1,6 +1,8 @@
 package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -32,7 +34,25 @@ public class Like extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		StringSplitter split = new StringSplitter();
+		String args[]=split.SplitRequestPath(request);
+		HttpSession session=request.getSession();
+		UserStore sessionUser = (UserStore)session.getAttribute("User");
+		if (args.length == 3)
+		{
+			PrintWriter pw = response.getWriter();
+			Boolean found = false;
+			TweetConnector connector = new TweetConnector();
+			found = !connector.checkLike(sessionUser.getUserName(), args[2]);
 		
+			if (found)
+			{
+				pw.print("Like");
+			} else {
+				pw.print("Unlike");
+			}
+			
+		}	
 	}
 
 	/**

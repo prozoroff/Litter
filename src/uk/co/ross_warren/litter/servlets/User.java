@@ -1,7 +1,6 @@
 package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -228,11 +227,14 @@ public class User extends HttpServlet {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 		UserStore sessionUser = (UserStore)session.getAttribute("User");
-		String username = sessionUser.getUserName();
-		String email = sessionUser.getEmail();
-		UserConnector connect = new UserConnector();
-		List<FollowereeStore> followers = connect.getFollowers(username);
-		List<FollowereeStore> followees = connect.getFollowees(username);
-		connect.deleteUser(username, email, followers, followees);
+		if (sessionUser != null && sessionUser.isloggedIn() == true)
+		{
+			String username = sessionUser.getUserName();
+			String email = sessionUser.getEmail();
+			UserConnector connect = new UserConnector();
+			List<FollowereeStore> followers = connect.getFollowers(username);
+			List<FollowereeStore> followees = connect.getFollowees(username);
+			connect.deleteUser(username, email, followers, followees);
+		}
 	}
 }
