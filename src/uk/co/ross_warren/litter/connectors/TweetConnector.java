@@ -54,6 +54,47 @@ public class TweetConnector {
 		}
 	}
 	
+	public void deleteTweet(String tweetID)
+	{
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+		}catch (Exception et){
+			System.out.println("Can't Connect to Cassandra. Check she is OK?");
+			return;
+		}
+		
+		try{
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			Mutator<String> mutator = HFactory.createMutator(ks,se);
+			
+			TweetStore store = getTweet(tweetID);
+			if (store == null) return;
+				
+			String username = store.getUser();
+			String reply = store.getReplyToUser();
+
+			mutator.delete(username, "UserTweets", tweetID, se);
+			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
+			mutator.delete(tweetID, "AllTweets", null, se);
+			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
+			if (reply != null && !reply.equals(""))
+			{
+				mutator.delete(reply, "AtReplies", tweetID, se);
+				mutator.execute();
+			}
+		}
+		catch (Exception e)
+		{
+			System.out.println("Adding the tweet totally failed :(" + e);
+		}
+	}
+	
 	public void addTweet(TweetStore store)
 	{
 		Cluster c; //V2
@@ -98,7 +139,7 @@ public class TweetConnector {
 		}
 	}
 	
-	public List<TweetStore> GetFeed(String username)
+	public List<TweetStore> getFeed(String username)
 	{
 		List<String> tweetIDs = new LinkedList<String>();
 		UserConnector userConnector = new UserConnector();

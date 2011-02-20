@@ -85,7 +85,7 @@ public class Feed extends HttpServlet {
 		 * 
 		 */
 		TweetConnector connect = new TweetConnector();
-		List<TweetStore> feed = connect.GetFeed(username);		
+		List<TweetStore> feed = connect.getFeed(username);		
 		switch(Format){
 			case 3: request.setAttribute("Data", feed);
 					RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");

@@ -138,6 +138,28 @@ public class Tweet extends HttpServlet {
 		}
 	}
 	
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		UserStore sessionUser =(UserStore)session.getAttribute("User");
+		if (sessionUser != null && sessionUser.isloggedIn() == true)
+		{
+			StringSplitter split = new StringSplitter();
+			String args[]=split.SplitRequestPath(request);
+			
+			if (args.length == 3)
+			{
+				try {
+					TweetConnector connector = new TweetConnector();
+					connector.deleteTweet(args[2]);
+				} catch (Exception e)
+				{
+					System.out.println("There was curious error in tweeting the tweet." + e);
+				}
+			}
+			
+		}
+	}
+	
 	public void GetTweets(HttpServletRequest request, HttpServletResponse response,int Format, String username) throws ServletException, IOException{
 		/*  Format is one of
 		 *  0 jsp

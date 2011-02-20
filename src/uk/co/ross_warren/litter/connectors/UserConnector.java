@@ -136,16 +136,22 @@ public class UserConnector {
 			Mutator<String> mutator = HFactory.createMutator(ks,se);
 			mutator.delete(username, "Likes", null, se);
 			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
 			mutator.delete(username, "UserTweets", null, se);
 			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
 			mutator.delete(username, "AtReplies", null, se);
 			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
 			mutator.delete(username, "Followers", null, se);
 			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
 			mutator.delete(username, "Followees", null, se);
 			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
 			mutator.delete(username, "Username", null, se);
 			mutator.execute();
+			mutator = HFactory.createMutator(ks,se);
 			mutator.delete(email, "User", null, se);
 			mutator.execute();
 			
