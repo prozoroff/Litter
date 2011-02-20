@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import uk.co.ross_warren.litter.Utils.StringSplitter;
 import uk.co.ross_warren.litter.connectors.TweetConnector;
+import uk.co.ross_warren.litter.connectors.UserConnector;
 import uk.co.ross_warren.litter.stores.TweetStore;
 import uk.co.ross_warren.litter.stores.UserStore;
 
@@ -98,8 +99,18 @@ public class Mentions extends HttpServlet {
 		 * 
 		 */
 		TweetConnector connect = new TweetConnector();
-		
 		List<TweetStore> feed = connect.getAtReplies(username);
+		
+		UserConnector connector = new UserConnector();
+		if (feed == null || feed.size() < 1) return;
+			
+		for (TweetStore tweet: feed)
+		{
+			UserStore store = connector.getUserByUsername(tweet.getUser());
+			store = connector.getUserByEmail(store.getEmail());
+			String avatarurl = store.getAvatarUrl();
+			tweet.setAvatarUrl(avatarurl);
+		}
 		switch(Format){
 			case 3: request.setAttribute("Data", feed);
 					RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");

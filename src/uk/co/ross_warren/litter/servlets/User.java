@@ -118,16 +118,6 @@ public class User extends HttpServlet {
 				dataUser.setName("");
 			} else {
 				dataUser.setUserName(username);
-				request.setAttribute("Tweets", null);
-				TweetConnector tweetConnect = new TweetConnector();
-				List<TweetStore> tweets = tweetConnect.getTweets(dataUser.getUserName());
-				if (tweets != null && tweets.size() > 0) Collections.sort(tweets);
-				request.setAttribute("Tweets", tweets);
-				request.setAttribute("AtReplies", null);
-				List<TweetStore> atReplies = tweetConnect.getAtReplies(dataUser.getUserName());
-				if (atReplies != null && atReplies.size() > 0) Collections.sort(atReplies);
-				request.setAttribute("AtReplies", atReplies);
-		
 			}
 		}
 		

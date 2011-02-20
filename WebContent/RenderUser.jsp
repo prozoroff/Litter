@@ -25,8 +25,7 @@ scope="session"
         <script src="../js/JSON.js"></script>
         <script>
         function loadfeed() {
-       		var count = 0;
-       		var url = '/Litter/Tweet/json';
+       		var url = '/Litter/Tweet/<%= displayUser.getUserName() %>/json';
        		$.getJSON(url, function(json) {
        			//$("#feed").fadeOut('fast');
        			$("#feed").html('');
@@ -80,7 +79,67 @@ scope="session"
    					'<a style="float: right" class="like"' +
    					'id="' + this.TweetID + '">' + like + '</a></p>' +
    					'</p></div>');
-				count += 1;
+      		});
+       			//$("#feed").fadeIn('slow');
+       	});	
+       		
+        }	
+        
+        function loadmentions() {
+       		var url = '/Litter/Mentions/<%= displayUser.getUserName() %>/json';
+       		$.getJSON(url, function(json) {
+       			//$("#feed").fadeOut('fast');
+       			$("#mentions").html('');
+       			$.each(json.Data, function(i, Data) {   
+       				var url3 = '/Litter/Like/' + this.TweetID;
+       				TheObject2 = {
+       					check : function(callback) {
+           			   		$.ajax({
+           			   			type: "GET",
+           			   			url: url3,
+           			   			async: false,
+           			   			success: function(msg) {$.ajax({
+           			    			//aysnc: true,
+           		    			//	type: "DELETE",
+           		    			///	url: url,
+           		    			//	dataType: "text",
+           		    			//	success: function(msg){
+           		    			//		location.reload(); 
+           		    			//	}
+           		    			});
+         			   			callback.call(this, msg);
+           			   		}
+           			   	});
+           		 	}
+       			};
+       				
+       			
+       				
+     			var like = 'Like';
+     			TheObject2.check(function(a) {
+     				like = a;
+     			});
+       				
+       			var isempty = this.ReplyToUser;
+       			var bleh = '';
+       			if (isempty)
+       			{
+       				bleh = ' to <a href="/Litter/User/' +
+							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
+       			}
+       				
+       				
+
+   				$("#mentions").append('<div class="tweet">' +
+  					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+  					'src="' + this.AvatarUrl + '" align="left" />' +
+  					'<p>' + this.Content +
+  					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
+   					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+   					bleh + 
+   					'<a style="float: right" class="like"' +
+   					'id="' + this.TweetID + '">' + like + '</a></p>' +
+   					'</p></div>');
       		});
        			//$("#feed").fadeIn('slow');
        	});	
@@ -162,6 +221,7 @@ scope="session"
 							<%
 						}
 					} 
+					}
 					%>
 					</td>
 					</tr>
@@ -171,8 +231,6 @@ scope="session"
 					<p>
 					<div id="followers"></div>	
 					</p>
-					
-					<div class="line"></div>  <!-- Dividing line -->  
 					<h4><%=displayUser.getUserName() %> Follows <span id="followeecount"></span> Users</h4>
 					<p>
 					<div id="followees"></div>	
@@ -187,50 +245,7 @@ scope="session"
 				</td>
 				<td style="width: 50%; vertical-align: top">
 					<h2><%= displayUser.getUserName() %>'s Mentions</h2>
-					<% 
-					List<TweetStore> atReplies = (List<TweetStore>)request.getAttribute("AtReplies");
-					if (atReplies != null && atReplies.size() > 0)
-					{
-						for (TweetStore tweet: atReplies)
-						{
-							%>
-							<div class="tweet">
-								<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px" class="<%= tweet.getUser() %>" src="" align="left"/>
-								<% 
-							TweetConnector connector = new TweetConnector();
-							String like = "Like";
-							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "Unlike";
-							String username = tweet.getUser();
-							%>
-							
-							<p>
-							<%= tweet.getContent() %>
-							<span style="float: right">Likes: <%= tweet.getLikes() %></span></p>
-							<p><a href="/Litter/User/<%= username %>"><%= username %></a>
-								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-								%>
-								 to 
-								<a href="/Litter/User/<%= tweet.getReplyToUser() %>"><%= tweet.getReplyToUser() %></a>
-								<% } %>
-								
-							<a style="float: right" class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
-							</div>
-							<script>
-					        	$(function() {
-					        		$.ajax({
-					        			url: '/Litter/User/<%= tweet.getUser() %>/json',
-					        			success: function(data) {
-					        				var obj = jQuery.parseJSON(data);
-					        				$('.<%= tweet.getUser() %>').attr('src', obj.AvatarUrl);
-					        			}
-					        		});					        		
-					        	});
-					        </script>
-							<%
-						}	
-					}
-					}
-				%>
+					<div id="mentions"></div>
 				</tr>
 				</table>
 				</article>
@@ -243,15 +258,12 @@ scope="session"
 		
         <script src="../jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="../script.js"></script>
-        <script>
-        
+        <script>        
         <% if (loggedin)
         {
         	
         	%>
-        	$(function() {
-            	loadfeed();
-            });
+        	
 	        $(function() {
 		   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
 		   		$.ajax({
@@ -264,6 +276,10 @@ scope="session"
 	        });
         <%
         } %>
+        $(function() {
+        	loadfeed();
+        	loadmentions();
+        });
         $("#follow").click(function () {
         	var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
 	   		$.ajax({
@@ -313,6 +329,7 @@ scope="session"
 	   				dataType: "text",
 	   				success: function(msg){
 	   					loadfeed();
+	   					loadmentions();
 	   				}
 	   	     	});
        		}
@@ -324,6 +341,7 @@ scope="session"
     				dataType: "text",
     				success: function(msg){
     					loadfeed();
+    					loadmentions();
     				}
     	     	});
         	}
@@ -352,6 +370,7 @@ scope="session"
        			});
        			$("#followeecount").append(count);
        		});		
+       	
        		var url = '/Litter/Follow/<%= displayUser.getUserName() %>/json';
        		$.getJSON(url, function(json) {
        			var count = 0;
@@ -368,7 +387,6 @@ scope="session"
        		});	
        	});
        </script>
-					
-         
+
     </body>
 </html>
