@@ -23,6 +23,70 @@ scope="session"
         <script src="../js/jquery-1.4.4.min.js"></script>
         <script src="../js/jquery-ui-1.8.9.custom.min.js"></script>
         <script src="../js/JSON.js"></script>
+        <script>
+        function loadfeed() {
+       		var count = 0;
+       		var url = '/Litter/Tweet/json';
+       		$.getJSON(url, function(json) {
+       			//$("#feed").fadeOut('fast');
+       			$("#feed").html('');
+       			$.each(json.Data, function(i, Data) {   
+       				var url3 = '/Litter/Like/' + this.TweetID;
+       				TheObject2 = {
+       					check : function(callback) {
+           			   		$.ajax({
+           			   			type: "GET",
+           			   			url: url3,
+           			   			async: false,
+           			   			success: function(msg) {$.ajax({
+           			    			//aysnc: true,
+           		    			//	type: "DELETE",
+           		    			///	url: url,
+           		    			//	dataType: "text",
+           		    			//	success: function(msg){
+           		    			//		location.reload(); 
+           		    			//	}
+           		    			});
+         			   			callback.call(this, msg);
+           			   		}
+           			   	});
+           		 	}
+       			};
+       				
+       			
+       				
+     			var like = 'Like';
+     			TheObject2.check(function(a) {
+     				like = a;
+     			});
+       				
+       			var isempty = this.ReplyToUser;
+       			var bleh = '';
+       			if (isempty)
+       			{
+       				bleh = ' to <a href="/Litter/User/' +
+							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
+       			}
+       				
+       				
+
+   				$("#feed").append('<div class="tweet">' +
+  					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+  					'src="' + this.AvatarUrl + '" align="left" />' +
+  					'<p>' + this.Content +
+  					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
+   					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+   					bleh + 
+   					'<a style="float: right" class="like"' +
+   					'id="' + this.TweetID + '">' + like + '</a></p>' +
+   					'</p></div>');
+				count += 1;
+      		});
+       			//$("#feed").fadeIn('slow');
+       	});	
+       		
+        }	
+        </script>
         <link rel="stylesheet" type="text/css" href="../styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'> 
         <link type="text/css" href="../css/ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
@@ -119,50 +183,7 @@ scope="session"
 					<tr>
 					<td style="width: 50%; vertical-align: top">
 					<h2><%= displayUser.getUserName() %>'s Timeline</h2>
-					<% 
-					List<TweetStore> tweets = (List<TweetStore>)request.getAttribute("Tweets");
-					if (tweets != null && tweets.size() > 0)
-					{
-						for (TweetStore tweet: tweets)
-						{
-							%>
-							<div class="tweet">
-								<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px" class="<%= tweet.getUser() %>" src="" align="left"/>
-								<% 
-							TweetConnector connector = new TweetConnector();
-							String like = "Like";
-							if (connector.checkLike(User.getUserName(), tweet.getTweetID()) == true) like = "Unlike";
-							String username = tweet.getUser();
-							%>
-							
-							<p>
-							<%= tweet.getContent() %>
-							<span style="float: right">Likes: <%= tweet.getLikes() %></span></p>
-							<p><a href="/Litter/User/<%= username %>"><%= username %></a>
-								<% if (tweet.getReplyToUser() != null && !tweet.getReplyToUser().equals("")) {
-								%>
-								 to 
-								<a href="/Litter/User/<%= tweet.getReplyToUser() %>"><%= tweet.getReplyToUser() %></a>
-								<% } %>
-								
-							<a style="float: right" class="<%= like %>" id="<%=tweet.getTweetID() %>"><%= like %></a></p>
-							</div>
-							<script>
-					        	$(function() {
-					        		$.ajax({
-					        			url: '/Litter/User/<%= tweet.getUser() %>/json',
-					        			success: function(data) {
-					        				var obj = jQuery.parseJSON(data);
-					        				var avatarurl = data.AvatarURL;	
-					        				$('.<%= tweet.getUser() %>').attr('src', obj.AvatarUrl);
-					        			}
-					        		});					        		
-					        	});
-					        </script>
-							<%
-						}	
-					}
-				%>
+					<div id="feed"></div>
 				</td>
 				<td style="width: 50%; vertical-align: top">
 					<h2><%= displayUser.getUserName() %>'s Mentions</h2>
@@ -226,7 +247,11 @@ scope="session"
         
         <% if (loggedin)
         {
+        	
         	%>
+        	$(function() {
+            	loadfeed();
+            });
 	        $(function() {
 		   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
 		   		$.ajax({
@@ -275,31 +300,39 @@ scope="session"
 	   		});
  		});
         
-	        $(".Like").click(function () {
-		var url = "/Litter/Like/" + (this.id);
-		$.ajax({
-			aysnc: true,
-				type: "POST",
-				url: url,
-				dataType: "text",
-				success: function(msg){
-					location.reload(); 
-				}
-		});
+        $("a.like").live('click', function () {
+        	var url = "/Litter/Like/" + (this.id);
+        	var text = this.text;
+        	var text2 = "Like";
+        	if (text == text2)
+       		{
+	       		$.ajax({
+	        			aysnc: true,
+	   				type: "POST",
+	   				url: url,
+	   				dataType: "text",
+	   				success: function(msg){
+	   					loadfeed();
+	   				}
+	   	     	});
+       		}
+        	else {
+        		$.ajax({
+         			aysnc: true,
+    				type: "DELETE",
+    				url: url,
+    				dataType: "text",
+    				success: function(msg){
+    					loadfeed();
+    				}
+    	     	});
+        	}
+     		
+	     	
+     	
 		}); 
-	        
-	        $(".Unlike").click(function () {
-	    		var url = "/Litter/Like/" + (this.id);
-	    		$.ajax({
-	    			aysnc: true,
-	    				type: "DELETE",
-	    				url: url,
-	    				dataType: "text",
-	    				success: function(msg){
-	    					location.reload(); 
-	    				}
-	    		});
-	    		}); 
+        
+        
 		$(function() {
 			$( "button", ".demo" ).button();
 			$( "a", ".demo" ).click(function() { return false; });

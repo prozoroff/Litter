@@ -217,7 +217,7 @@ public class UserConnector {
 			System.out.println("Can't connect to Cassandra. Have you tried turning her on? - " + et);
 			return false;
 		}
-		try{
+		////try{
 			if (this.getUserByUsername(toFollow) !=null && this.getUserByUsername(toBeFollowed) !=null)
 			{
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
@@ -226,14 +226,14 @@ public class UserConnector {
 				StringSerializer se = StringSerializer.get();
 				
 				//--------------------- Check if it already exists
-				RangeSlicesQuery<String, String, String> rangeSlicesQuery =
-					HFactory.createRangeSlicesQuery(ks, se, se, se);
-					rangeSlicesQuery.setColumnFamily("Followers");
-					rangeSlicesQuery.setKeys(toBeFollowed, toBeFollowed);
-					rangeSlicesQuery.setRange(toFollow, toFollow, false, 999);
-					QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
-				OrderedRows<String, String, String> rows = result.get();
-				if (rows.getByKey(toBeFollowed).getColumnSlice().getColumns().isEmpty() == false) return false;
+				//RangeSlicesQuery<String, String, String> rangeSlicesQuery =
+				//	HFactory.createRangeSlicesQuery(ks, se, se, se);
+				//	rangeSlicesQuery.setColumnFamily("Followers");
+				//	rangeSlicesQuery.setKeys(toBeFollowed, toBeFollowed);
+				//	rangeSlicesQuery.setRange(toFollow, toFollow, false, 999);
+				//	QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
+				//OrderedRows<String, String, String> rows = result.get();
+				//if (rows.getByKey(toBeFollowed).getColumnSlice().getColumns().isEmpty() == false) return false;
 				//---------------------- 
 				Long now = System.currentTimeMillis();
 				Mutator<String> mutator = HFactory.createMutator(ks,se);
@@ -245,10 +245,10 @@ public class UserConnector {
 				System.out.println("You are trying to connect users that don't exist. Shame on you!");
 				return false;
 			}
-		}catch (Exception et){
-			System.out.println("Adding the follower went terribly wrong. I suggest hiding underground until it all blows over. -" + et);
-			return false;
-		}
+		//}catch (Exception et){
+		//	System.out.println("Adding the follower went terribly wrong. I suggest hiding underground until it all blows over. -" + et);
+		//	return false;
+		//}
 	}
 	
 	public boolean removeFollower(String toFollow, String toBeFollowed)

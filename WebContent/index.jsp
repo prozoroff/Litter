@@ -44,20 +44,15 @@ scope="session"
 		}
 		
 		function loadfeed() {
-        	
-			
        		var count = 0;
        		var url = '/Litter/Feed/json';
        		$.getJSON(url, function(json) {
-       			$("#feed").fadeOut('fast');
+       			//$("#feed").fadeOut('fast');
        			$("#feed").html('');
-       			$.each(json.Data, function(i, Data) {
-       				    
+       			$.each(json.Data, function(i, Data) {   
        				var url3 = '/Litter/Like/' + this.TweetID;
-       				
        				TheObject2 = {
        					check : function(callback) {
-           			   		
            			   		$.ajax({
            			   			type: "GET",
            			   			url: url3,
@@ -70,44 +65,44 @@ scope="session"
            		    				success: function(msg){
            		    					location.reload(); 
            		    				}
-           		    		});
-           			   				callback.call(this, msg);
-           			   			}
-           			   		});
-           		        }
-       				};
+           		    			});
+         			   			callback.call(this, msg);
+           			   		}
+           			   	});
+           		 	}
+       			};
        				
        			
        				
-       				var like = 'Like';
-       				TheObject2.check(function(a) {
-       					like = a;
-       				});
+     			var like = 'Like';
+     			TheObject2.check(function(a) {
+     				like = a;
+     			});
        				
-       				var isempty = this.ReplyToUser;
-       				var bleh = '';
-       				if (isempty)
-       				{
-       					bleh = ' to <a href="/Litter/User/' +
+       			var isempty = this.ReplyToUser;
+       			var bleh = '';
+       			if (isempty)
+       			{
+       				bleh = ' to <a href="/Litter/User/' +
 							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
-       				}
+       			}
        				
        				
 
-       				$("#feed").append('<div class="tweet">' +
-     					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
-     					'src="' + this.AvatarUrl + '" align="left" />' +
-     					'<p>' + this.Content +
-     					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
-       					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
-       					bleh + 
-       					'<a style="float: right" class="like"' +
-       					'id="' + this.TweetID + '">' + like + '</a></p>' +
-       					'</p></div>');
-					count += 1;
-       			});
-       			$("#feed").fadeIn('slow');
-       		});	
+   				$("#feed").append('<div class="tweet">' +
+  					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+  					'src="' + this.AvatarUrl + '" align="left" />' +
+  					'<p>' + this.Content +
+  					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
+   					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+   					bleh + 
+   					'<a style="float: right" class="like"' +
+   					'id="' + this.TweetID + '">' + like + '</a></p>' +
+   					'</p></div>');
+				count += 1;
+      		});
+       			//$("#feed").fadeIn('slow');
+       	});	
        		
         }	
  		</script>
@@ -216,17 +211,17 @@ scope="session"
         	var text = this.text;
         	var text2 = "Like";
         	if (text == text2)
-        		{
-        		$.ajax({
-         			aysnc: true,
-    				type: "POST",
-    				url: url,
-    				dataType: "text",
-    				success: function(msg){
-    					loadfeed();
-    				}
-    	     	});
-        		}
+       		{
+	       		$.ajax({
+	        			aysnc: true,
+	   				type: "POST",
+	   				url: url,
+	   				dataType: "text",
+	   				success: function(msg){
+	   					loadfeed();
+	   				}
+	   	     	});
+       		}
         	else {
         		$.ajax({
          			aysnc: true,

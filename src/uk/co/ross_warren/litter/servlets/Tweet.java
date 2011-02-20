@@ -19,6 +19,7 @@ import org.jsoup.safety.Whitelist;
 
 import uk.co.ross_warren.litter.Utils.StringSplitter;
 import uk.co.ross_warren.litter.connectors.TweetConnector;
+import uk.co.ross_warren.litter.connectors.UserConnector;
 import uk.co.ross_warren.litter.stores.TweetStore;
 import uk.co.ross_warren.litter.stores.UserStore;
 
@@ -170,7 +171,16 @@ public class Tweet extends HttpServlet {
 		 */
 		TweetConnector connect = new TweetConnector();
 		List<TweetStore> tweets = connect.getTweets(username);
-		if (tweets == null) return;
+		UserConnector connector = new UserConnector();
+		if (tweets == null || tweets.size() < 1) return;
+		UserStore store = connector.getUserByUsername(tweets.get(0).getUser());
+		store = connector.getUserByEmail(store.getEmail());
+		String avatarurl = store.getAvatarUrl();
+		
+		for (TweetStore tweet: tweets)
+		{
+			tweet.setAvatarUrl(avatarurl);
+		}
 		Collections.sort(tweets);
 		switch(Format){
 			case 3: request.setAttribute("Data", tweets);
