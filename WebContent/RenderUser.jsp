@@ -77,25 +77,34 @@ scope="session"
 
        			<% } %>
        			
-       			
-       			
        			if (displayuser == tweetuser)
      			{
      				deletetext = '<a style="float: right" class="delete"' +
-   					'id="' + this.TweetID + '">Delete</a>';
+   					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
      			}
 
    				$("#feed").append('<div class="tweet">' +
-  					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
-  					'src="' + this.AvatarUrl + '" align="left" />' +
-  					'<p>' + this.Content +
-  					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
-   					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
-   					bleh + 
-   					'<a style="float: right" class="like"' +
-   					'id="' + this.TweetID + '">' + like + '</a>' +
-   					deletetext + 
-   					'</p></div>');
+   						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+   	  					'src="' + this.AvatarUrl + '" align="left" />' +
+   	  					'<p>' + this.Content +
+   	  					'<span style="float: right">Likes: ' + this.Likes +
+   	  					<%
+   	  					if (loggedin == true)
+   	  						{
+   	  						%>
+   	  						
+   	  						
+   	  					' - <a class="like"' +
+   	   					'id="' + this.TweetID + '">' + like + '</a>' +
+   	   				<%
+   	  						}%>
+   	  					'</span></p>' +
+   	   					'<p>' +
+   	  					deletetext + 
+   	  					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+   	   					bleh + 
+   	   					'</p>' +
+   	   					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
        	});	
@@ -159,22 +168,33 @@ scope="session"
        			if (displayuser == tweetuser)
      			{
      				deletetext = '<a style="float: right" class="delete"' +
-   					'id="' + this.TweetID + '">Delete</a>';
+   					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
      			}
        				
        				
 
-   				$("#mentions").append('<div class="tweet">' +
-  					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
-  					'src="' + this.AvatarUrl + '" align="left" />' +
-  					'<p>' + this.Content +
-  					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
-   					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
-   					bleh + 
-   					'<a style="float: right" class="like"' +
-   					'id="' + this.TweetID + '">' + like + '</a>' +
-   					deletetext + 
-   					'</p></div>');
+       			$("#mentions").append('<div class="tweet">' +
+      					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+      					'src="' + this.AvatarUrl + '" align="left" />' +
+      					'<p>' + this.Content +
+      					'<span style="float: right">Likes: ' + this.Likes +
+      					<%
+    	  					if (loggedin == true)
+    	  						{
+    	  						%>
+    	  						
+    	  						
+    	  					' - <a class="like"' +
+    	   					'id="' + this.TweetID + '">' + like + '</a>' +
+    	   				<%
+    	  						}%>
+    	  					'</span></p>' +
+       					'<p>' +
+      					deletetext + 
+      					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+       					bleh + 
+       					'</p>' +
+       					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
        	});	

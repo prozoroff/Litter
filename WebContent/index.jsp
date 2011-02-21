@@ -81,18 +81,43 @@ scope="session"
        			}
        				
        				
+       			var deletetext = '';
+       			var displayuser = '';
+       			var tweetuser = this.User;
+       			<% if (loggedin) { %>
+       				
+       			displayuser = '<%= User.getUserName() %>';
+
+       			<% } %>
+       			
+       			if (displayuser == tweetuser)
+     			{
+     				deletetext = '<a style="float: right" class="delete"' +
+   					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
+     			}
 
    				$("#feed").append('<div class="tweet">' +
-  					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
-  					'src="' + this.AvatarUrl + '" align="left" />' +
-  					'<p>' + this.Content +
-  					'<span style="float: right">Likes: ' + this.Likes + '</span>' + '</p>' +
-   					'<p><a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
-   					bleh + 
-   					'<a style="float: right" class="like"' +
-   					'id="' + this.TweetID + '">' + like + '</a></p>' +
-   					'</p></div>');
-				count += 1;
+   						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+      					'src="' + this.AvatarUrl + '" align="left" />' +
+      					'<p>' + this.Content +
+      					'<span style="float: right">Likes: ' + this.Likes +
+      					<%
+    	  					if (loggedin == true)
+    	  						{
+    	  						%>
+    	  						
+    	  						
+    	  					' - <a class="like"' +
+    	   					'id="' + this.TweetID + '">' + like + '</a>' +
+    	   				<%
+    	  						}%>
+    	  					'</span></p>' +
+       					'<p>' +
+      					deletetext + 
+      					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+       					bleh + 
+       					'</p>' +
+       					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
        	});	
@@ -196,7 +221,19 @@ scope="session"
         	loadfeed();
         });
         
-        
+        $("a.delete").live('click', function () {
+        	var url = "/Litter/Tweet/" + (this.id);
+    		$.ajax({
+     			aysnc: true,
+				type: "DELETE",
+				url: url,
+				dataType: "text",
+				success: function(msg){
+					loadfeed();
+					loadmentions();
+				}
+        	});
+        });
         
 		
         $("a.like").live('click', function () {
