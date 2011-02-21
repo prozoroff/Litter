@@ -293,16 +293,16 @@ scope="session"
 					<div class="line"></div>  <!-- Dividing line --> 		
 					 
 					<table style="width: 100%">
-					<tr>
-					<td style="width: 50%; vertical-align: top">
-					<h2><%= displayUser.getUserName() %>'s Timeline</h2>
-					<div id="feed"></div>
-				</td>
-				<td style="width: 50%; vertical-align: top">
-					<h2><%= displayUser.getUserName() %>'s Mentions</h2>
-					<div id="mentions"></div>
-				</tr>
-				</table>
+						<tr>
+							<td style="width: 50%; vertical-align: top">
+							<h2><%= displayUser.getUserName() %>'s Timeline</h2>
+							<div id="feed"></div>
+							</td>
+							<td style="width: 50%; vertical-align: top">
+							<h2><%= displayUser.getUserName() %>'s Mentions</h2>
+							<div id="mentions"></div>
+						</tr>
+					</table>
 				</article>
             </section>
        <%@ include file="footer.jsp" %>  

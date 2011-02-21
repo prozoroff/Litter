@@ -136,7 +136,7 @@ nav{
 	position:absolute;
 	right:0;
 	top:4em;
-	
+
 	border:1px solid #FCFCFC;
 
 	-moz-box-shadow:0 1px 1px #333333;
@@ -197,7 +197,7 @@ article{
 	background-color:#1F3A45;
 	margin:3em 0;
 	padding:20px;
-	
+
 	text-shadow:0 2px 0 black;
 }
 
@@ -267,17 +267,17 @@ input, textarea {
 			display:block;
 			margin-bottom:16px;
 			margin-top:8px;
-			
+
 			-webkit-border-radius:5px;
 			-moz-border-radius:5px;
 			border-radius:5px;
-			
+
 			-webkit-transition: all 0.5s ease-in-out;
 			-moz-transition: all 0.5s ease-in-out;
 			transition: all 0.5s ease-in-out;
 		}
-		
-		
+
+
 		textarea {
 				min-height:200px;
 				resize: none;
@@ -287,18 +287,18 @@ input, textarea {
 			-webkit-box-shadow:0 0 25px #ccc;
 			-moz-box-shadow:0 0 25px #ccc;
 			box-shadow:0 0 25px #ccc;
-			
+
 			-webkit-transform: scale(1.05);
 			-moz-transform: scale(1.05);
 			transform: scale(1.05);
 		}
-		
+
 		/* The interesting bit */
-		
+
 		input:not(:focus), textarea:not(:focus) {
 			opacity:0.5;
 		}
-		
+
 		input:required, textarea:required {
 			background:url("img/asterisk_orange.png") no-repeat 280px 7px;						
 		}
@@ -316,13 +316,12 @@ input, textarea {
 			background:none;
 			opacity:1.0;
 		}
-		
+
 		form {
 			width:300px;
 			margin: 20px auto;
 		}
-		
+
 		*:focus{
 			outline:none; /* Prevents blue border in Webkit */
 		}
-		

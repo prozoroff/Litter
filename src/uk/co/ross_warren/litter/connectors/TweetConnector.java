@@ -374,8 +374,7 @@ public class TweetConnector {
 			System.out.println("Wasn't liked anyway! What are you doing calling that? you fool!");
 		}
 	}
-	
-	
+		
 	public void like(String username, String tweetID)
 	{
 		if (checkLike(username, tweetID) == false)

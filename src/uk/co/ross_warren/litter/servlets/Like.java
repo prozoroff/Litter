@@ -2,7 +2,6 @@ package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +19,6 @@ import uk.co.ross_warren.litter.stores.UserStore;
 @WebServlet("/Like")
 public class Like extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -51,8 +49,7 @@ public class Like extends HttpServlet {
 			} else {
 				pw.print("Unlike");
 			}
-			
-		}	
+		}
 	}
 
 	/**

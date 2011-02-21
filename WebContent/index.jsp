@@ -24,7 +24,7 @@ scope="session"
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
         <script src="js/jquery-1.4.4.min.js"></script>
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
-         <script language="javascript" src="Jquery.js"></script>
+        <script language="javascript" src="Jquery.js"></script>
 		<script language="javascript">
 		function limitChars(textid, limit, infodiv)
 		{
@@ -63,10 +63,7 @@ scope="session"
            			   		}
            			   	});
            		 	}
-       			};
-       				
-       			
-       				
+       			};	
      			var like = 'Like';
      			TheObject2.check(function(a) {
      				like = a;
@@ -123,6 +120,84 @@ scope="session"
        	});	
        		
         }	
+		
+		function loadlikes() {
+       		var count = 0;
+       		var url = '/Litter/Feed/Like/json';
+       		$.getJSON(url, function(json) {
+       			//$("#feed").fadeOut('fast');
+       			$("#likefeed").html('');
+       			$.each(json.Data, function(i, Data) {   
+       				var url3 = '/Litter/Like/' + this.TweetID;
+       				TheObject2 = {
+       					check : function(callback) {
+           			   		$.ajax({
+           			   			type: "GET",
+           			   			url: url3,
+           			   			async: false,
+           			   			success: function(msg) {
+           			   			
+         			   			callback.call(this, msg);
+           			   		}
+           			   	});
+           		 	}
+       			};	
+     			var like = 'Like';
+     			TheObject2.check(function(a) {
+     				like = a;
+     			});
+       				
+       			var isempty = this.ReplyToUser;
+       			var bleh = '';
+       			if (isempty)
+       			{
+       				bleh = ' to <a href="/Litter/User/' +
+							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
+       			}
+       				
+       				
+       			var deletetext = '';
+       			var displayuser = '';
+       			var tweetuser = this.User;
+       			<% if (loggedin) { %>
+       				
+       			displayuser = '<%= User.getUserName() %>';
+
+       			<% } %>
+       			
+       			if (displayuser == tweetuser)
+     			{
+     				deletetext = '<a style="float: right" class="delete"' +
+   					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
+     			}
+
+   				$("#likefeed").append('<div class="tweet">' +
+   						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+      					'src="' + this.AvatarUrl + '" align="left" />' +
+      					'<p>' + this.Content +
+      					'<span style="float: right">Likes: ' + this.Likes +
+      					<%
+    	  					if (loggedin == true)
+    	  						{
+    	  						%>
+    	  						
+    	  						
+    	  					' - <a class="like"' +
+    	   					'id="' + this.TweetID + '">' + like + '</a>' +
+    	   				<%
+    	  						}%>
+    	  					'</span></p>' +
+       					'<p>' +
+      					deletetext + 
+      					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+       					bleh + 
+       					'</p>' +
+       					'</div>');
+      		});
+       			//$("#feed").fadeIn('slow');
+       	});	
+       		
+        }	
  		</script>
         <!-- Internet Explorer HTML5 enabling code: -->       
         <!--[if IE]>
@@ -140,7 +215,7 @@ scope="session"
             <header> <!-- Defining the header section of the page with the appropriate tag -->
                 <a href="/Litter/"><img style="padding-top: 15px; padding-right: 15px;" align="left" src="/Litter/img/IMG-small.png" /></a>
                 <hgroup>
-                    <h1><a href="/Litter/" style="color: white;">Litter</a></h1>
+                    <h1><a href="/Litter/" style="color: white">Litter</a></h1>
                     <h3>Like Twitter but with liking!</h3>
                 </hgroup>            
                 <nav class="clear"> <!-- The nav link semantically marks your main site navigation -->
@@ -200,7 +275,17 @@ scope="session"
 						</tr>
 						</table>
 					</form>
-					<div id="feed"></div>
+					<table style="width: 100%">
+						<tr>
+							<td style="width: 50%; vertical-align: top">
+							<h2>Your Feed</h2>
+							<div id="feed"></div>
+							</td>
+							<td style="width: 50%; vertical-align: top">
+							<h2>Most Popular Tweets</h2>
+							<div id="likefeed"></div>
+						</tr>
+					</table>
                 </article>
                 <% } %>
             </section>
@@ -213,12 +298,11 @@ scope="session"
         
         <script>
         
-        
-        
         <% if (loggedin) { %>
         
         $(function() {
         	loadfeed();
+        	loadlikes();
         });
         
         $("a.delete").live('click', function () {
@@ -230,7 +314,7 @@ scope="session"
 				dataType: "text",
 				success: function(msg){
 					loadfeed();
-					loadmentions();
+					loadlikes();
 				}
         	});
         });
@@ -249,6 +333,7 @@ scope="session"
 	   				dataType: "text",
 	   				success: function(msg){
 	   					loadfeed();
+	   					loadlikes();
 	   				}
 	   	     	});
        		}
@@ -260,6 +345,7 @@ scope="session"
     				dataType: "text",
     				success: function(msg){
     					loadfeed();
+    					loadlikes();
     				}
     	     	});
         	}
@@ -277,6 +363,7 @@ scope="session"
        		  		$("#comment").val('');
        		  		limitChars('comment', 140, 'charlimitinfo');
        		  		loadfeed();
+       		  		loadlikes();
        		  	}		
         	});		
         	return false;

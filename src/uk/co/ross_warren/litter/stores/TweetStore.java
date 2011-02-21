@@ -11,6 +11,8 @@ public class TweetStore implements Comparable<TweetStore>
 	private String avatarurl = "";
 	private int likes = 0;
 	
+	private Long sort = timeStamp;
+	
 	public void setTweetID(String tweetID) {
 		this.tweetID = tweetID;
 	}
@@ -25,6 +27,7 @@ public class TweetStore implements Comparable<TweetStore>
 	}
 	public void setTimeStamp(long timeStamp) {
 		this.timeStamp = timeStamp;
+		sort = timeStamp;
 	}
 	public long getTimeStamp() {
 		return timeStamp;
@@ -44,7 +47,15 @@ public class TweetStore implements Comparable<TweetStore>
 	@Override
 	public int compareTo(TweetStore o) {
 		// TODO Auto-generated method stub
-		return (int) (o.timeStamp - this.timeStamp);
+		return (int) (o.sort - this.sort);
+	}
+	public void switchToLikeOrdering()
+	{
+		sort = (long) likes;
+	}
+	public void switchToTimeOrdering()
+	{
+		sort = timeStamp;
 	}
 	public void setLikes(int likes) {
 		this.likes = likes;

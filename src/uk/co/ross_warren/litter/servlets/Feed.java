@@ -1,6 +1,7 @@
 package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,7 +58,26 @@ public class Feed extends HttpServlet {
 					if (sessionUser != null && sessionUser.isloggedIn() == true)
 					{
 						switch((int)IFormat.intValue()){
-							case 3:GetFeed(request, response,3,sessionUser.getUserName()); //Only JSON implemented for now
+							case 3:GetFeed(request, response,3,sessionUser.getUserName(), false); //Only JSON implemented for now
+							break;
+							case 0: response.sendRedirect("/Litter/");
+							break;
+							default: response.sendRedirect("/Litter/");
+							break;
+						}
+						
+					}
+				}
+				break;
+			case 4:
+				if (FormatsMap.containsKey(args[3])) {
+					Integer IFormat= (Integer)FormatsMap.get(args[3]);
+					HttpSession session=request.getSession();
+					UserStore sessionUser = (UserStore)session.getAttribute("User");
+					if (sessionUser != null && sessionUser.isloggedIn() == true)
+					{
+						switch((int)IFormat.intValue()){
+							case 3:GetFeed(request, response,3,sessionUser.getUserName(), true); //Only JSON implemented for now
 							break;
 							case 0: response.sendRedirect("/Litter/");
 							break;
@@ -76,7 +96,7 @@ public class Feed extends HttpServlet {
 		
 	}
 	
-	public void GetFeed(HttpServletRequest request, HttpServletResponse response,int Format, String username) throws ServletException, IOException{
+	public void GetFeed(HttpServletRequest request, HttpServletResponse response,int Format, String username, Boolean orderByLike) throws ServletException, IOException{
 		/*  Format is one of
 		 *  0 jsp
 		 *  1 xml
@@ -86,6 +106,14 @@ public class Feed extends HttpServlet {
 		 */
 		TweetConnector connect = new TweetConnector();
 		List<TweetStore> feed = connect.getFeed(username);		
+		if (orderByLike)
+		{	
+			for (TweetStore tweet: feed)
+			{
+				tweet.switchToLikeOrdering();
+			}
+			Collections.sort(feed);
+		}
 		switch(Format){
 			case 3: request.setAttribute("Data", feed);
 					RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");

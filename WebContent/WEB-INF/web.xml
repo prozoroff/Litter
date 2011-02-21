@@ -119,6 +119,9 @@
     <url-pattern>/Like</url-pattern>
     <url-pattern>/Like/*</url-pattern>
   </servlet-mapping>
+  <session-config> 
+		<session-timeout>60</session-timeout> 
+	</session-config> 
   <error-page>
     <error-code>404</error-code>
     <location>/404.jsp</location>
