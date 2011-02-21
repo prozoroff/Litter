@@ -1,7 +1,6 @@
 package uk.co.ross_warren.litter.servlets;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -13,10 +12,8 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.RequestDispatcher;
 
 import uk.co.ross_warren.litter.Utils.StringSplitter;
-import uk.co.ross_warren.litter.connectors.TweetConnector;
 import uk.co.ross_warren.litter.connectors.UserConnector;
 import uk.co.ross_warren.litter.stores.FollowereeStore;
-import uk.co.ross_warren.litter.stores.TweetStore;
 import uk.co.ross_warren.litter.stores.UserStore;
 
 /**
