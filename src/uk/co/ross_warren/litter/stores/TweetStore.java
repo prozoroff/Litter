@@ -9,6 +9,9 @@ public class TweetStore implements Comparable<TweetStore>
 	private String replyToUser = "";
 	private String content = "";
 	private String avatarurl = "";
+	private String latitude = "";
+	private String longitude = "";
+	
 	private int likes = 0;
 	
 	private Long sort = timeStamp;
@@ -68,5 +71,17 @@ public class TweetStore implements Comparable<TweetStore>
 	}
 	public String getAvatarUrl() {
 		return avatarurl;
+	}
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+	public String getLatitude() {
+		return latitude;
+	}
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+	public String getLongitude() {
+		return longitude;
 	}
 }

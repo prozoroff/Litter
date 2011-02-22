@@ -22,9 +22,11 @@ scope="session"
         <title>Litter</title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
+        
+        <link type="text/css" href="css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
         <script src="js/jquery-1.4.4.min.js"></script>
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
-        <script language="javascript" src="Jquery.js"></script>
+        
 		<script language="javascript">
 		function limitChars(textid, limit, infodiv)
 		{
@@ -287,6 +289,9 @@ scope="session"
 						</tr>
 					</table>
                 </article>
+                <div id="dialog-confirm" style="display: none" title="Really delete? Really?">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Will be deleted forever!</p>
+</div>
                 <% } %>
             </section>
         <%@ include file="footer.jsp" %>                 
@@ -306,19 +311,8 @@ scope="session"
         });
         
         $("a.delete").live('click', function () {
-        	var url = "/Litter/Tweet/" + (this.id);
-    		$.ajax({
-     			aysnc: true,
-				type: "DELETE",
-				url: url,
-				dataType: "text",
-				success: function(msg){
-					loadfeed();
-					loadlikes();
-				}
-        	});
+			showpopup(this);
         });
-        
 		
         $("a.like").live('click', function () {
         	var url = "/Litter/Like/" + (this.id);
@@ -368,6 +362,39 @@ scope="session"
         	});		
         	return false;
         });
+        
+        
+        window.setInterval(loadfeed, 10000);
+       	window.setInterval(loadlikes, 10000);
+       	
+       	function showpopup(a) {
+			$( "#dialog:ui-dialog" ).dialog( "destroy" );
+        	
+    		$( "#dialog-confirm" ).dialog({
+    			resizable: false,
+    			height:150,
+    			modal: true,
+    			buttons: {
+    				"Delete tweet": function() {
+    					var url = "/Litter/Tweet/" + (a.id);
+    	        		$.ajax({
+    	         			aysnc: true,
+    	    				type: "DELETE",
+    	    				url: url,
+    	    				dataType: "text",
+    	    				success: function(msg){
+    	    					loadfeed();
+    	    					loadmentions();
+    	    				}
+    		        	});
+    					$( this ).dialog( "close" );
+    				},
+    				Cancel: function() {
+    					$( this ).dialog( "close" );
+    				}
+    			}
+    		});
+       	}
         <% } %>
         
 

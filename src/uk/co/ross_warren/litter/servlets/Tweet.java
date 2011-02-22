@@ -116,6 +116,8 @@ public class Tweet extends HttpServlet {
 					tweet.setReplyToUser(token);
 				}
 			}
+			tweet.setLatitude(request.getParameter("latitude"));
+			tweet.setLongitude(request.getParameter("longitude"));
 			tweet.setUser(sessionUser.getUserName());
 			tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));
 			String unsafe = request.getParameter("Content");

@@ -20,9 +20,9 @@ scope="session"
     	<% UserStore displayUser = (UserStore)request.getAttribute("ViewUser"); %>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>Litter - <%= displayUser.getUserName() %></title>
+        <link type="text/css" href="../css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
         <script src="../js/jquery-1.4.4.min.js"></script>
         <script src="../js/jquery-ui-1.8.9.custom.min.js"></script>
-        <script src="../js/JSON.js"></script>
         <script>
         function loadfeed() {
        		var url = '/Litter/Tweet/<%= displayUser.getUserName() %>/json';
@@ -268,7 +268,7 @@ scope="session"
 						%>
 						
 						<div class="demo">
-						<button id = "follow" >Follow</button>
+						<button id = "follow" style="padding: 3px" >Follow</button>
 						</div>
 						<%} else {
 							%>
@@ -304,6 +304,9 @@ scope="session"
 						</tr>
 					</table>
 				</article>
+						<div id="dialog-confirm" style="display: none" title="Really delete? Really?">
+	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Will be deleted forever!</p>
+</div>
             </section>
        <%@ include file="footer.jsp" %>  
 		</section> <!-- Closing the #page section -->
@@ -365,17 +368,7 @@ scope="session"
 			}); 
 	        
 	        $("a.delete").live('click', function () {
-	        	var url = "/Litter/Tweet/" + (this.id);
-        		$.ajax({
-         			aysnc: true,
-    				type: "DELETE",
-    				url: url,
-    				dataType: "text",
-    				success: function(msg){
-    					loadfeed();
-    					loadmentions();
-    				}
-	        	});
+				showpopup(this);
 	        });
 	        
         <%
@@ -458,7 +451,40 @@ scope="session"
        			$("#followercount").append(count);
        		});	
        	});
-       </script>
+       	
+       	window.setInterval(loadfeed, 10000);
+       	window.setInterval(loadmentions, 10000);
+       	
+       	function showpopup(a) {
+			$( "#dialog:ui-dialog" ).dialog( "destroy" );
+        	
+    		$( "#dialog-confirm" ).dialog({
+    			resizable: false,
+    			height:150,
+    			modal: true,
+    			buttons: {
+    				"Delete tweet": function() {
+    					var url = "/Litter/Tweet/" + (a.id);
+    	        		$.ajax({
+    	         			aysnc: true,
+    	    				type: "DELETE",
+    	    				url: url,
+    	    				dataType: "text",
+    	    				success: function(msg){
+    	    					loadfeed();
+    	    					loadmentions();
+    	    				}
+    		        	});
+    					$( this ).dialog( "close" );
+    				},
+    				Cancel: function() {
+    					$( this ).dialog( "close" );
+    				}
+    			}
+    		});
+       	}
+    	
+	</script>
 
     </body>
 </html>

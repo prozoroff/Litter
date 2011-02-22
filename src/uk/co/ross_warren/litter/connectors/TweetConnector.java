@@ -125,6 +125,8 @@ public class TweetConnector {
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("replyToUser", store.getReplyToUser()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("content", store.getContent()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("timestamp", time));
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("longitude", store.getLongitude()));
+			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("latitude", store.getLatitude()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("likes", "0"));
 			mutator.execute();
 			if (!store.getReplyToUser().equals(""))
@@ -213,7 +215,7 @@ public class TweetConnector {
 			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("AllTweets")
 			.setKey(tweetID)
-			.setColumnNames("user", "replyToUser", "content", "timestamp", "likes");
+			.setColumnNames("user", "replyToUser", "content", "latitude", "longitude", "timestamp", "likes");
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			ColumnSlice<String, String> slice = r.get();
 			result.setReplyToUser(slice.getColumnByName("replyToUser").getValue());
@@ -225,6 +227,15 @@ public class TweetConnector {
 			result.setTweetID(tweetID);
 			result.setUser(slice.getColumnByName("user").getValue());
 			result.setContent(slice.getColumnByName("content").getValue());
+			try {
+				result.setLatitude(slice.getColumnByName("latitude").getValue());
+				result.setLongitude(slice.getColumnByName("longitude").getValue());
+			}
+			catch (Exception e)
+			{
+				result.setLatitude("");
+				result.setLongitude("");
+			}
 			try {
 				result.setLikes(Integer.parseInt(slice.getColumnByName("likes").getValue()));
 			} catch (Exception e)
@@ -281,6 +292,8 @@ public class TweetConnector {
 					store.setReplyToUser(store2.getReplyToUser());
 					store.setContent(store2.getContent());
 					store.setLikes(store2.getLikes());
+					store.setLongitude(store2.getLongitude());
+					store.setLatitude(store2.getLatitude());
 				}
 				catch (Exception e)
 				{
@@ -455,6 +468,8 @@ public class TweetConnector {
 					store.setReplyToUser(store2.getReplyToUser());
 					store.setContent(store2.getContent());
 					store.setLikes(store2.getLikes());
+					store.setLongitude(store2.getLongitude());
+					store.setLatitude(store2.getLatitude());
 				}
 				catch (Exception e)
 				{

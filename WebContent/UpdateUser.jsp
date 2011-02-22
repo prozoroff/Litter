@@ -74,7 +74,7 @@ $("#toput").submit(function() {
 			url: "/Litter/User?" + form,
 		  	type: "PUT",
 		  	complete: function() {
-		  		$("#toput").hide('fast');
+		  		$("#toput").fadeOut('slow');
 		  		$('#forminfo').show();
 		  	}		
 			
