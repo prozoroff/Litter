@@ -22,7 +22,7 @@ scope="session"
         <title>Litter</title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
-        <script src="http://maps.google.com/maps?file=api&amp;v=2.133d&amp;&kry=ABQIAAAApihxGewKXLQTYcrRwFn4ERT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSFC-RZh21eklbK4vFYR6Te1DHqEA"></script> 
+        <script src="http://maps.google.com/maps?file=api&amp;v=2.133d&amp;"></script> 
         <link type="text/css" href="css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
         <script src="js/jquery-1.4.4.min.js"></script>
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
@@ -30,58 +30,14 @@ scope="session"
 		<script language="javascript">
 		
 		<%
-		
-		
-		
 		if (loggedin)
 		{
 			%>
 			    
-			
 		var gl = null;
-		
-		 
-		function displayPosition(position) {
-			$("#latitude").val(position.coords.latitude).trigger('change');
-			$("#longitude").val(position.coords.longitude).trigger('change');
-		}
-		 
-		function displayError(positionError) {
-		  alert("error");
-		}
-		 
-		try {
-		  if(typeof(navigator.geolocation) == 'undefined'){
-		    gl = google.gears.factory.create('beta.geolocation');
-		  } else {
-		    gl = navigator.geolocation;
-		  }
-		}catch(e){}
-		 
-		if (gl) {
-		  gl.getCurrentPosition(displayPosition, displayError);
-		} else {  
-		  alert("I'm sorry, but geolocation services are not supported by your browser.");  
-		}
-		
-		
-		
-		function limitChars(textid, limit, infodiv)
-		{
-			var text = $('#'+textid).val(); 
- 			var textlength = text.length;
-			if(textlength > limit)
-			{
-				$('#' + infodiv).html('You cannot write more then '+limit+' characters!');
-				$('#'+textid).val(text.substr(0,limit));
-				return false;
-			}
-			else
-			{
-				$('#' + infodiv).html('You have '+ (limit - textlength) +' characters left.');
-				return true;
-			}
-		}
+		$(function() {
+			initgeo();
+		});
 		
 		function loadfeed() {
        		var count = 0;
@@ -132,12 +88,17 @@ scope="session"
    					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
      			}
        			
+       			var locationtext = '';
+       			if (this.LocationName)
+       				{
+       					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
+       				}
+       			
        			
        			var location = '';
-       			var locationtext = '';
        			if (this.Latitude)
     			{
-       				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=400x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+       				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
 
        				
     			}
@@ -158,14 +119,12 @@ scope="session"
       					deletetext + 
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
-       					'</p>' +
+       					'<p>' +
        					location +
-       					locationtext+
+       					locationtext +
        					'</div>');
       		});
-       			//$("#feed").fadeIn('slow');
-       	});	
-       		
+       	});	     		
         }	
 		
 		function loadlikes() {
@@ -209,11 +168,17 @@ scope="session"
        		
        				
        			displayuser = '<%= User.getUserName() %>';
+       			
+       			var locationtext = '';
+       			if (this.LocationName)
+       				{
+       					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
+       				}
 
        			var location = '';
        			if (this.Latitude)
        				{
-       					location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=400x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+       					location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
 					}
        			
        			if (displayuser == tweetuser)
@@ -238,11 +203,10 @@ scope="session"
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
        					'</p>' +
-       					location
-       							+
+       					location + 
+       					locationtext + 
        					'</div>');
       		});
-       			//$("#feed").fadeIn('slow');
        	});	
        		
         }	
@@ -314,9 +278,7 @@ scope="session"
 							$('#comment').keyup(function(){
 								limitChars('comment', 140, 'charlimitinfo');
 							});
-							
 							limitChars('comment', 140, 'charlimitinfo');			
-						
 						});
 						
 						</script>
@@ -324,6 +286,7 @@ scope="session"
 						<td style="vertical-align: top;">
 							<input style="display: none" type="hidden" id = "latitude" name="latitude">
 							<input style="display: none" type="hidden" id = "longitude" name="longitude">
+							<input style="display: none" type="hidden" id = "locationname" name="locationname">
 							<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
 							<p>Add your location?  <input value = "location" type="checkbox" name="location"  style="width: auto; background: none; display: inline; margin: 0; padding: 0; min-height: 0"/></p>
 						</td>
@@ -349,108 +312,24 @@ scope="session"
             </section>
         <%@ include file="footer.jsp" %>                 
 		</section> <!-- Closing the #page section -->
-        
         <!-- JavaScript Includes -->
         <script src="jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="script.js"></script>
-        
         <script>
         
         <% if (loggedin) { %>
         
         $(function() {
-        	loadfeed();
-        	loadlikes();
+        	loadfeeds();
         });
         
-        $("a.delete").live('click', function () {
-			showpopup(this);
-        });
-		
-        $("a.like").live('click', function () {
-        	var url = "/Litter/Like/" + (this.id);
-        	var text = this.text;
-        	var text2 = "Like";
-        	if (text == text2)
-       		{
-	       		$.ajax({
-	        			aysnc: true,
-	   				type: "POST",
-	   				url: url,
-	   				dataType: "text",
-	   				success: function(msg){
-	   					loadfeed();
-	   					loadlikes();
-	   				}
-	   	     	});
-       		}
-        	else {
-        		$.ajax({
-         			aysnc: true,
-    				type: "DELETE",
-    				url: url,
-    				dataType: "text",
-    				success: function(msg){
-    					loadfeed();
-    					loadlikes();
-    				}
-    	     	});
-        	}
-     		
-	     	
-     	
-		}); 
-        
-        $("#totweet").submit(function() {
-        	var form = $(this).serialize();
-        	$.ajax({
-       			url: "/Litter/Tweet?" + form,
-       		  	type: "POST",
-       		  	complete: function() {
-       		  		$("#comment").val('');
-       		  		limitChars('comment', 140, 'charlimitinfo');
-       		  		loadfeed();
-       		  		loadlikes();
-       		  	}		
-        	});		
-        	return false;
-        });
-        
-        
-        window.setInterval(loadfeed, 10000);
-       	window.setInterval(loadlikes, 10000);
-       	
-       	function showpopup(a) {
-			$( "#dialog:ui-dialog" ).dialog( "destroy" );
-        	
-    		$( "#dialog-confirm" ).dialog({
-    			resizable: false,
-    			height:150,
-    			modal: true,
-    			buttons: {
-    				"Delete tweet": function() {
-    					var url = "/Litter/Tweet/" + (a.id);
-    	        		$.ajax({
-    	         			aysnc: true,
-    	    				type: "DELETE",
-    	    				url: url,
-    	    				dataType: "text",
-    	    				success: function(msg){
-    	    					loadfeed();
-    	    					loadmentions();
-    	    				}
-    		        	});
-    					$( this ).dialog( "close" );
-    				},
-    				Cancel: function() {
-    					$( this ).dialog( "close" );
-    				}
-    			}
-    		});
-       	}
+        function loadfeeds()
+        {
+			loadfeed();
+			loadlikes();
+        }
+       	window.setInterval(loadfeeds, 10000);
         <% } %>
-        
-
     	</script>
     </body>
 </html>

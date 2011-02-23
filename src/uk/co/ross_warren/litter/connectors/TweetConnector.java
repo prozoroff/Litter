@@ -139,6 +139,7 @@ public class TweetConnector {
 			{
 				mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("longitude", store.getLongitude()));
 				mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("latitude", store.getLatitude()));
+				mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("locationname", store.getLocationName()));
 			}
 			catch(Exception e)
 			{
@@ -239,7 +240,7 @@ public class TweetConnector {
 			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("AllTweets")
 			.setKey(tweetID)
-			.setColumnNames("user", "replyToUser", "content", "latitude", "longitude", "timestamp", "likes");
+			.setColumnNames("user", "replyToUser", "content", "latitude", "longitude", "locationname", "timestamp", "likes");
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			ColumnSlice<String, String> slice = r.get();
 			result.setReplyToUser(slice.getColumnByName("replyToUser").getValue());
@@ -254,10 +255,12 @@ public class TweetConnector {
 			try {
 				result.setLatitude(slice.getColumnByName("latitude").getValue());
 				result.setLongitude(slice.getColumnByName("longitude").getValue());
+				result.setLocationName(slice.getColumnByName("locationname").getValue());
 			}
 			catch (Exception e)
 			{
 				result.setLatitude("");
+				result.setLongitude("");
 				result.setLongitude("");
 			}
 			try {
@@ -321,6 +324,7 @@ public class TweetConnector {
 					store.setLikes(store2.getLikes());
 					store.setLongitude(store2.getLongitude());
 					store.setLatitude(store2.getLatitude());
+					store.setLocationName(store2.getLocationName());
 				}
 				catch (Exception e)
 				{
@@ -509,6 +513,7 @@ public class TweetConnector {
 					store.setLikes(store2.getLikes());
 					store.setLongitude(store2.getLongitude());
 					store.setLatitude(store2.getLatitude());
+					store.setLocationName(store2.getLocationName());
 				}
 				catch (Exception e)
 				{
