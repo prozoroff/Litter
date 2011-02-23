@@ -22,7 +22,7 @@ scope="session"
         <title>Litter</title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
-        <script src="http://maps.google.com/maps?file=api&amp;v=2.133d&amp;"></script> 
+        <script src="http://maps.google.com/maps?file=api&amp;v=2.133d&amp;&kry=ABQIAAAApihxGewKXLQTYcrRwFn4ERT2yXp_ZAY8_ufC3CFXhHIE1NvwkxSFC-RZh21eklbK4vFYR6Te1DHqEA"></script> 
         <link type="text/css" href="css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
         <script src="js/jquery-1.4.4.min.js"></script>
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
@@ -44,7 +44,6 @@ scope="session"
 		function displayPosition(position) {
 			$("#latitude").val(position.coords.latitude).trigger('change');
 			$("#longitude").val(position.coords.longitude).trigger('change');
-			
 		}
 		 
 		function displayError(positionError) {
@@ -138,24 +137,9 @@ scope="session"
        			var locationtext = '';
        			if (this.Latitude)
     			{
-       				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+       				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=400x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
 
-       				var latlng = new google.maps.LatLng(this.Latitude, this.Longitude);
-					if (latlng) {
-				    	 var geocoder = new GClientGeocoder();
-				        	
-				    	geocoder.getLocations(latlng, function(addresses) {
-				          var newlocationtext;
-				    		if(addresses.Status.code != 200) {
-				            newlocationtext = "No address found";
-				          }
-				          else {
-				            address = addresses.Placemark[0];
-				            newlocationtext = address.address;
-				          }
-				        });
-				      }
-    			
+       				
     			}
 
    				$("#feed").append('<div class="tweet">' +
@@ -176,7 +160,7 @@ scope="session"
        					bleh + 
        					'</p>' +
        					location +
-       					//
+       					locationtext+
        					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
@@ -229,7 +213,7 @@ scope="session"
        			var location = '';
        			if (this.Latitude)
        				{
-       					location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+       					location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=400x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
 					}
        			
        			if (displayuser == tweetuser)

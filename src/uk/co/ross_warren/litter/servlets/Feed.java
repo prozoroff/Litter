@@ -39,6 +39,7 @@ public class Feed extends HttpServlet {
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * 
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		 
@@ -48,21 +49,21 @@ public class Feed extends HttpServlet {
 
 		switch (args.length){
 			case 2:
-				response.sendRedirect("/Litter/");
+				response.sendRedirect("/Litter/"); //If just requests /Feed then redirect to the home page as it is shown there.
 				break;
 			case 3:
-				if (FormatsMap.containsKey(args[2])) {
+				if (FormatsMap.containsKey(args[2])) {  //if the second part of the request is a format for example /Feed/json
 					Integer IFormat= (Integer)FormatsMap.get(args[2]);
 					HttpSession session=request.getSession();
 					UserStore sessionUser = (UserStore)session.getAttribute("User");
-					if (sessionUser != null && sessionUser.isloggedIn() == true)
+					if (sessionUser != null && sessionUser.isloggedIn() == true) //Check the request user is logged in
 					{
 						switch((int)IFormat.intValue()){
-							case 3:GetFeed(request, response,3,sessionUser.getUserName(), false); //Only JSON implemented for now
+							case 3:GetFeed(request, response,3,sessionUser.getUserName(), false); //If the request is for json, call the getfeed method in json mode
 							break;
-							case 0: response.sendRedirect("/Litter/");
+							case 0: response.sendRedirect("/Litter/"); // if jsp is wanted redirect to the home page as it is shown there
 							break;
-							default: response.sendRedirect("/Litter/");
+							default: response.sendRedirect("/Litter/"); //same here
 							break;
 						}
 						
@@ -70,7 +71,7 @@ public class Feed extends HttpServlet {
 				}
 				break;
 			case 4:
-				if (FormatsMap.containsKey(args[3])) {
+				if (FormatsMap.containsKey(args[3])) { 
 					Integer IFormat= (Integer)FormatsMap.get(args[3]);
 					HttpSession session=request.getSession();
 					UserStore sessionUser = (UserStore)session.getAttribute("User");

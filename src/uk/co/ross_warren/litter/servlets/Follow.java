@@ -171,6 +171,7 @@ public class Follow extends HttpServlet {
 		}
 	}
 	
+	// Logged in user unfollow user specified in URL
 	protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		StringSplitter split = new StringSplitter();

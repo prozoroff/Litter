@@ -27,6 +27,9 @@ public class TweetConnector {
 		
 	}
 	
+	/*
+	 * Updates a tweet's like count
+	 */
 	public void updateTweet(TweetStore store)
 	{
 		Cluster c; //V2
@@ -54,6 +57,9 @@ public class TweetConnector {
 		}
 	}
 	
+	/*
+	 * Deletes a tweet and all references to it
+	 */
 	public void deleteTweet(String tweetID)
 	{
 		Cluster c; //V2
@@ -95,6 +101,9 @@ public class TweetConnector {
 		}
 	}
 	
+	/*
+	 * Adds a tweet to the alltweets column family, and attributes it to a user.
+	 */
 	public void addTweet(TweetStore store)
 	{
 		Cluster c; //V2
@@ -150,6 +159,10 @@ public class TweetConnector {
 		}
 	}
 	
+	/*
+	 * Gets a users feed, meaning all their friends recent tweets
+	 * and their @replies
+	 */
 	public List<TweetStore> getFeed(String username)
 	{
 		List<String> tweetIDs = new LinkedList<String>();
@@ -204,6 +217,9 @@ public class TweetConnector {
 		return tweets2;
 	}
 	
+	/*
+	 * Gets a single tweet based on ID.
+	 */
 	public TweetStore getTweet(String tweetID)
 	{
 		TweetStore result = new TweetStore();
@@ -262,6 +278,9 @@ public class TweetConnector {
 		return result;
 	}
 	
+	/*
+	 * Gets a users recent at replies
+	 */
 	public List<TweetStore> getAtReplies(String username)
 	{
 		List<TweetStore> list = new LinkedList<TweetStore>();
@@ -318,6 +337,9 @@ public class TweetConnector {
 		}
 	}
 	
+	/*
+	 * Checks if a user has liked a tweet
+	 */
 	public Boolean checkLike(String username, String tweetID)
 	{
 		System.out.println("Checking if " + username + " likes " + tweetID);
@@ -355,6 +377,9 @@ public class TweetConnector {
 		}
 	}
 	
+	/*
+	 * Sets the user to have unliked a tweet
+	 */
 	public void unLike(String username, String tweetID)
 	{
 		if (checkLike(username, tweetID) == true)
@@ -396,6 +421,9 @@ public class TweetConnector {
 		}
 	}
 		
+	/*
+	 * Likes a tweet for a username
+	 */
 	public void like(String username, String tweetID)
 	{
 		if (checkLike(username, tweetID) == false)
@@ -438,6 +466,9 @@ public class TweetConnector {
 		}
 	}
 	
+	/*
+	 * Gets a users recent tweets
+	 */
 	public List<TweetStore> getTweets(String username)
 	{
 		List<TweetStore> list = new LinkedList<TweetStore>();

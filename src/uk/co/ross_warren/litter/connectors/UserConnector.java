@@ -21,6 +21,9 @@ public class UserConnector {
 	public UserConnector(){
 	}
 	
+	/*
+	 * Gets a user with attributes username and email based on username
+	 */
 	public UserStore getUserByUsername(String username)
 	{
 		UserStore user = new UserStore();
@@ -50,6 +53,9 @@ public class UserConnector {
 		}
 	}
 	
+	/*
+	 * Gets a user and all their attributes based on email
+	 */
 	public UserStore getUserByEmail(String email) 
 	{
 		UserStore user = new UserStore();
@@ -84,6 +90,9 @@ public class UserConnector {
 		}
 	}
 	
+	/*
+	 * Updates a users details
+	 */
 	public boolean updateUser(UserStore Author){
 		Cluster c; //V2
 		try{
@@ -116,6 +125,9 @@ public class UserConnector {
 		}
 	}
 
+	/*
+	 * Deletes a user (UNTESTED)
+	 */
 	public void deleteUser(String username, String email, List<FollowereeStore> followers, List<FollowereeStore> followees)
 	{
 		Cluster c; //V2
@@ -169,6 +181,9 @@ public class UserConnector {
 		
 	}
 	
+	/*
+	 * Adds a user to the database
+	 */
 	public boolean addUser(UserStore Author){
 		Cluster c; //V2
 		try{
@@ -206,6 +221,9 @@ public class UserConnector {
 		}
 	}
 
+	/*
+	 * adds a follower to a user
+	 */
 	public boolean addFollower(String toFollow, String toBeFollowed)
 	{
 		Cluster c; //V2
@@ -249,6 +267,9 @@ public class UserConnector {
 		}
 	}
 	
+	/*
+	 * removes a follower from a user
+	 */
 	public boolean removeFollower(String toFollow, String toBeFollowed)
 	{
 		Cluster c; //V2
@@ -304,6 +325,9 @@ public class UserConnector {
 		}
 	}
 	
+	/*
+	 * user unfollows another user
+	 */
 	public boolean removeFollowee(String toFollow, String toBeFollowed)
 	{
 		Cluster c; //V2
@@ -328,6 +352,9 @@ public class UserConnector {
 		}
 	}
 	
+	/*
+	 * Get those who the user follows
+	 */
 	public List<FollowereeStore> getFollowees(String username)
 	{
 		Cluster c; //V2
@@ -369,6 +396,9 @@ public class UserConnector {
 		}
 	}
 	
+	/*
+	 * Get a users followers
+	 */
 	public List<FollowereeStore> getFollowers(String username)
 	{
 		Cluster c; //V2
