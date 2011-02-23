@@ -116,7 +116,30 @@ public class Tweet extends HttpServlet {
 					tweet.setReplyToUser(token);
 				}
 			}
-			tweet.setLatitude(request.getParameter("latitude"));
+			
+			
+			if (request.getParameterValues("location") != null)
+			{
+				if (request.getParameter("latitude") != null)
+				{
+					tweet.setLatitude(request.getParameter("latitude"));
+				} else {
+					tweet.setLatitude("");
+				}
+				if (request.getParameter("longitude") != null)
+				{
+					tweet.setLongitude(request.getParameter("longitude"));
+				} else {
+					tweet.setLongitude("");
+				}
+			} else {
+				tweet.setLatitude("");
+				tweet.setLongitude("");
+			}
+			
+			
+			
+			
 			tweet.setLongitude(request.getParameter("longitude"));
 			tweet.setUser(sessionUser.getUserName());
 			tweet.setTweetID(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("TweetID")));

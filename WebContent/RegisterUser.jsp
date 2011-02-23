@@ -40,6 +40,9 @@
         <title>Litter</title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
+        <link type="text/css" href="/Litter/css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
+        <script src="/Litter/js/jquery-1.4.4.min.js"></script>
+        <script src="/Litter/js/jquery-ui-1.8.9.custom.min.js"></script>
         <!-- Internet Explorer HTML5 enabling code: -->       
         <!--[if IE]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>       
@@ -79,9 +82,24 @@
 					<form action='<%= request.getRequestURI() %>' method="POST">
 					    <label for="Name">Name: <span style="color: red"><%= form.getErrorMessage("name") %></span></label> 
 						<input value = "<%= tempName %>" style="background-color: white;" type="text" name="Name" required placeholder="Name" />
-						<label for="Username">Username: <span style="color: red"><%= form.getErrorMessage("username") %></span></label> 
-						<input value = "<%= form.getUserName() %>" style="background-color: white;" type="text" name="Username" required placeholder="Username" />
-						<label for="Bio">Bio:</label> 
+						<label for="Username">Username: <span id="errortext" style="color: red"><%= form.getErrorMessage("username") %></span></label> 
+						<input id = "username" value = "<%= form.getUserName() %>" style="background-color: white;" type="text" name="Username" required placeholder="Username" />
+						<script>
+						$('#username').keyup(function(){
+							var url = '/Litter/User/' + $("#username").val() + '/json';
+							$.getJSON(url, function(json) {
+								if (json.Name)
+								{
+									$('#errortext').text('Username taken!');
+								}
+								else 
+								{
+									$('#errortext').text('Username OK!');
+								}
+							});
+						});
+						</script>
+						<label for="Bio">Bio:</label> 	
 						<textarea style="background-color: white;" name="Bio" placeholder="Write a bit about yourself"></textarea> 
 						<label for="Avatar">Avatar (Leave blank to use Gravatar):</label>
 						<input style="background-color: white;" type="text" name="Avatar"></input>
@@ -93,7 +111,7 @@
         <%@ include file="footer.jsp" %>  
 		</section> <!-- Closing the #page section -->
         <!-- JavaScript Includes -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+       
         <script src="jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="script.js"></script>
     </body>

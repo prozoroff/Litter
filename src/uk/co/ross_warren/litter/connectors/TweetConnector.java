@@ -106,6 +106,7 @@ public class TweetConnector {
 		}
 		try
 		{
+			System.out.println("User to add tweet:" + store.getUser());
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
 			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
 			ks.setConsistencyLevelPolicy(mcl);
@@ -125,8 +126,15 @@ public class TweetConnector {
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("replyToUser", store.getReplyToUser()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("content", store.getContent()));
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("timestamp", time));
-			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("longitude", store.getLongitude()));
-			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("latitude", store.getLatitude()));
+			try
+			{
+				mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("longitude", store.getLongitude()));
+				mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("latitude", store.getLatitude()));
+			}
+			catch(Exception e)
+			{
+				// no location
+			}
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("likes", "0"));
 			mutator.execute();
 			if (!store.getReplyToUser().equals(""))
@@ -135,7 +143,7 @@ public class TweetConnector {
 				mutator.addInsertion(store.getReplyToUser(), "AtReplies", HFactory.createStringColumn(store.getTweetID(), time));
 				mutator.execute();
 			}
-		}
+	}
 		catch (Exception e)
 		{
 			System.out.println("Adding the tweet totally failed :(" + e);

@@ -22,12 +22,51 @@ scope="session"
         <title>Litter</title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
-        
+        <script src="http://maps.google.com/maps?file=api&amp;v=2.133d&amp;"></script> 
         <link type="text/css" href="css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
         <script src="js/jquery-1.4.4.min.js"></script>
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
-        
+        <script src="js/gears_init.js"></script>
 		<script language="javascript">
+		
+		<%
+		
+		
+		
+		if (loggedin)
+		{
+			%>
+			    
+			
+		var gl = null;
+		
+		 
+		function displayPosition(position) {
+			$("#latitude").val(position.coords.latitude).trigger('change');
+			$("#longitude").val(position.coords.longitude).trigger('change');
+			
+		}
+		 
+		function displayError(positionError) {
+		  alert("error");
+		}
+		 
+		try {
+		  if(typeof(navigator.geolocation) == 'undefined'){
+		    gl = google.gears.factory.create('beta.geolocation');
+		  } else {
+		    gl = navigator.geolocation;
+		  }
+		}catch(e){}
+		 
+		if (gl) {
+		  gl.getCurrentPosition(displayPosition, displayError);
+		} else {  
+		  alert("I'm sorry, but geolocation services are not supported by your browser.");  
+		}
+		
+		
+		
 		function limitChars(textid, limit, infodiv)
 		{
 			var text = $('#'+textid).val(); 
@@ -83,39 +122,61 @@ scope="session"
        			var deletetext = '';
        			var displayuser = '';
        			var tweetuser = this.User;
-       			<% if (loggedin) { %>
-       				
+       		
        			displayuser = '<%= User.getUserName() %>';
 
-       			<% } %>
+       		
        			
        			if (displayuser == tweetuser)
      			{
      				deletetext = '<a style="float: right" class="delete"' +
    					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
      			}
+       			
+       			
+       			var location = '';
+       			var locationtext = '';
+       			if (this.Latitude)
+    			{
+       				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+
+       				var latlng = new google.maps.LatLng(this.Latitude, this.Longitude);
+					if (latlng) {
+				    	 var geocoder = new GClientGeocoder();
+				        	
+				    	geocoder.getLocations(latlng, function(addresses) {
+				          var newlocationtext;
+				    		if(addresses.Status.code != 200) {
+				            newlocationtext = "No address found";
+				          }
+				          else {
+				            address = addresses.Placemark[0];
+				            newlocationtext = address.address;
+				          }
+				        });
+				      }
+    			
+    			}
 
    				$("#feed").append('<div class="tweet">' +
    						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
       					'src="' + this.AvatarUrl + '" align="left" />' +
       					'<p>' + this.Content +
       					'<span style="float: right">Likes: ' + this.Likes +
-      					<%
-    	  					if (loggedin == true)
-    	  						{
-    	  						%>
+      				
     	  						
     	  						
     	  					' - <a class="like"' +
     	   					'id="' + this.TweetID + '">' + like + '</a>' +
-    	   				<%
-    	  						}%>
+    	   			
     	  					'</span></p>' +
        					'<p>' +
       					deletetext + 
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
        					'</p>' +
+       					location +
+       					//
        					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
@@ -161,11 +222,15 @@ scope="session"
        			var deletetext = '';
        			var displayuser = '';
        			var tweetuser = this.User;
-       			<% if (loggedin) { %>
+       		
        				
        			displayuser = '<%= User.getUserName() %>';
 
-       			<% } %>
+       			var location = '';
+       			if (this.Latitude)
+       				{
+       					location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+					}
        			
        			if (displayuser == tweetuser)
      			{
@@ -178,28 +243,29 @@ scope="session"
       					'src="' + this.AvatarUrl + '" align="left" />' +
       					'<p>' + this.Content +
       					'<span style="float: right">Likes: ' + this.Likes +
-      					<%
-    	  					if (loggedin == true)
-    	  						{
-    	  						%>
-    	  						
+      
     	  						
     	  					' - <a class="like"' +
     	   					'id="' + this.TweetID + '">' + like + '</a>' +
-    	   				<%
-    	  						}%>
+    	   	
     	  					'</span></p>' +
        					'<p>' +
       					deletetext + 
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
        					'</p>' +
+       					location
+       							+
        					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
        	});	
        		
         }	
+		
+		<%
+		}
+			%>
  		</script>
         <!-- Internet Explorer HTML5 enabling code: -->       
         <!--[if IE]>
@@ -272,7 +338,10 @@ scope="session"
 						</script>
 						</td>
 						<td style="vertical-align: top;">
+							<input style="display: none" type="hidden" id = "latitude" name="latitude">
+							<input style="display: none" type="hidden" id = "longitude" name="longitude">
 							<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
+							<p>Add your location?  <input value = "location" type="checkbox" name="location"  style="width: auto; background: none; display: inline; margin: 0; padding: 0; min-height: 0"/></p>
 						</td>
 						</tr>
 						</table>
