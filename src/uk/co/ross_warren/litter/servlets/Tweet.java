@@ -120,6 +120,14 @@ public class Tweet extends HttpServlet {
 			
 			if (request.getParameterValues("location") != null)
 			{
+				if (request.getParameter("locationname") != null)
+				{
+					tweet.setLocationName(request.getParameter("locationname"));
+				}
+				else
+				{
+					tweet.setLocationName("");
+				}
 				if (request.getParameter("latitude") != null)
 				{
 					tweet.setLatitude(request.getParameter("latitude"));
@@ -133,12 +141,10 @@ public class Tweet extends HttpServlet {
 					tweet.setLongitude("");
 				}
 			} else {
+				tweet.setLocationName("");
 				tweet.setLatitude("");
 				tweet.setLongitude("");
 			}
-			
-			
-			
 			
 			tweet.setLongitude(request.getParameter("longitude"));
 			tweet.setUser(sessionUser.getUserName());

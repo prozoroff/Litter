@@ -82,29 +82,41 @@ scope="session"
      				deletetext = '<a style="float: right" class="delete"' +
    					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
      			}
+       			var locationtext = '';
+       			if (this.LocationName)
+       				{
+       					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
+       				}
+       			
+       			
+       			var location = '';
+       			if (this.Latitude)
+    			{
+       				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+
+       				
+    			}
 
    				$("#feed").append('<div class="tweet">' +
    						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
-   	  					'src="' + this.AvatarUrl + '" align="left" />' +
-   	  					'<p>' + this.Content +
-   	  					'<span style="float: right">Likes: ' + this.Likes +
-   	  					<%
-   	  					if (loggedin == true)
-   	  						{
-   	  						%>
-   	  						
-   	  						
-   	  					' - <a class="like"' +
-   	   					'id="' + this.TweetID + '">' + like + '</a>' +
-   	   				<%
-   	  						}%>
-   	  					'</span></p>' +
-   	   					'<p>' +
-   	  					deletetext + 
-   	  					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
-   	   					bleh + 
-   	   					'</p>' +
-   	   					'</div>');
+      					'src="' + this.AvatarUrl + '" align="left" />' +
+      					'<p>' + this.Content +
+      					'<span style="float: right">Likes: ' + this.Likes +
+      				
+    	  						
+    	  						
+    	  					' - <a class="like"' +
+    	   					'id="' + this.TweetID + '">' + like + '</a>' +
+    	   			
+    	  					'</span></p>' +
+       					'<p>' +
+      					deletetext + 
+      					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
+       					bleh + 
+       					'<p>' +
+       					location +
+       					locationtext +
+       					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
        	});	
@@ -173,27 +185,40 @@ scope="session"
        				
        				
 
-       			$("#mentions").append('<div class="tweet">' +
-      					'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
+       			var locationtext = '';
+       			if (this.LocationName)
+       				{
+       					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
+       				}
+       			
+       			
+       			var location = '';
+       			if (this.Latitude)
+    			{
+       				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
+
+       				
+    			}
+
+   				$("#mentions").append('<div class="tweet">' +
+   						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
       					'src="' + this.AvatarUrl + '" align="left" />' +
       					'<p>' + this.Content +
       					'<span style="float: right">Likes: ' + this.Likes +
-      					<%
-    	  					if (loggedin == true)
-    	  						{
-    	  						%>
+      				
     	  						
     	  						
     	  					' - <a class="like"' +
     	   					'id="' + this.TweetID + '">' + like + '</a>' +
-    	   				<%
-    	  						}%>
+    	   			
     	  					'</span></p>' +
        					'<p>' +
       					deletetext + 
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
-       					'</p>' +
+       					'<p>' +
+       					location +
+       					locationtext +
        					'</div>');
       		});
        			//$("#feed").fadeIn('slow');
@@ -321,7 +346,6 @@ scope="session"
         {
         	
         	%>
-        	
 	        $(function() {
 		   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
 		   		$.ajax({
@@ -332,50 +356,15 @@ scope="session"
 		   			}
 		   		});
 	        });
-	        
-	        $("a.like").live('click', function () {
-	        	var url = "/Litter/Like/" + (this.id);
-	        	var text = this.text;
-	        	var text2 = "Like";
-	        	if (text == text2)
-	       		{
-		       		$.ajax({
-		        			aysnc: true,
-		   				type: "POST",
-		   				url: url,
-		   				dataType: "text",
-		   				success: function(msg){
-		   					loadfeed();
-		   					loadmentions();
-		   				}
-		   	     	});
-	       		}
-	        	else {
-	        		$.ajax({
-	         			aysnc: true,
-	    				type: "DELETE",
-	    				url: url,
-	    				dataType: "text",
-	    				success: function(msg){
-	    					loadfeed();
-	    					loadmentions();
-	    				}
-	    	     	});
-	        	}
-	     		
-		     	
-	     	
-			}); 
-	        
-	        $("a.delete").live('click', function () {
-				showpopup(this);
-	        });
-	        
         <%
         } %>
+        function loadfeeds()
+        {
+			loadfeed();
+			loadmentions();
+        }
         $(function() {
-        	loadfeed();
-        	loadmentions();
+        	loadfeeds();
         });
         $("#follow").click(function () {
         	var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
@@ -412,10 +401,6 @@ scope="session"
 	   			}
 	   		});
  		});
-        
-        
-        
-        
 		$(function() {
 			$( "button", ".demo" ).button();
 			$( "a", ".demo" ).click(function() { return false; });
@@ -435,7 +420,6 @@ scope="session"
        			});
        			$("#followeecount").append(count);
        		});		
-       	
        		var url = '/Litter/Follow/<%= displayUser.getUserName() %>/json';
        		$.getJSON(url, function(json) {
        			var count = 0;
@@ -451,39 +435,7 @@ scope="session"
        			$("#followercount").append(count);
        		});	
        	});
-       	
-       	window.setInterval(loadfeed, 10000);
-       	window.setInterval(loadmentions, 10000);
-       	
-       	function showpopup(a) {
-			$( "#dialog:ui-dialog" ).dialog( "destroy" );
-        	
-    		$( "#dialog-confirm" ).dialog({
-    			resizable: false,
-    			height:150,
-    			modal: true,
-    			buttons: {
-    				"Delete tweet": function() {
-    					var url = "/Litter/Tweet/" + (a.id);
-    	        		$.ajax({
-    	         			aysnc: true,
-    	    				type: "DELETE",
-    	    				url: url,
-    	    				dataType: "text",
-    	    				success: function(msg){
-    	    					loadfeed();
-    	    					loadmentions();
-    	    				}
-    		        	});
-    					$( this ).dialog( "close" );
-    				},
-    				Cancel: function() {
-    					$( this ).dialog( "close" );
-    				}
-    			}
-    		});
-       	}
-    	
+       	window.setInterval(loadfeeds, 10000);
 	</script>
 
     </body>

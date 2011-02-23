@@ -10,6 +10,9 @@
 	-webkit-border-radius:10px;
 	border-radius:10px;
 	margin-left: 20px;
+	float: left;
+	display: inline;
+	margin-right: 5px;
 	}
 
 header,footer,
