@@ -28,7 +28,6 @@ scope="session"
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
         <script src="js/gears_init.js"></script>
 		<script language="javascript">
-		
 		<%
 		if (loggedin)
 		{
@@ -40,6 +39,7 @@ scope="session"
 		});
 		
 		function loadfeed() {
+			$("#feed").fadeTo('slow', 0.5);
        		var count = 0;
        		var url = '/Litter/Feed/json';
        		$.getJSON(url, function(json) {
@@ -102,15 +102,11 @@ scope="session"
 
        				
     			}
-
    				$("#feed").append('<div class="tweet">' +
    						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
       					'src="' + this.AvatarUrl + '" align="left" />' +
       					'<p>' + this.Content +
       					'<span style="float: right">Likes: ' + this.Likes +
-      				
-    	  						
-    	  						
     	  					' - <a class="like"' +
     	   					'id="' + this.TweetID + '">' + like + '</a>' +
     	   			
@@ -124,6 +120,7 @@ scope="session"
        					locationtext +
        					'</div>');
       		});
+       			$("#feed").fadeTo('slow', 1);
        	});	     		
         }	
 		
@@ -131,7 +128,7 @@ scope="session"
        		var count = 0;
        		var url = '/Litter/Feed/Like/json';
        		$.getJSON(url, function(json) {
-       			//$("#feed").fadeOut('fast');
+       			$("#likefeed").fadeTo('slow', 0.5);
        			$("#likefeed").html('');
        			$.each(json.Data, function(i, Data) {   
        				var url3 = '/Litter/Like/' + this.TweetID;
@@ -207,6 +204,7 @@ scope="session"
        					locationtext + 
        					'</div>');
       		});
+       			$("#likefeed").fadeTo('slow', 1);
        	});	
        		
         }	
@@ -271,24 +269,36 @@ scope="session"
 						<table style="width: 100%">
 						<tr>
 						<td>
-						<textarea id = "comment" style="background: none; width: 90%; min-height: 42px; font-size: 1em; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
-						<p id="charlimitinfo">
-						<script>
-						$(function(){
-							$('#comment').keyup(function(){
-								limitChars('comment', 140, 'charlimitinfo');
-							});
-							limitChars('comment', 140, 'charlimitinfo');			
-						});
-						
-						</script>
+						<ul class="menu">
+						<li class="expand"> 
+							<a href="#">Tweet</a> 
+							<div class="acitem panel"> 
+								<textarea id = "comment" style="background: none; width: 90%; min-height: 42px; font-size: 1em; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
+								<p id="charlimitinfo"></p>
+								<script>
+								$(function(){
+									$('#comment').keyup(function(){
+										limitChars('comment', 140, 'charlimitinfo');
+									});
+									limitChars('comment', 140, 'charlimitinfo');			
+								});
+								
+								</script>
+							</div> 
+						</li> 
+						<li> 
+							<a href="#">Location</a> 
+							<div class="acitem panel"> 
+								<input style="width: 90%; background: none; background-color: white " id = "locationname" name="locationname">
+								<p>Add your location?  <input value = "location" type="checkbox" name="location"  style="width: auto; background: none; display: inline; margin: 0; padding: 0; min-height: 0"/></p>
+							</div> 
+						</li> 
+						</ul>
 						</td>
 						<td style="vertical-align: top;">
 							<input style="display: none" type="hidden" id = "latitude" name="latitude">
 							<input style="display: none" type="hidden" id = "longitude" name="longitude">
-							<input style="display: none" type="hidden" id = "locationname" name="locationname">
-							<input style="width: 90%; background-color: white;" type="submit"  value="Tweet">
-							<p>Add your location?  <input value = "location" type="checkbox" name="location"  style="width: auto; background: none; display: inline; margin: 0; padding: 0; min-height: 0"/></p>
+							<input style="width: 90%; background-color: white; margin-top: 22px" type="submit"  value="Tweet">
 						</td>
 						</tr>
 						</table>
@@ -321,6 +331,7 @@ scope="session"
         
         $(function() {
         	loadfeeds();
+        	$('.menu').initMenu();
         });
         
         function loadfeeds()
@@ -328,7 +339,7 @@ scope="session"
 			loadfeed();
 			loadlikes();
         }
-       	window.setInterval(loadfeeds, 10000);
+       	window.setInterval(loadfeeds, 20000);
         <% } %>
     	</script>
     </body>

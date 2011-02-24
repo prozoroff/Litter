@@ -102,6 +102,9 @@ public class Follow extends HttpServlet {
 	
 	}
 		
+	/*
+	 * Gets the followers in the specified format
+	 */
 	public void GetFollowers(HttpServletRequest request, HttpServletResponse response,int Format, String username) throws ServletException, IOException{
 		/*  Format is one of
 		 *  0 jsp

@@ -50,11 +50,6 @@ public class Login extends HttpServlet {
         // TODO Auto-generated constructor stub
         
         manager = new OpenIdManager();
-        //manager.setRealm("http://134.36.37.221/");
-        //manager.setReturnTo("http://134.36.37.221/jBloggyAppy/Login");
-       
-       
-        
     }
 
 	/**
@@ -70,16 +65,15 @@ public class Login extends HttpServlet {
         StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
 		String op=null;
-		//op = request.getParameter("op");
+		
 		switch (args.length){
 			case 3: op=args[2];
 					break;
 		}
 
-
-	        if (op==null) {
+        if (op==null) {
 	            // check sign on result from Google or Yahoo:
-	        	try{
+        	try{
 	        		checkNonce(request.getParameter("openid.response_nonce"));
 	        	}catch (Exception et){
 	        		System.out.println("Check Nonce failed "+et);
@@ -107,6 +101,11 @@ public class Login extends HttpServlet {
 	            String url = manager.getAuthenticationUrl(endpoint, association);
 	            System.out.println(url);
 	            response.sendRedirect(url);
+	        }
+	        else if (op.equals("Admin"))
+	        {
+	        	session.setAttribute("Admin", "logged");
+	        	response.sendRedirect("/Litter/Admin");
 	        }
 	        else {
 	            throw new ServletException("Unsupported OP: " + op);

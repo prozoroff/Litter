@@ -21,6 +21,27 @@ public class UserConnector {
 	public UserConnector(){
 	}
 	
+	public String connectionTest()
+	{
+		Cluster c; //V2
+		try{
+			c=CassandraHosts.getCluster();
+			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
+			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
+			ks.setConsistencyLevelPolicy(mcl);
+			StringSerializer se = StringSerializer.get();
+			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
+			q.setColumnFamily("UserTweets")
+			.setKey("test")
+			.setRange("", "", false, 100);
+			QueryResult<ColumnSlice<String, String>> r = q.execute();
+			return "Connection Success";
+		}catch (Exception et){
+			System.out.println("Can't Connect to Cassandra. Check she is OK?");
+			return "Connection Failed - " + et;
+		}
+	}
+	
 	/*
 	 * Gets a user with attributes username and email based on username
 	 */

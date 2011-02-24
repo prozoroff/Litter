@@ -27,7 +27,7 @@ scope="session"
         function loadfeed() {
        		var url = '/Litter/Tweet/<%= displayUser.getUserName() %>/json';
        		$.getJSON(url, function(json) {
-       			//$("#feed").fadeOut('fast');
+       			$("#feed").fadeTo('slow', 0.5);
        			$("#feed").html('');
        			$.each(json.Data, function(i, Data) {   
        				var url3 = '/Litter/Like/' + this.TweetID;
@@ -118,7 +118,7 @@ scope="session"
        					locationtext +
        					'</div>');
       		});
-       			//$("#feed").fadeIn('slow');
+       			$("#feed").fadeTo('slow', 1);
        	});	
        		
         }	
@@ -126,7 +126,7 @@ scope="session"
         function loadmentions() {
        		var url = '/Litter/Mentions/<%= displayUser.getUserName() %>/json';
        		$.getJSON(url, function(json) {
-       			//$("#feed").fadeOut('fast');
+       			$("#mentions").fadeTo('slow', 0.5);
        			$("#mentions").html('');
        			$.each(json.Data, function(i, Data) {   
        				var url3 = '/Litter/Like/' + this.TweetID;
@@ -221,7 +221,7 @@ scope="session"
        					locationtext +
        					'</div>');
       		});
-       			//$("#feed").fadeIn('slow');
+       			$("#mentions").fadeTo('slow', 1);
        	});	
        		
         }	
@@ -435,7 +435,7 @@ scope="session"
        			$("#followercount").append(count);
        		});	
        	});
-       	window.setInterval(loadfeeds, 10000);
+       	window.setInterval(loadfeeds, 20000);
 	</script>
 
     </body>

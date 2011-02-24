@@ -3,6 +3,8 @@ package uk.co.ross_warren.litter.Utils;
 import java.util.Iterator;
 import java.util.Set;
 
+import uk.co.ross_warren.litter.stores.CassandraStore;
+
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.factory.HFactory;
 //import me.prettyprint.cassandra.service.Cluster;
@@ -10,24 +12,36 @@ import me.prettyprint.cassandra.service.*;
 
 public final class CassandraHosts {
 	static Cluster c=null;
-	static String Host ="127.0.0.1"; // Cassandra Server I.P.
-	static String Port = "9160";
-	static String ClusterName = "Test Cluster";
 	
 	public CassandraHosts() {
 	}
 	
 	public static String getHost() {
-		return (Host);
+		return CassandraStore.instance().getHost();
+	}
+	
+	public void killClusterToDeath()
+	{
+		if (c==null){
+			// System.out.println("Creating cluster connection");
+			c = HFactory.getOrCreateCluster(CassandraStore.instance().getClusterName(), CassandraStore.instance().getHost() + ":" + CassandraStore.instance().getPort());
+		}
+		Set <CassandraHost>hosts= c.getKnownPoolHosts(false);
+
+		for (CassandraHost host: hosts)
+		{
+			c.getConnectionManager().removeCassandraHost(host);
+		}
+		c = HFactory.getOrCreateCluster(CassandraStore.instance().getClusterName(), CassandraStore.instance().getHost() + ":" + CassandraStore.instance().getPort());
 	}
 	
 	public static String[] getHosts() {
 		if (c==null){
 			// System.out.println("Creating cluster connection");
-			c = HFactory.getOrCreateCluster(ClusterName, Host + ":" + Port);
+			c = HFactory.getOrCreateCluster(CassandraStore.instance().getClusterName(), CassandraStore.instance().getHost() + ":" + CassandraStore.instance().getPort());
 		}
 		Set <CassandraHost>hosts= c.getKnownPoolHosts(false);
-			
+
 		String sHosts[] = new String[hosts.size()];
 		Iterator<CassandraHost> it =hosts.iterator();
 		int i=0;
@@ -42,7 +56,7 @@ public final class CassandraHosts {
 	}
 	
 	public static Cluster getCluster(){
-			c = HFactory.getOrCreateCluster(ClusterName, Host + ":" + Port);
+			c = HFactory.getOrCreateCluster(CassandraStore.instance().getClusterName(), CassandraStore.instance().getHost() + ":" + CassandraStore.instance().getPort());
 			getHosts();	
 			Keyspaces.SetUpKeySpaces(c);
 			return c;

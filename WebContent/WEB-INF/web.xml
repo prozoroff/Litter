@@ -119,9 +119,20 @@
     <url-pattern>/Like</url-pattern>
     <url-pattern>/Like/*</url-pattern>
   </servlet-mapping>
-  <session-config> 
-		<session-timeout>60</session-timeout> 
-	</session-config> 
+  <servlet>
+    <description></description>
+    <display-name>Admin</display-name>
+    <servlet-name>Admin</servlet-name>
+    <servlet-class>uk.co.ross_warren.litter.servlets.Admin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Admin</servlet-name>
+    <url-pattern>/Admin</url-pattern>
+    <url-pattern>/Admin/*</url-pattern>
+  </servlet-mapping>
+  <session-config>
+    <session-timeout>60</session-timeout>
+  </session-config>
   <error-page>
     <error-code>404</error-code>
     <location>/404.jsp</location>
