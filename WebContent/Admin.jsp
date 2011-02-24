@@ -56,6 +56,15 @@
 	               		<button style="margin-top: 20px" id="test">Test Connection</button>
 	               		<p id="testtext">Click to test Cassandra connection</p>
 	               		<p>Note: Changing the IP and Port will not cause the connection to fail, as the old ones will still be in the known pool.</p>
+	               		<h4>Pool Hosts</h4>
+	               		<table style="width: 250px;" id = "pool">
+	               		<tr><th style="text-align: left">IP</th><th style="text-align: left">Port</th></tr>
+	               		</table>
+	               		<h4>Downed Pool Hosts</h4>
+	               		<table style="width: 250px;" id = "downed">
+	               		<tr><th style="text-align: left">IP</th><th style="text-align: left">Port</th></tr>
+	               		</table>
+	               		<button id="refresh">Refresh</button>
                		</div>
                 </article>
             </section>
@@ -111,6 +120,7 @@
         
         
         $("#test").click( function() {
+        	$("#testtext").text('testing...');
         	$.ajax({
     			aysnc: true,
 				type: "GET",
@@ -125,17 +135,24 @@
 				}
 	     	});
         });
+        
+        $("#refresh").click( function() {
+        	getPool();
+        	getDowned();
+        });
         $(function () {
         	$(".settings").hide();
         	loadHost();
         	loadPort();
         	loadCluster();
+        	getPool();
+        	getDowned();
         	$(".settings").slideDown('slow');
         });
         
         $(function() {
 			$( "button", ".settings" ).button();
 			$( "a", ".settings" ).click(function() { return false; });
-		});
+        });
         </script>
     </body>

@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import me.prettyprint.cassandra.service.CassandraHost;
+
+import com.sun.tools.javac.util.List;
+
 import uk.co.ross_warren.litter.Utils.CassandraHosts;
 import uk.co.ross_warren.litter.Utils.StringSplitter;
 import uk.co.ross_warren.litter.connectors.UserConnector;
@@ -57,6 +61,20 @@ public class Admin extends HttpServlet {
 				//hosts.killClusterToDeath();
 				UserConnector connect = new UserConnector();
 				pw.print(connect.connectionTest());
+			} else if (args[2].equals("Pool"))
+			{
+				CassandraHosts hosts = new CassandraHosts();
+				java.util.List<CassandraHost> poolhosts = hosts.getPoolHosts();
+				request.setAttribute("Data", poolhosts);
+				RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");
+				rdjson.forward(request,response);
+			} else if (args[2].equals("Down"))
+			{
+				CassandraHosts hosts = new CassandraHosts();
+				java.util.List<CassandraHost> poolhosts = hosts.getDownedPoolHosts();
+				request.setAttribute("Data", poolhosts);
+				RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");
+				rdjson.forward(request,response);
 			}
 		}
 		else

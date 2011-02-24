@@ -214,7 +214,7 @@ public class UserConnector {
 			return false;
 		}
 		try{
-			if (this.getUserByUsername(Author.getUserName()) == null)
+			if (this.getUserByUsername(Author.getUserName()) == null && this.getUserByEmail(Author.getEmail()) == null)
 			{
 				System.out.println("User " + Author.getUserName() + " probably Doesn't exist, adding now.");
 				ConsistencyLevelPolicy mcl = new MyConsistancyLevel();

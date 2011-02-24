@@ -33,6 +33,7 @@ import uk.co.ross_warren.litter.stores.UserStore;
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private static String adminpass = "Admin";
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -102,7 +103,7 @@ public class Login extends HttpServlet {
 	            System.out.println(url);
 	            response.sendRedirect(url);
 	        }
-	        else if (op.equals("Admin"))
+	        else if (op.equals(adminpass))
 	        {
 	        	session.setAttribute("Admin", "logged");
 	        	response.sendRedirect("/Litter/Admin");

@@ -19,7 +19,11 @@ scope="session"
     <head>
     	<% UserStore displayUser = (UserStore)request.getAttribute("ViewUser"); %>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>Litter - <%= displayUser.getUserName() %></title>
+        <% if (displayUser==null || displayUser.getEmail() == "") { %>
+         	<title>Litter - User Not Found</title>
+        <%} else {%>
+       		<title>Litter - <%= displayUser.getUserName() %></title>
+        <% } %>
         <link type="text/css" href="../css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
         <script src="../js/jquery-1.4.4.min.js"></script>
         <script src="../js/jquery-ui-1.8.9.custom.min.js"></script>
@@ -272,13 +276,11 @@ scope="session"
                 <div class="line"></div>  <!-- Dividing line -->   
                 <article id="Welcome">
                    <% 
-					System.out.println("In RenderAuthor.jsp");
-					
-					if (displayUser==null || displayUser.getEmail() == ""){
+					if (displayUser==null || displayUser.getEmail() == "") {
 					 %>
 						<h2>User was not found.</h2>
 						<% 
-					}else{
+					} else {
 					%>
 					<table>
 					<tr><td><img title="<%=displayUser.getUserName() %>" style="padding-right: 10px;" src="<%=displayUser.getAvatarUrl() %>" /></td>
@@ -301,7 +303,7 @@ scope="session"
 							<%
 						}
 					} 
-					}
+					
 					%>
 					</td>
 					</tr>
@@ -328,6 +330,7 @@ scope="session"
 							<div id="mentions"></div>
 						</tr>
 					</table>
+					<% } %>
 				</article>
 						<div id="dialog-confirm" style="display: none" title="Really delete? Really?">
 	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Will be deleted forever!</p>
