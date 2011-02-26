@@ -24,7 +24,7 @@ public class UserConnector {
 	public String connectionTest()
 	{
 		Cluster c; //V2
-		try{
+		try {
 			c=CassandraHosts.getCluster();
 			ConsistencyLevelPolicy mcl = new MyConsistancyLevel();
 			Keyspace ks = HFactory.createKeyspace("litter", c);  //V2
@@ -36,7 +36,7 @@ public class UserConnector {
 			.setRange("", "", false, 100);
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			return "Connection Success";
-		}catch (Exception et){
+		} catch (Exception et){
 			System.out.println("Can't Connect to Cassandra. Check she is OK?");
 			return "Connection Failed - " + et;
 		}
@@ -395,7 +395,7 @@ public class UserConnector {
 			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("Followees")
 			.setKey(username)
-			.setRange("", "", false, 3);
+			.setRange("", "", true, 999);
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			ColumnSlice<String, String> slice = r.get();
 			List<HColumn<String, String>> slices = slice.getColumns();
@@ -438,7 +438,7 @@ public class UserConnector {
 			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("Followers")
 			.setKey(username)
-			.setRange("", "", false, 3);
+			.setRange("", "", true, 999);
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			ColumnSlice<String, String> slice = r.get();
 			List<HColumn<String, String>> slices = slice.getColumns();

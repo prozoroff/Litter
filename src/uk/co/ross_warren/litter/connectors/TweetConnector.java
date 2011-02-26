@@ -32,7 +32,7 @@ public class TweetConnector {
 	 */
 	public void updateTweet(TweetStore store)
 	{
-		Cluster c; //V2
+		Cluster c; 
 		try{
 			c=CassandraHosts.getCluster();
 		}catch (Exception et){
@@ -47,7 +47,7 @@ public class TweetConnector {
 			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
 			Mutator<String> mutator = HFactory.createMutator(ks,se);
-			Integer likes = store.getLikes();
+			Integer likes = store.getLikes(); //Get the new like count
 			mutator.addInsertion(store.getTweetID(), "AllTweets", HFactory.createStringColumn("likes", likes.toString()));
 			mutator.execute();
 		}
@@ -78,11 +78,9 @@ public class TweetConnector {
 			Mutator<String> mutator = HFactory.createMutator(ks,se);
 			
 			TweetStore store = getTweet(tweetID);
-			if (store == null) return;
-				
+			if (store == null) return; //stop of there it can't get the tweet				
 			String username = store.getUser();
 			String reply = store.getReplyToUser();
-
 			mutator.delete(username, "UserTweets", tweetID, se);
 			mutator.execute();
 			mutator = HFactory.createMutator(ks,se);
@@ -97,7 +95,7 @@ public class TweetConnector {
 		}
 		catch (Exception e)
 		{
-			System.out.println("Adding the tweet totally failed :(" + e);
+			System.out.println("Deleting the tweet totally failed :(" + e);
 		}
 	}
 	
@@ -121,8 +119,11 @@ public class TweetConnector {
 			ks.setConsistencyLevelPolicy(mcl);
 			StringSerializer se = StringSerializer.get();
 			Mutator<String> mutator = HFactory.createMutator(ks,se);
-			Long now = System.currentTimeMillis();
-			store.setTweetID(store.getUser() + now);
+			Long now = System.currentTimeMillis(); // Get the current time to store
+			/* Set the tweet ID as a combination of username and time, 
+			 * making ordering work and guaranteeing that it is unique
+			 */
+			store.setTweetID(now + store.getUser()); 
 			String time = now.toString();
 			if (store.getReplyToUser() == null)
 			{
@@ -168,23 +169,35 @@ public class TweetConnector {
 	{
 		List<String> tweetIDs = new LinkedList<String>();
 		UserConnector userConnector = new UserConnector();
+		
+		//Get those who the user follows, so that they can be loaded into the users feed.
 		List<FollowereeStore> followees= userConnector.getFollowees(username);
-		if (followees == null || followees.size() == 0) return null;
+		
 		List<TweetStore> tweets = new LinkedList<TweetStore>();
 		List<TweetStore> tweets2 = new LinkedList<TweetStore>();
-		for (FollowereeStore store: followees)
+		if (followees == null || followees.size() == 0)
 		{
-			try
+			
+		}
+		else
+		{
+			for (FollowereeStore store: followees)
 			{
-				tweets.addAll(getTweets(store.getUsername()));
-			}
-			catch (Exception e)
-			{
-				System.out.println("oops" + e);
+				try
+				{
+					//Get the tweets of all those who they follow
+					tweets.addAll(getTweets(store.getUsername()));
+				}
+				catch (Exception e)
+				{
+					System.out.println("oops" + e);
+				}
 			}
 		}
+		
 		try
 		{
+			//Get all at replies and tweets of the current user
 			tweets.addAll(getAtReplies(username));
 			tweets.addAll(getTweets(username));
 		}
@@ -200,15 +213,29 @@ public class TweetConnector {
 				tweets2.add(tweet);
 			}
 		}
-		if (tweets2 != null && tweets2.size() > 0) Collections.sort(tweets2);
+		if (tweets2 != null && tweets2.size() > 0) Collections.sort(tweets2); //ensure they are in time order
 		for (TweetStore tweet: tweets2)
 		{
 			try
 			{
+				/*
+				 * Get the avatars
+				 */
 				UserConnector connect = new UserConnector();
 				UserStore store = connect.getUserByUsername(tweet.getUser());
 				store = connect.getUserByEmail(store.getEmail());
 				tweet.setAvatarUrl(store.getAvatarUrl());
+				/*
+				 * Set the liking
+				 */
+				if (checkLike(username, tweet.getTweetID()) == false)
+				{
+					tweet.setLike("Like");
+				}
+				else
+				{
+					tweet.setLike("Unlike");
+				}
 			}
 			catch (Exception e)
 			{
@@ -304,7 +331,7 @@ public class TweetConnector {
 			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("AtReplies")
 			.setKey(username)
-			.setRange("", "", false, 100);
+			.setRange("", "", true, 100); // get the 100 newest 
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			ColumnSlice<String, String> slice = r.get();
 			List<HColumn<String, String>> slices = slice.getColumns();
@@ -365,7 +392,7 @@ public class TweetConnector {
 				HFactory.createRangeSlicesQuery(ks, se, se, se);
 				rangeSlicesQuery.setColumnFamily("Likes");
 				rangeSlicesQuery.setKeys(username, username);
-				rangeSlicesQuery.setRange(tweetID, tweetID, false, 999);
+				rangeSlicesQuery.setRange(tweetID, tweetID, false, 999); // get them all!
 				QueryResult<OrderedRows<String, String, String>> result = rangeSlicesQuery.execute();
 			OrderedRows<String, String, String> rows = result.get();
 			
@@ -493,7 +520,7 @@ public class TweetConnector {
 			SliceQuery<String, String, String> q = HFactory.createSliceQuery(ks, se, se, se);
 			q.setColumnFamily("UserTweets")
 			.setKey(username)
-			.setRange("", "", false, 100);
+			.setRange("", "", true, 100); // Get the 100 newest
 			QueryResult<ColumnSlice<String, String>> r = q.execute();
 			ColumnSlice<String, String> slice = r.get();
 			List<HColumn<String, String>> slices = slice.getColumns();

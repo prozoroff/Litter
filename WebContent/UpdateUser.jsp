@@ -56,9 +56,8 @@
 						<input value = "<%= User.getName() %>" style="background-color: white;" type="text" name="Name" required placeholder="Name" />
 						<label for="Bio">Bio:</label> 
 						<textarea style="background-color: white;" name="Bio" placeholder="Write a bit about yourself"><%= User.getBio() %></textarea> 
-						<label for="Avatar">Avatar (Leave blank to use Gravatar):</label>
-						<input value = "<%= User.getAvatarUrl() %>" style="background-color: white;" type="text" name="Avatar"></input>
-						<input style="background-color: white;" type="submit"  value="Add Yourself">
+						<input value = "<%= User.getAvatarUrl() %>" style="background-color: white;" type="hidden" name="Avatar"></input>
+						<input style="background-color: white;" type="submit"  value="Update Yourself">
 					</form>
 				</article>
             </section>

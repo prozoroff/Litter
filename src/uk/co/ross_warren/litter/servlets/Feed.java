@@ -105,8 +105,8 @@ public class Feed extends HttpServlet {
 		 * 
 		 */
 		TweetConnector connect = new TweetConnector();
-		List<TweetStore> feed = connect.getFeed(username);		
-		if (orderByLike)
+		List<TweetStore> feed = connect.getFeed(username);	
+		if (feed != null && feed.size() > 0 && orderByLike)
 		{	
 			for (TweetStore tweet: feed)
 			{
@@ -114,6 +114,7 @@ public class Feed extends HttpServlet {
 			}
 			Collections.sort(feed);
 		}
+		if (feed == null) return;
 		switch(Format){
 			case 3: request.setAttribute("Data", feed);
 					RequestDispatcher rdjson=request.getRequestDispatcher("/RenderJson");

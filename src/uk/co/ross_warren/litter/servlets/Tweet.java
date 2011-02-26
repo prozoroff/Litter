@@ -207,10 +207,23 @@ public class Tweet extends HttpServlet {
 		UserStore store = connector.getUserByUsername(tweets.get(0).getUser());
 		store = connector.getUserByEmail(store.getEmail());
 		String avatarurl = store.getAvatarUrl();
+		HttpSession session=request.getSession();
+		UserStore sessionUser =(UserStore)session.getAttribute("User");
 		
 		for (TweetStore tweet: tweets)
 		{
 			tweet.setAvatarUrl(avatarurl);
+			if (sessionUser != null && sessionUser.isloggedIn() == true)
+			{
+				if (connect.checkLike(username, tweet.getTweetID()) == false)
+				{
+					tweet.setLike("Like");
+				}
+				else
+				{
+					tweet.setLike("Unlike");
+				}
+			}
 		}
 		Collections.sort(tweets);
 		switch(Format){

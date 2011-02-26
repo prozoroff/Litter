@@ -58,10 +58,7 @@ scope="session"
        				
        			
        				
-     			var like = 'Like';
-     			TheObject2.check(function(a) {
-     				like = a;
-     			});
+     			var like = this.Like;
        				
        			var isempty = this.ReplyToUser;
        			var bleh = '';
@@ -92,7 +89,24 @@ scope="session"
        					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
        				}
        			
+				var currentdate = new Date();
        			
+				var date = new Date(currentdate.getTime() - this.TimeStamp);
+				
+				var seconds = date.getTime();
+				
+				var minutes = date.getTime() / 60000;
+				
+
+				var datedisplay;
+				if (minutes < 60)
+				{
+					datedisplay = Math.round(minutes) + ' Minutes ago';
+				}
+				else
+				{
+					datedisplay = Math.round(minutes / 60) + ' Hours ago';
+				}
        			var location = '';
        			if (this.Latitude)
     			{
@@ -117,9 +131,10 @@ scope="session"
       					deletetext + 
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
-       					'<p>' +
-       					location +
-       					locationtext +
+       					'</p>' +
+       					location + 
+       					locationtext + 
+       					datedisplay +
        					'</div>');
       		});
        			$("#feed").fadeTo('slow', 1);
@@ -157,10 +172,7 @@ scope="session"
        				
        			
        				
-     			var like = 'Like';
-     			TheObject2.check(function(a) {
-     				like = a;
-     			});
+      			var like = this.Like;
        				
        			var isempty = this.ReplyToUser;
        			var bleh = '';
@@ -186,8 +198,24 @@ scope="session"
      				deletetext = '<a style="float: right" class="delete"' +
    					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
      			}
-       				
-       				
+       			
+				var currentdate = new Date();
+       			
+				var date = new Date(currentdate.getTime() - this.TimeStamp);
+				
+				var seconds = date.getTime();
+				
+				var minutes = date.getTime() / 60000;
+				
+				var datedisplay;
+				if (minutes < 60)
+				{
+					datedisplay = Math.round(minutes) + ' Minutes ago';
+				}
+				else
+				{
+					datedisplay = Math.round(minutes / 60) + ' Hours ago';
+				}
 
        			var locationtext = '';
        			if (this.LocationName)
@@ -220,9 +248,10 @@ scope="session"
       					deletetext + 
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
-       					'<p>' +
-       					location +
-       					locationtext +
+       					'</p>' +
+       					location + 
+       					locationtext + 
+       					datedisplay +
        					'</div>');
       		});
        			$("#mentions").fadeTo('slow', 1);
@@ -349,8 +378,10 @@ scope="session"
         {
         	
         	%>
-	        $(function() {
-		   		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
+        	
+        	function loadfollowbutton()
+        	{
+        		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
 		   		$.ajax({
 		   			type: "GET",
 		   			url: url,
@@ -358,6 +389,9 @@ scope="session"
 		   				$("#follow").text(msg);
 		   			}
 		   		});
+        	}
+	        $(function() {
+		   		loadfollowbutton();
 	        });
         <%
         } %>
@@ -368,6 +402,7 @@ scope="session"
         }
         $(function() {
         	loadfeeds();
+        	loadfollowers();
         });
         $("#follow").click(function () {
         	var url = '/Litter/Follows/<%= displayUser.getUserName() %>/Check';
@@ -385,7 +420,8 @@ scope="session"
 	   		   				url: "/Litter/Follow/<%= displayUser.getUserName() %>",
 	   		   				dataType: "text",
 	   		  				success: function(msg){
-	   		  					location.reload(); 
+	   		  					loadfollowbutton();
+	   		  					loadfollowers();
 	   		   				}
 	   		        	});
    					}
@@ -397,7 +433,8 @@ scope="session"
 	   		   				url: "/Litter/Follow/<%= displayUser.getUserName() %>",
 	   		   				dataType: "text",
 	   		  				success: function(msg){
-	   		  					location.reload(); 
+	   		  					loadfollowbutton();
+	   		  					loadfollowers();
 	   		   				}
 	   		        	});
 	   				}
@@ -408,10 +445,12 @@ scope="session"
 			$( "button", ".demo" ).button();
 			$( "a", ".demo" ).click(function() { return false; });
 		});
-       	$(function() {
+       	function loadfollowers()
+       	{
        		var count = 0;
        		var url = '/Litter/Follows/<%= displayUser.getUserName() %>/json';
        		$.getJSON(url, function(json) {
+       			$("#followees").html('');
        			$.each(json.Data, function(i, Data) {
        				$("#followees").append('<a href="/Litter/User/' 
        						+ this.Username 
@@ -421,10 +460,12 @@ scope="session"
 					count += 1;
        				
        			});
+       			$("#followeecount").html('');
        			$("#followeecount").append(count);
        		});		
        		var url = '/Litter/Follow/<%= displayUser.getUserName() %>/json';
        		$.getJSON(url, function(json) {
+       			$("#followers").html('');
        			var count = 0;
        			$.each(json.Data, function(i, Data) {
        				$("#followers").append('<a href="/Litter/User/' 
@@ -435,9 +476,10 @@ scope="session"
        				count += 1;
        				
        			});
+       			$("#followercount").html('');
        			$("#followercount").append(count);
        		});	
-       	});
+       	}
        	window.setInterval(loadfeeds, 20000);
 	</script>
 

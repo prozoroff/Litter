@@ -60,11 +60,8 @@ scope="session"
            			   	});
            		 	}
        			};	
-     			var like = 'Like';
-     			TheObject2.check(function(a) {
-     				like = a;
-     			});
-       				
+     			var like = this.Like;
+     		
        			var isempty = this.ReplyToUser;
        			var bleh = '';
        			if (isempty)
@@ -94,6 +91,23 @@ scope="session"
        					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
        				}
        			
+				var currentdate = new Date();
+       			
+				var date = new Date(currentdate.getTime() - this.TimeStamp);
+				
+				var seconds = date.getTime();
+				
+				var minutes = date.getTime() / 60000;
+
+				var datedisplay;
+				if (minutes < 60)
+				{
+					datedisplay = Math.round(minutes) + ' Minutes ago';
+				}
+				else
+				{
+					datedisplay = Math.round(minutes / 60) + ' Hours ago';
+				}
        			
        			var location = '';
        			if (this.Latitude)
@@ -115,9 +129,10 @@ scope="session"
       					deletetext + 
       					'<a href="/Litter/User/' + this.User + '">' + this.User + '</a>' +
        					bleh + 
-       					'<p>' +
+       					'</p>' +
        					location +
        					locationtext +
+       					datedisplay + 
        					'</div>');
       		});
        			$("#feed").fadeTo('slow', 1);
@@ -145,11 +160,7 @@ scope="session"
            			   	});
            		 	}
        			};	
-     			var like = 'Like';
-     			TheObject2.check(function(a) {
-     				like = a;
-     			});
-       				
+     			var like = this.Like;
        			var isempty = this.ReplyToUser;
        			var bleh = '';
        			if (isempty)
@@ -162,7 +173,24 @@ scope="session"
        			var deletetext = '';
        			var displayuser = '';
        			var tweetuser = this.User;
-       		
+       			
+       			var currentdate = new Date();
+       			
+				var date = new Date(currentdate.getTime() - this.TimeStamp);
+				
+				var seconds = date.getTime();
+				
+				var minutes = date.getTime() / 60000;
+				
+				var datedisplay;
+				if (minutes < 60)
+				{
+					datedisplay = Math.round(minutes) + ' Minutes ago';
+				}
+				else
+				{
+					datedisplay = Math.round(minutes / 60) + ' Hours ago';
+				}
        				
        			displayuser = '<%= User.getUserName() %>';
        			
@@ -202,6 +230,7 @@ scope="session"
        					'</p>' +
        					location + 
        					locationtext + 
+       					datedisplay +
        					'</div>');
       		});
        			$("#likefeed").fadeTo('slow', 1);
@@ -269,36 +298,24 @@ scope="session"
 						<table style="width: 100%">
 						<tr>
 						<td>
-						<ul class="menu">
-						<li class="expand"> 
-							<a href="#">Tweet</a> 
-							<div class="acitem panel"> 
-								<textarea id = "comment" style="background: none; width: 90%; min-height: 42px; font-size: 1em; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
-								<p id="charlimitinfo"></p>
-								<script>
-								$(function(){
-									$('#comment').keyup(function(){
-										limitChars('comment', 140, 'charlimitinfo');
-									});
-									limitChars('comment', 140, 'charlimitinfo');			
+							<textarea id = "comment" style="background: none; width: 90%; min-height: 42px; font-size: 1em; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
+							<p id="charlimitinfo"></p>
+							<script>
+							$(function(){
+								$('#comment').keyup(function(){
+									limitChars('comment', 140, 'charlimitinfo');
 								});
-								
-								</script>
-							</div> 
-						</li> 
-						<li> 
-							<a href="#">Location</a> 
-							<div class="acitem panel"> 
-								<input style="width: 90%; background: none; background-color: white " id = "locationname" name="locationname">
-								<p>Add your location?  <input value = "location" type="checkbox" name="location"  style="width: auto; background: none; display: inline; margin: 0; padding: 0; min-height: 0"/></p>
-							</div> 
-						</li> 
-						</ul>
-						</td>
+								limitChars('comment', 140, 'charlimitinfo');			
+							});
+							
+							</script>
+							<input  class="location" style="display: none; width: 90%; background: none; background-color: white " id = "locationname" name="locationname">
+							<p>Add your location?  <input id="locationcheck" value = "location" type="checkbox" name="location"  style="width: auto; background: none; display: inline; margin: 0; padding: 0; min-height: 0"/></p>
+					</td>
 						<td style="vertical-align: top;">
 							<input style="display: none" type="hidden" id = "latitude" name="latitude">
 							<input style="display: none" type="hidden" id = "longitude" name="longitude">
-							<input style="width: 90%; background-color: white; margin-top: 22px" type="submit"  value="Tweet">
+							<input style="width: 90%; background-color: white; margin-top: 8px" type="submit"  value="Tweet">
 						</td>
 						</tr>
 						</table>
@@ -325,9 +342,12 @@ scope="session"
         <!-- JavaScript Includes -->
         <script src="jquery.scrollTo-1.4.2/jquery.scrollTo-min.js"></script>
         <script src="script.js"></script>
-        <script>
-        
+        <script>        
         <% if (loggedin) { %>
+        
+        $("#locationcheck").click( function() {
+        	$("#locationname").show();
+        });
         
         $(function() {
         	loadfeeds();

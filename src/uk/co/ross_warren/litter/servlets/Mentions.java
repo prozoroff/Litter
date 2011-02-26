@@ -100,6 +100,8 @@ public class Mentions extends HttpServlet {
 		 */
 		TweetConnector connect = new TweetConnector();
 		List<TweetStore> feed = connect.getAtReplies(username);
+		HttpSession session=request.getSession();
+		UserStore sessionUser =(UserStore)session.getAttribute("User");
 		
 		UserConnector connector = new UserConnector();
 		if (feed == null || feed.size() < 1) return;
@@ -110,6 +112,18 @@ public class Mentions extends HttpServlet {
 			store = connector.getUserByEmail(store.getEmail());
 			String avatarurl = store.getAvatarUrl();
 			tweet.setAvatarUrl(avatarurl);
+			
+			if (sessionUser != null && sessionUser.isloggedIn() == true)
+			{
+				if (connect.checkLike(username, tweet.getTweetID()) == false)
+				{
+					tweet.setLike("Like");
+				}
+				else
+				{
+					tweet.setLike("Unlike");
+				}
+			}
 		}
 		switch(Format){
 			case 3: request.setAttribute("Data", feed);

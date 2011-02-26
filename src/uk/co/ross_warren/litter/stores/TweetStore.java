@@ -12,6 +12,7 @@ public class TweetStore implements Comparable<TweetStore>
 	private String latitude = "";
 	private String longitude = "";
 	private String locationName = "";
+	private String like = "Like";
 	
 	private int likes = 0;
 	
@@ -90,5 +91,11 @@ public class TweetStore implements Comparable<TweetStore>
 	}
 	public String getLocationName() {
 		return locationName;
+	}
+	public void setLike(String like) {
+		this.like = like;
+	}
+	public String getLike() {
+		return like;
 	}
 }

@@ -12,9 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import me.prettyprint.cassandra.service.CassandraHost;
-
-import com.sun.tools.javac.util.List;
-
 import uk.co.ross_warren.litter.Utils.CassandraHosts;
 import uk.co.ross_warren.litter.Utils.StringSplitter;
 import uk.co.ross_warren.litter.connectors.UserConnector;
@@ -42,8 +39,13 @@ public class Admin extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		HttpSession session=request.getSession();
-		String admin = (String)session.getAttribute("Admin");
-		if (admin == null)
+		UserStore admin = (UserStore)session.getAttribute("User");
+		Boolean usercheck = false;
+		if (admin.getUserName().equals("Admin") || admin.getUserName().equals(CassandraStore.instance().getAdmin()))
+		{
+			usercheck = true;
+		}
+		if (admin == null || !usercheck)
 		{
 			return;
 		}
@@ -57,8 +59,6 @@ public class Admin extends HttpServlet {
 			else if (args[2].equals("Port")) pw.print(CassandraStore.instance().getPort());
 			else if (args[2].equals("Test"))
 			{
-				//CassandraHosts hosts = new CassandraHosts();
-				//hosts.killClusterToDeath();
 				UserConnector connect = new UserConnector();
 				pw.print(connect.connectionTest());
 			} else if (args[2].equals("Pool"))
@@ -100,8 +100,13 @@ public class Admin extends HttpServlet {
 		StringSplitter split = new StringSplitter();
 		String args[]=split.SplitRequestPath(request);
 		HttpSession session=request.getSession();
-		String admin = (String)session.getAttribute("Admin");
-		if (admin == null)
+		UserStore admin = (UserStore)session.getAttribute("User");
+		Boolean usercheck = false;
+		if (admin.getUserName().equals("Admin") || admin.getUserName().equals(CassandraStore.instance().getAdmin()))
+		{
+			usercheck = true;
+		}
+		if (admin == null || !usercheck)
 		{
 			return;
 		}

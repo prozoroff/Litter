@@ -101,8 +101,7 @@
 						</script>
 						<label for="Bio">Bio:</label> 	
 						<textarea style="background-color: white;" name="Bio" placeholder="Write a bit about yourself"></textarea> 
-						<label for="Avatar">Avatar (Leave blank to use Gravatar):</label>
-						<input style="background-color: white;" type="text" name="Avatar"></input>
+						<input style="background-color: white;" type="hidden" value="" name="Avatar"></input>
 						<input style="background-color: white;" type="submit"  value="Add Yourself">
 						<input type="HIDDEN" name="process" value="true">
 					</form>
