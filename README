@@ -63,7 +63,21 @@ GET
 /json - Gets mentions of logged in user in json
 /[username/json - gets mentions of specified user in json
 
---Feed--
+--Feed-- (must be logged in)
 GET
 no parameters - redirects to homepage to show tweets
 /json returns the logged in users feed as json
+
+--ADMIN-- (Must be specified admin user for all actions)
+GET
+/Host - gets the IP of the cassandra node used to connect
+/Cluster gets the cluster name
+/Port gets the port the cassandra node used to connect uses
+/Test - test the connection to cassandra
+/Pool - gets all nodes in the pool
+/Down - gets all downed nodes
+
+/POST
+/Host  - set the host ip used to connect
+/Cluster - set the cluster name used to connect
+/Port - set the port used to connect
