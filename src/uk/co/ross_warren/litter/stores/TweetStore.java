@@ -1,5 +1,8 @@
 package uk.co.ross_warren.litter.stores;
 
+/*
+ * Tweetstore, comparable for sorting by time.
+ */
 public class TweetStore implements Comparable<TweetStore>
 {
 	
