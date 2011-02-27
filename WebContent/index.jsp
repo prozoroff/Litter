@@ -22,7 +22,7 @@ scope="session"
         <title>Litter</title>
         <link rel="stylesheet" type="text/css" href="styles.css" />
         <link href='http://fonts.googleapis.com/css?family=Chewy' rel='stylesheet' type='text/css'>
-        <script src="http://maps.google.com/maps?file=api&amp;v=2.133d&amp;"></script> 
+        <script src="http://maps.google.com/maps?file=api&amp;v=2.133d&amp;key=ABQIAAAApihxGewKXLQTYcrRwFn4ERQHTRQe-061-RpZ4gWM6uvKU5vTzBRUJn0P7DsaFhvxadfMWq3Qe81l1A"></script> 
         <link type="text/css" href="css/vader/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
         <script src="js/jquery-1.4.4.min.js"></script>
         <script src="js/jquery-ui-1.8.9.custom.min.js"></script>
@@ -69,16 +69,10 @@ scope="session"
        				bleh = ' to <a href="/Litter/User/' +
 							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
        			}
-       				
-       				
        			var deletetext = '';
        			var displayuser = '';
-       			var tweetuser = this.User;
-       		
+       			var tweetuser = this.User;      		
        			displayuser = '<%= User.getUserName() %>';
-
-       		
-       			
        			if (displayuser == tweetuser)
      			{
      				deletetext = '<a style="float: right" class="delete"' +
@@ -90,15 +84,11 @@ scope="session"
        				{
        					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
        				}
-       			
+				//for showing how long ago the tweet was
 				var currentdate = new Date();
-       			
 				var date = new Date(currentdate.getTime() - this.TimeStamp);
-				
 				var seconds = date.getTime();
-				
 				var minutes = date.getTime() / 60000;
-
 				var datedisplay;
 				if (minutes < 60)
 				{
@@ -168,20 +158,15 @@ scope="session"
        				bleh = ' to <a href="/Litter/User/' +
 							this.ReplyToUser + '">' + this.ReplyToUser + '</a>';
        			}
-       				
-       				
        			var deletetext = '';
        			var displayuser = '';
        			var tweetuser = this.User;
        			
+				//for showing how long ago the tweet was
        			var currentdate = new Date();
-       			
-				var date = new Date(currentdate.getTime() - this.TimeStamp);
-				
-				var seconds = date.getTime();
-				
+				var date = new Date(currentdate.getTime() - this.TimeStamp);				
+				var seconds = date.getTime();				
 				var minutes = date.getTime() / 60000;
-				
 				var datedisplay;
 				if (minutes < 60)
 				{
@@ -194,24 +179,28 @@ scope="session"
        				
        			displayuser = '<%= User.getUserName() %>';
        			
+       			//User freindly location name
        			var locationtext = '';
        			if (this.LocationName)
        				{
        					var locationtext = '<p style="height: 100px">' + this.LocationName + '<p>';
        				}
 
+       			//Map image
        			var location = '';
        			if (this.Latitude)
        				{
        					location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
 					}
        			
+       			//add delete button
        			if (displayuser == tweetuser)
      			{
      				deletetext = '<a style="float: right" class="delete"' +
    					'id="' + this.TweetID + '"><img src="/Litter/img/delete.png" /></a>';
      			}
 
+       			//add the tweet to the feed
    				$("#likefeed").append('<div class="tweet">' +
    						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
       					'src="' + this.AvatarUrl + '" align="left" />' +
@@ -301,6 +290,8 @@ scope="session"
 							<textarea id = "comment" style="background: none; width: 90%; min-height: 42px; font-size: 1em; background-color: white;" name="Content" required placeholder="Write your post here"></textarea> 
 							<p id="charlimitinfo"></p>
 							<script>
+							
+							//Limit the characters of the tweet box, and display message
 							$(function(){
 								$('#comment').keyup(function(){
 									limitChars('comment', 140, 'charlimitinfo');
@@ -333,8 +324,8 @@ scope="session"
 					</table>
                 </article>
                 <div id="dialog-confirm" style="display: none" title="Really delete? Really?">
-	<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Will be deleted forever!</p>
-</div>
+					<p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>Will be deleted forever!</p>
+				</div>
                 <% } %>
             </section>
         <%@ include file="footer.jsp" %>                 
@@ -349,16 +340,18 @@ scope="session"
         	$("#locationname").show();
         });
         
+        //Load feeds on page load
         $(function() {
         	loadfeeds();
-        	$('.menu').initMenu();
         });
         
+        //Load the feeds
         function loadfeeds()
         {
 			loadfeed();
 			loadlikes();
         }
+        //reload feeds every 20 seconds
        	window.setInterval(loadfeeds, 20000);
         <% } %>
     	</script>

@@ -29,7 +29,7 @@ import uk.co.ross_warren.litter.stores.UserStore;
  * http://code.google.com/p/jopenid/
  * Sample servlet using JOpenID.
  * 
- * @author Andy Cobley ()
+ * Written by Andy Cobley, adapted by Ross Warren
  */
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;

@@ -30,11 +30,10 @@ GET
 /json return followers formatted as Json for logged in user
 /[username]/json - return followers formatted as Json for specified user
 POST
-/[username] - adds the user specified to those who the logged in user follows (or unfollows if already followed)
+/[username] - adds the user specified to those who the logged in user follows
 
-TODO:
 DELETE
-unfollow the user (functionality currently in POST
+/[username] - removes the spicified user from those who the logged in user follows
 
 -- Follows --
 GET
@@ -42,6 +41,8 @@ GET
 /[username]/json - return those who the user follows formatted as Json
 
 --Like--
+GET
+/[TweetID] - check if the logged in  user likes the specified tweet (DEPRECIATED, now loaded in before sending to user!)
 POST
 /[tweetID] - "likes" the tweet for the user currently logged in
 DELETE
@@ -54,11 +55,13 @@ GET
 /[username]/json returns tweets formatted as json for specified user
 POST
 adds a tweet for the logged in user
-
-TODO:
-
 DELETE
-remove the tweet
+/[tweetID] - remove the tweet
+
+-- Mentions --
+GET
+/json - Gets mentions of logged in user in json
+/[username/json - gets mentions of specified user in json
 
 --Feed--
 GET

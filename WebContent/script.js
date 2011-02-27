@@ -57,7 +57,7 @@ function displayPosition(position) {
  * Displays error if geolocation goes wrong
  */
 function displayError(positionError) {
-  //alert("error");
+	$("#locationname").val(positionError).trigger('change');
 }
 
 /*
@@ -76,7 +76,7 @@ function initgeo()
 		if (gl) {
 		  gl.getCurrentPosition(displayPosition, displayError);
 		} else {  
-		 // alert("I'm sorry, but geolocation services are not supported by your browser.");  
+			$("#locationname").val("Location services not supported by your browser").trigger('change');
 		}
 }
 
@@ -154,6 +154,7 @@ function showpopup(a) {
 	});
 }
 
+//Tweet submit
 $("#totweet").submit(function() {
 	var form = $(this).serialize();
 	$.ajax({
@@ -167,62 +168,8 @@ $("#totweet").submit(function() {
 	});		
 	return false;
 });
-
-
-jQuery.fn.initMenu = function() {
-	return this.each(function(){
-		var theMenu = $(this).get(0);
-		$('.acitem', this).hide();
-		$('li.expand > .acitem', this).show();
-		$('li.expand > .acitem', this).prev().addClass('active');
-		$('li a', this).click(
-		function(e) {
-		e.stopImmediatePropagation();
-		var theElement = $(this).next();
-		var parent = this.parentNode.parentNode;
-		if($(parent).hasClass('noaccordion')) {
-		if(theElement[0] === undefined) {
-		window.location.href = this.href;
-		}
-		$(theElement).slideToggle('normal', function() {
-		if ($(this).is(':visible')) {
-		$(this).prev().addClass('active');
-		}
-		else {
-		$(this).prev().removeClass('active');
-		}
-		});
-		return false;
-		}
-		else {
-		if(theElement.hasClass('acitem') && theElement.is(':visible')) {
-		if($(parent).hasClass('collapsible')) {
-		$('.acitem:visible', parent).first().slideUp('normal',
-		function() {
-		$(this).prev().removeClass('active');
-		}
-		);
-		return false;
-		}
-		return false;
-		}
-		if(theElement.hasClass('acitem') && !theElement.is(':visible')) {
-		$('.acitem:visible', parent).first().slideUp('normal', function() {
-		$(this).prev().removeClass('active');
-		});
-		theElement.slideDown('normal', function() {
-		$(this).prev().addClass('active');
-		});
-		return false;
-		}
-		}
-		}
-		);
-	});
-};
-	
-	
 	 
+//gets the host ip
 function loadHost()
 {
 	
@@ -238,6 +185,7 @@ function loadHost()
  	});
 }
     
+//gets the cluster port
 function loadPort()
 {
 	$.ajax({
@@ -252,6 +200,7 @@ function loadPort()
  	});
 }
     
+//gets the cluster name
 function loadCluster()
 {
 	$.ajax({
@@ -266,6 +215,8 @@ function loadCluster()
  	});
 }
 
+
+//gets list of nodes
 function getPool() {
     $("#pool").html('');
     $.getJSON('/Litter/Admin/Pool', function(json) {
@@ -278,6 +229,7 @@ function getPool() {
     });
 }
         
+//Gets list of downed nodes
 function getDowned() {
 	$("#downed").html('');
     $.getJSON('/Litter/Admin/Down', function(json) {
