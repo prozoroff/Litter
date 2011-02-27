@@ -41,7 +41,7 @@ public class TweetStore implements Comparable<TweetStore>
 		return timeStamp;
 	}
 	public void setReplyToUser(String replyToUser) {
-		this.replyToUser = replyToUser;
+		this.replyToUser = replyToUser.toLowerCase();
 	}
 	public String getReplyToUser() {
 		return replyToUser;
