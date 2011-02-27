@@ -58,7 +58,7 @@ public class CassandraStore {
 	private String Port = "9160";
 	private String ClusterName = "CassabdraStarbase";
 	//private String ClusterName = "Test Cluster";
-	private String Admin = "Ross";
+	private String Admin = "ross";
 	
 	public void LoadSettingsFromFile() throws IOException
 	{

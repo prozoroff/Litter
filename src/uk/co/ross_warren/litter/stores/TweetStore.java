@@ -25,7 +25,7 @@ public class TweetStore implements Comparable<TweetStore>
 		return tweetID;
 	}
 	public void setUser(String user) {
-		this.user = user;
+		this.user = user.toLowerCase();
 	}
 	public String getUser() {
 		return user;

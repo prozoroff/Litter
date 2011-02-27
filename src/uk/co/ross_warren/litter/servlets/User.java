@@ -78,6 +78,7 @@ public class User extends HttpServlet {
 					break;
 			case 4: if (FormatsMap.containsKey(args[3])){ //Display an Author
 						Integer IFormat= (Integer)FormatsMap.get(args[3]);
+						args[2] = args[2].toLowerCase();
 						switch((int)IFormat.intValue()){
 						case 3:
 							ReturnAuthor(request, response,3,args[2]); //Only JSON implemented for now
@@ -99,6 +100,7 @@ public class User extends HttpServlet {
 		 *  3 json
 		 * 
 		 */	
+		username = username.toLowerCase();
 		UserConnector userConnect = new UserConnector();
 		UserStore dataUser;
 		dataUser = userConnect.getUserByUsername(username);
@@ -153,7 +155,7 @@ public class User extends HttpServlet {
 		}
 		writeUser.setEmail(sessionUser.getEmail());
 		writeUser.setName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Name")));
-		writeUser.setUserName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Username")));
+		writeUser.setUserName(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Username")).toLowerCase());
 		writeUser.setBio(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Bio")));
 		writeUser.setAvatar(org.apache.commons.lang.StringEscapeUtils.escapeHtml(request.getParameter("Avatar")));
 		UserConnector au = new UserConnector();

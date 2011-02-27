@@ -101,7 +101,7 @@ public class UserConnector {
 			ColumnSlice<String, String> slice = r.get();
 			user.login(email);
 			user.setName(slice.getColumnByName("name").getValue());
-			user.setUserName(slice.getColumnByName("username").getValue());
+			user.setUserName(slice.getColumnByName("username").getValue().toLowerCase());
 			user.setBio(slice.getColumnByName("bio").getValue());
 			user.setAvatar(slice.getColumnByName("avatarurl").getValue());
 			return user;

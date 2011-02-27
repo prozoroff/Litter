@@ -57,7 +57,7 @@ function displayPosition(position) {
  * Displays error if geolocation goes wrong
  */
 function displayError(positionError) {
-  alert("error");
+  //alert("error");
 }
 
 /*
@@ -76,7 +76,7 @@ function initgeo()
 		if (gl) {
 		  gl.getCurrentPosition(displayPosition, displayError);
 		} else {  
-		  alert("I'm sorry, but geolocation services are not supported by your browser.");  
+		 // alert("I'm sorry, but geolocation services are not supported by your browser.");  
 		}
 }
 
