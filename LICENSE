@@ -1,25 +1,8 @@
-License
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. 
+To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 
+171 Second Street, Suite 300, San Francisco, California, 94105, USA.
 
-This is released under the DWTFYWWI license (below) with the exception with that if you are on my computing course 
-you can't steal it and use it for your own coursework submission. If you do fall under this section feel free to look at it, 
-but don't take any of the code.
-Therefore it is under the DWTFYWWIEIYAOMCAPTUIFYCS License.
-(Do what the fuck you want with it except if you are on my course and planning to use it for your coursework submission)
 
-DWTFYWWI LICENSE
-                       Version 1, January 2006
+The attribution I require is, if you use any of the Java code please reference my name (Ross Warren) and a link to my website (ross-warren.co.uk) at the top of the file, or in the case that you only use one method, then at the top of that method.
 
- Copyright (C) 2006 �var Arnfj�r� Bjarmason
-
-                            Preamble
-
-  The licenses for most software are designed to take away your
-freedom to share and change it.  By contrast, the DWTFYWWI or Do
-Whatever The Fuck You Want With It license is intended to guarantee
-your freedom to share and change the software--to make sure the
-software is free for all its users.
-
-                         DWTFYWWI LICENSE
-   TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION AND MODIFICATION
-0. The author grants everyone permission to do whatever the fuck they
-want with the software, whatever the fuck that may be.
+If you are using any of the javascript, please do the same at either the top of the file, an html style comment shall suffice, or at the top of the code segment if only a small amount is used.
