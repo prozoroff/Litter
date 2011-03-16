@@ -103,8 +103,6 @@ scope="session"
        			if (this.Latitude)
     			{
        				location = '<img class = "tweetimage" src="http://maps.google.com/maps/api/staticmap?center=' + this.Latitude + ',' + this.Longitude + '&zoom=14&size=300x100&&markers=color:red%7Clabel:!%7C' + this.Latitude + ',' + this.Longitude + '&sensor=true" />';
-
-       				
     			}
    				$("#feed").append('<div class="tweet">' +
    						'<img width = "33px" height = "33px" style="margin-top: 11px; margin-right: 15px"' +
